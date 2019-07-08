@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>这里是pz阁下</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="这里是pz阁下">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:locale" content="Chinese">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="这里是pz阁下">
+  
+    <link rel="alternate" href="/atom.xml" title="这里是pz阁下" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">这里是pz阁下</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-ykym-structure" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/07/06/ykym-structure/" class="article-date">
+  <time datetime="2019-07-06T03:50:01.524Z" itemprop="datePublished">2019-07-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/07/06/ykym-structure/">ykym.platform结构</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="ykym-app"><a href="#ykym-app" class="headerlink" title="ykym-app"></a>ykym-app</h2><h3 id="pom-xml"><a href="#pom-xml" class="headerlink" title="pom.xml"></a><code>pom.xml</code></h3><p>引用了这些依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">com.app.ykym</span><br><span class="line">com.app.kernel</span><br><span class="line">com.app.base</span><br><span class="line">com.alibaba</span><br><span class="line">org.springframework.boot</span><br><span class="line">org.springframework.boot</span><br><span class="line">commons-codec</span><br><span class="line">net.sf.json-lib</span><br></pre></td></tr></table></figure>
+
+<h3 id="customer-auth"><a href="#customer-auth" class="headerlink" title="customer.auth"></a><code>customer.auth</code></h3><p>? 鉴权服务的消费者</p>
+<h3 id="infrastructure"><a href="#infrastructure" class="headerlink" title="infrastructure"></a><code>infrastructure</code></h3><p>基础设施</p>
+<p>freemarker</p>
+<p>​    annotation</p>
+<p>​    component</p>
+<p>​    config</p>
+<p>result</p>
+<p>​    result    统一API响应结果封装</p>
+<p>​    resultCode     响应码枚举，与http相对应</p>
+<p>​    resultGenerate    响应结果生成工具</p>
+<p>​    simpleResponse    </p>
+<p>rule</p>
+<p>​    expressComponent    ？</p>
+<p>​    expressMethod    定义注解</p>
+<p>​    expressContext    与ApplicationContext有关 ？</p>
+<p>​    ExpressRunnerKits    与expressRunner有关 ？</p>
+<p>​    myExpress    比较？</p>
+<p>schedule    都没有被用到</p>
+<p>​    AbstractBizHandler    </p>
+<p>​    BizProcessResult    biz：商业    定义了success、errorCode、errorMsg</p>
+<p>​    BizComponent    定义注解</p>
+<p>​    BizComponentFactory    业务组件的工厂</p>
+<p>​    BizProcessor    业务作业处理器</p>
+<p>support.json</p>
+<p>​    </p>
+<p>UUID</p>
+<p>&nbsp;</p>
+<h2 id="ykym-app-api"><a href="#ykym-app-api" class="headerlink" title="ykym-app-api"></a>ykym-app-api</h2><p>空文件</p>
+<p>&nbsp;</p>
+<h2 id="ykym-app-common"><a href="#ykym-app-common" class="headerlink" title="ykym-app-common"></a>ykym-app-common</h2><h3 id="pom-xml-1"><a href="#pom-xml-1" class="headerlink" title="pom.xml"></a><code>pom.xml</code></h3><p>引用了这些依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">com.app.kernel（内核？操作系统？）</span><br><span class="line">org.springframework</span><br><span class="line">commons-codec（处理常用的编码方法的工具类包）</span><br><span class="line">javabase64（加密与解密）</span><br></pre></td></tr></table></figure>
+
+<h3 id="util工具包"><a href="#util工具包" class="headerlink" title="util工具包"></a><code>util</code>工具包</h3><ul>
+<li><p><code>Base64Util</code></p>
+<table>
+<thead>
+<tr>
+<th align="center">方法名</th>
+<th align="center">功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">decode</td>
+<td align="center">BASE64字符串解码为二进制数据</td>
+</tr>
+<tr>
+<td align="center">encode</td>
+<td align="center">二进制数据编码为BASE64字符串</td>
+</tr>
+<tr>
+<td align="center">encodeFile</td>
+<td align="center">将文件编码为BASE64字符串</td>
+</tr>
+<tr>
+<td align="center">decodeToFile</td>
+<td align="center">BASE64字符串转回文件</td>
+</tr>
+<tr>
+<td align="center">fileToByte</td>
+<td align="center">文件转换为二进制数组</td>
+</tr>
+<tr>
+<td align="center">byteArrayToFile</td>
+<td align="center">二进制数据写文件</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><code>HttpUtil</code></p>
+<table>
+<thead>
+<tr>
+<th align="center">方法名</th>
+<th align="center">功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">sendGet(String url, String param)</td>
+<td align="center">向指定URL发送GET方法的请求</td>
+</tr>
+<tr>
+<td align="center">sendGet(String url)</td>
+<td align="center">向指定URL发送GET方法的请求</td>
+</tr>
+<tr>
+<td align="center">sendPost</td>
+<td align="center">向指定URL发送POST方法的请求</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><code>PropUtil</code></p>
+<p>属性文件读取工厂 ？</p>
+</li>
+<li><p><code>ProxyUtil</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取代理</span></span><br><span class="line">getProxy(String url, <span class="keyword">int</span> type)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>ValidateUtil</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 判断对象是否为空</span></span><br><span class="line">isEmpty(Object o)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="ykym-app-server"><a href="#ykym-app-server" class="headerlink" title="ykym-app-server"></a>ykym-app-server</h2><h2 id="idea"><a href="#idea" class="headerlink" title=".idea"></a>.idea</h2><p>存放项目的配置信息，与代码内容无关</p>
+<p><img src="/../../assets/1562401319212.png" alt=".idea目录"></p>
+<table>
+<thead>
+<tr>
+<th align="center">文件名</th>
+<th align="center">Component name</th>
+<th align="center">内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Project_Default.xml</td>
+<td align="center">Inspection Project Profile Manager</td>
+<td align="center">检查</td>
+</tr>
+<tr>
+<td align="center">compiler.xml</td>
+<td align="center">Compiler Configuration</td>
+<td align="center">编译器配置</td>
+</tr>
+<tr>
+<td align="center">misc.xml</td>
+<td align="center">Maven Projects Manager</td>
+<td align="center">maven管理</td>
+</tr>
+<tr>
+<td align="center">modules.xml</td>
+<td align="center">Project Module Manager</td>
+<td align="center">模块</td>
+</tr>
+<tr>
+<td align="center">vcs.xml</td>
+<td align="center">Vcs Directory Mappings</td>
+<td align="center">版本控制（svn）</td>
+</tr>
+<tr>
+<td align="center">workspace.xml</td>
+<td align="center">Change List Manager</td>
+<td align="center">？</td>
+</tr>
+</tbody></table>
+<p>&nbsp;</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/07/06/ykym-structure/" data-id="cjxtxasdl0000m8jjjx3suhkm" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/07/06/ykym-structure/">ykym.platform结构</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 pz<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
