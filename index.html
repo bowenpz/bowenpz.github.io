@@ -62,10 +62,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-ykym-structure" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-helloworld" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/07/06/ykym-structure/" class="article-date">
-  <time datetime="2019-07-06T03:50:01.524Z" itemprop="datePublished">2019-07-06</time>
+    <a href="/2019/07/09/helloworld/" class="article-date">
+  <time datetime="2019-07-09T02:22:26.000Z" itemprop="datePublished">2019-07-09</time>
 </a>
     
   </div>
@@ -76,7 +76,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/07/06/ykym-structure/">ykym.platform结构</a>
+      <a class="article-title" href="/2019/07/09/helloworld/">helloworld</a>
     </h1>
   
 
@@ -84,173 +84,11 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="ykym-app"><a href="#ykym-app" class="headerlink" title="ykym-app"></a>ykym-app</h2><h3 id="pom-xml"><a href="#pom-xml" class="headerlink" title="pom.xml"></a><code>pom.xml</code></h3><p>引用了这些依赖：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">com.app.ykym</span><br><span class="line">com.app.kernel</span><br><span class="line">com.app.base</span><br><span class="line">com.alibaba</span><br><span class="line">org.springframework.boot</span><br><span class="line">org.springframework.boot</span><br><span class="line">commons-codec</span><br><span class="line">net.sf.json-lib</span><br></pre></td></tr></table></figure>
-
-<h3 id="customer-auth"><a href="#customer-auth" class="headerlink" title="customer.auth"></a><code>customer.auth</code></h3><p>? 鉴权服务的消费者</p>
-<h3 id="infrastructure"><a href="#infrastructure" class="headerlink" title="infrastructure"></a><code>infrastructure</code></h3><p>基础设施</p>
-<p>freemarker</p>
-<ul>
-<li>​    annotation</li>
-<li>​    component</li>
-<li>​    config</li>
-</ul>
-<p>result</p>
-<ul>
-<li>​    result    统一API响应结果封装</li>
-<li>​    resultCode     响应码枚举，与http相对应</li>
-<li>​    resultGenerate    响应结果生成工具</li>
-<li>​    simpleResponse    </li>
-</ul>
-<p>rule</p>
-<ul>
-<li>​    expressComponent    ？</li>
-<li>​    expressMethod    定义注解</li>
-<li>​    expressContext    与ApplicationContext有关 ？</li>
-<li>​    ExpressRunnerKits    与expressRunner有关 ？</li>
-<li>​    myExpress    比较？</li>
-</ul>
-<p>schedule    都没有被用到</p>
-<ul>
-<li>​    AbstractBizHandler    </li>
-<li>​    BizProcessResult    biz：商业    定义了success、errorCode、errorMsg</li>
-<li>​    BizComponent    定义注解</li>
-<li>​    BizComponentFactory    业务组件的工厂</li>
-<li>​    BizProcessor    业务作业处理器</li>
-</ul>
-<p>support.json</p>
-<ul>
-<li>​    JsonKit    对象和json之间互转</li>
-<li>​    JsonParserForDto     parser：解析器     DTO：数据传输对象</li>
-</ul>
-<p>UUID</p>
-<ul>
-<li>RedisUUIDServiceRedis    UUID：通用唯一识别码</li>
-</ul>
-<h3 id="moudles"><a href="#moudles" class="headerlink" title="moudles"></a><code>moudles</code></h3><ul>
-<li>controller</li>
-</ul>
-<p>&nbsp;</p>
-<h2 id="ykym-app-api"><a href="#ykym-app-api" class="headerlink" title="ykym-app-api"></a>ykym-app-api</h2><p>空文件</p>
-<p>&nbsp;</p>
-<h2 id="ykym-app-common"><a href="#ykym-app-common" class="headerlink" title="ykym-app-common"></a>ykym-app-common</h2><h3 id="pom-xml-1"><a href="#pom-xml-1" class="headerlink" title="pom.xml"></a><code>pom.xml</code></h3><p>引用了这些依赖：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">com.app.kernel（内核？操作系统？）</span><br><span class="line">org.springframework</span><br><span class="line">commons-codec（处理常用的编码方法的工具类包）</span><br><span class="line">javabase64（加密与解密）</span><br></pre></td></tr></table></figure>
-
-<h3 id="util工具包"><a href="#util工具包" class="headerlink" title="util工具包"></a><code>util</code>工具包</h3><ul>
-<li><p><code>Base64Util</code></p>
-<table>
-<thead>
-<tr>
-<th align="center">方法名</th>
-<th align="center">功能</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">decode</td>
-<td align="center">BASE64字符串解码为二进制数据</td>
-</tr>
-<tr>
-<td align="center">encode</td>
-<td align="center">二进制数据编码为BASE64字符串</td>
-</tr>
-<tr>
-<td align="center">encodeFile</td>
-<td align="center">将文件编码为BASE64字符串</td>
-</tr>
-<tr>
-<td align="center">decodeToFile</td>
-<td align="center">BASE64字符串转回文件</td>
-</tr>
-<tr>
-<td align="center">fileToByte</td>
-<td align="center">文件转换为二进制数组</td>
-</tr>
-<tr>
-<td align="center">byteArrayToFile</td>
-<td align="center">二进制数据写文件</td>
-</tr>
-</tbody></table>
-</li>
-<li><p><code>HttpUtil</code></p>
-<table>
-<thead>
-<tr>
-<th align="center">方法名</th>
-<th align="center">功能</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">sendGet(String url, String param)</td>
-<td align="center">向指定URL发送GET方法的请求</td>
-</tr>
-<tr>
-<td align="center">sendGet(String url)</td>
-<td align="center">向指定URL发送GET方法的请求</td>
-</tr>
-<tr>
-<td align="center">sendPost</td>
-<td align="center">向指定URL发送POST方法的请求</td>
-</tr>
-</tbody></table>
-</li>
-<li><p><code>PropUtil</code></p>
-<p>属性文件读取工厂 ？</p>
-</li>
-<li><p><code>ProxyUtil</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取代理</span></span><br><span class="line">getProxy(String url, <span class="keyword">int</span> type)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>ValidateUtil</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 判断对象是否为空</span></span><br><span class="line">isEmpty(Object o)</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h2 id="ykym-app-server"><a href="#ykym-app-server" class="headerlink" title="ykym-app-server"></a>ykym-app-server</h2><h2 id="idea"><a href="#idea" class="headerlink" title=".idea"></a>.idea</h2><p>存放项目的配置信息，与代码内容无关</p>
-<p><img src="/../../assets/1562401319212.png" alt=".idea目录"></p>
-<table>
-<thead>
-<tr>
-<th align="center">文件名</th>
-<th align="center">Component name</th>
-<th align="center">内容</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">Project_Default.xml</td>
-<td align="center">Inspection Project Profile Manager</td>
-<td align="center">检查</td>
-</tr>
-<tr>
-<td align="center">compiler.xml</td>
-<td align="center">Compiler Configuration</td>
-<td align="center">编译器配置</td>
-</tr>
-<tr>
-<td align="center">misc.xml</td>
-<td align="center">Maven Projects Manager</td>
-<td align="center">maven管理</td>
-</tr>
-<tr>
-<td align="center">modules.xml</td>
-<td align="center">Project Module Manager</td>
-<td align="center">模块</td>
-</tr>
-<tr>
-<td align="center">vcs.xml</td>
-<td align="center">Vcs Directory Mappings</td>
-<td align="center">版本控制（svn）</td>
-</tr>
-<tr>
-<td align="center">workspace.xml</td>
-<td align="center">Change List Manager</td>
-<td align="center">？</td>
-</tr>
-</tbody></table>
-<p>&nbsp;</p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/07/06/ykym-structure/" data-id="cjxv5tnwe0000pwjja1bf9sas" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/07/09/helloworld/" data-id="cjxv6z65j00012sjjfjtegq8o" class="article-share-link">Share</a>
       
       
     </footer>
@@ -291,7 +129,7 @@
       <ul>
         
           <li>
-            <a href="/2019/07/06/ykym-structure/">ykym.platform结构</a>
+            <a href="/2019/07/09/helloworld/">helloworld</a>
           </li>
         
       </ul>
