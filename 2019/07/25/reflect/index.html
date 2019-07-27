@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="七月的第四周，来写反射。 反射是java很有意思的机制，有一点注入灵魂的感觉。  写程序可以认为是女娲捏泥人的过程，女娲和了一团稀泥，揉捏出一个小人，放在地上，活了。 你设身处地想象一下，如果你是女娲造的其中一个小人，在落地之前一直都没有活。 那在你还没活的时候，你是不知道外面的世界长什么样子的，也不知道将来会遇到哪些小人。你不知道还有小王、小张、小李一起被造出来，你也不知道他们是什么样子的。">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java中的反射机制">
+<meta property="og:url" content="http://yoursite.com/2019/07/25/reflect/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="七月的第四周，来写反射。 反射是java很有意思的机制，有一点注入灵魂的感觉。  写程序可以认为是女娲捏泥人的过程，女娲和了一团稀泥，揉捏出一个小人，放在地上，活了。 你设身处地想象一下，如果你是女娲造的其中一个小人，在落地之前一直都没有活。 那在你还没活的时候，你是不知道外面的世界长什么样子的，也不知道将来会遇到哪些小人。你不知道还有小王、小张、小李一起被造出来，你也不知道他们是什么样子的。">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://yoursite.com/assets/%E5%8F%8D%E5%B0%84%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93.png">
+<meta property="og:updated_time" content="2019-07-27T11:28:45.619Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java中的反射机制">
+<meta name="twitter:description" content="七月的第四周，来写反射。 反射是java很有意思的机制，有一点注入灵魂的感觉。  写程序可以认为是女娲捏泥人的过程，女娲和了一团稀泥，揉捏出一个小人，放在地上，活了。 你设身处地想象一下，如果你是女娲造的其中一个小人，在落地之前一直都没有活。 那在你还没活的时候，你是不知道外面的世界长什么样子的，也不知道将来会遇到哪些小人。你不知道还有小王、小张、小李一起被造出来，你也不知道他们是什么样子的。">
+<meta name="twitter:image" content="http://yoursite.com/assets/%E5%8F%8D%E5%B0%84%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>java中的反射机制</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/java/">Java</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/07/21/helloworld/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/07/25/reflect/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/07/25/reflect/&text=java中的反射机制"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/07/25/reflect/&is_video=false&description=java中的反射机制"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        java中的反射机制
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2019-07-25T07:13:45.000Z" itemprop="datePublished">2019-07-25</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/java/">java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>七月的第四周，来写反射。</p>
+<p>反射是java很有意思的机制，有一点注入灵魂的感觉。</p>
+<hr>
+<p>写程序可以认为是女娲捏泥人的过程，女娲和了一团稀泥，揉捏出一个小人，放在地上，活了。</p>
+<p>你设身处地想象一下，如果你是女娲造的其中一个小人，在落地之前一直都没有活。</p>
+<p>那在你还没活的时候，你是不知道外面的世界长什么样子的，也不知道将来会遇到哪些小人。你不知道还有小王、小张、小李一起被造出来，你也不知道他们是什么样子的。</p>
+<p>总之你只知道你自己的事情，你对其他的一无所知。</p>
+<p>这就是你在活之前的状态。</p>
+<hr>
+<p>写程序如果按照正常理解，就应该是程序运行，安分守己地完成自己的任务。</p>
+<p>如果写了一个名叫 <code>apple</code> 的类，程序运行的时候， <code>apple</code> 就应该安分守己地做 <code>apple</code> 的事情，它不会知道，在程序中还有 <code>banana</code> 、 <code>peach</code> 、 <code>watermelon</code> ，也没有办法知道，除了自己以外的其他类能够做什么。</p>
+<p>反射是做什么的呢？</p>
+<p>就像是你刚被女娲捏出形状时，女娲对你说：“以后你将遇到一个叫‘小王’的人，记得找他玩。”然后你活了之后，果然找到了小王，愉快地跟他玩了起来。</p>
+<p>程序在运行的时候，具有了访问别人的能力，甚至还能用别人的东西，这就是反射。</p>
+<hr>
+<p>反射（reflect）是一个让人听了一头雾水的名字，但实际上确实也没有别的更好的表述方法，这就是一种比较难以形容的特性。如果暂时忘了这个名字，直接去理解这种特性，隐约理解之后再回来看反射这两个字，会稍微容易一些。</p>
+<p>维基百科对于反射的描述，还是大概能看懂的，不然你试着搜搜百度百科的解释，当你精通概念之后回看才能勉强看懂。维基百科是这么说的：</p>
+<blockquote>
+<p>在计算机科学中，反射是指计算机程序在运行时（Run time）可以访问、检测和修改它本身状态或行为的一种能力。用比喻来说，反射就是程序在运行的时候能够“观察”并且修改自己的行为。</p>
+</blockquote>
+<p>java是一门具有动态性的语言，反射就是动态性的典型代表，这里的动态，说的就是程序正在运行。程序一边运行着，一边去查看自己的状态，然后做出修改，全程不停，就是动态。（但是java只能说有动态性，不能算动态语言）</p>
+<hr>
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+
+
+<p><img src="/../../assets/%E5%8F%8D%E5%B0%84%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93.png" alt="1564150307754"></p>
+<p>参考文献：</p>
+<p><a href="https://www.imooc.com/article/8021" target="_blank" rel="noopener">https://www.imooc.com/article/8021</a></p>
+<p><a href="https://docs.oracle.com/javase/tutorial/reflect/index.html" target="_blank" rel="noopener">https://docs.oracle.com/javase/tutorial/reflect/index.html</a></p>
+<p><a href="https://zh.wikipedia.org/wiki/反射_(计算机科学)" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/%E5%8F%8D%E5%B0%84_(%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6)</a></p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 pz
+  </div>
+  <div class="footer-right">
+    <nav>
+      pz阁下的blog
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+
