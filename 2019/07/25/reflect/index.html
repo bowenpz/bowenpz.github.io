@@ -14,12 +14,13 @@
 <meta property="og:site_name" content="这里是pz阁下">
 <meta property="og:description" content="七月的第四周，来写反射。 反射是java很有意思的机制，有一点注入灵魂的感觉。  写程序可以认为是女娲捏泥人的过程，女娲和了一团稀泥，揉捏出一个小人，放在地上，活了。 你设身处地想象一下，如果你是女娲造的其中一个小人，在落地之前一直都没有活。 那在你还没活的时候，你是不知道外面的世界长什么样子的，也不知道将来会遇到哪些小人。你不知道还有小王、小张、小李一起被造出来，你也不知道他们是什么样子的。">
 <meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E5%8F%8D%E5%B0%84%E5%89%8D.jpg">
 <meta property="og:image" content="http://hellopz.netlify.com/assets/%E5%8F%8D%E5%B0%84%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93.png">
-<meta property="og:updated_time" content="2019-07-27T11:28:45.619Z">
+<meta property="og:updated_time" content="2019-07-29T11:26:14.270Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java中的反射机制">
 <meta name="twitter:description" content="七月的第四周，来写反射。 反射是java很有意思的机制，有一点注入灵魂的感觉。  写程序可以认为是女娲捏泥人的过程，女娲和了一团稀泥，揉捏出一个小人，放在地上，活了。 你设身处地想象一下，如果你是女娲造的其中一个小人，在落地之前一直都没有活。 那在你还没活的时候，你是不知道外面的世界长什么样子的，也不知道将来会遇到哪些小人。你不知道还有小王、小张、小李一起被造出来，你也不知道他们是什么样子的。">
-<meta name="twitter:image" content="http://hellopz.netlify.com/assets/%E5%8F%8D%E5%B0%84%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93.png">
+<meta name="twitter:image" content="http://hellopz.netlify.com/assets/%E5%8F%8D%E5%B0%84%E5%89%8D.jpg">
     
     
         
@@ -153,37 +154,58 @@
 </blockquote>
 <p>java是一门具有动态性的语言，反射就是动态性的典型代表，这里的动态，说的就是程序正在运行。程序一边运行着，一边去查看自己的状态，然后做出修改，全程不停，就是动态。（但是java只能说有动态性，不能算动态语言）</p>
 <hr>
-<br>
+<p>反射的原理是较为复杂的，这里面涉及到java虚拟机相关的内容，我基本也是小白，尽量按照自己的理解写清楚。</p>
+<p>打开编程软件之后，我首先创建一个文件，然后在里面写上一段代码，例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hello</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"Hello word!"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<br>
+<p>这个文件，它的文件名是<code>Hello.java</code>（就像是新建一个word文件，随便写了句话，保存之后文件名叫做<code>Hello.doc</code>一样），现在这个文件的后缀名是<code>.java</code>，这是我们的源代码文件。</p>
+<p>你一定听过编译这个词，编译的意思是说，你写完代码之后，会有一种叫做编译器的东西帮我们把代码变成一堆010101……的二进制数字文件，也就是翻译成机器语言。编译器翻译完，会生成一个<code>Hello.class</code>文件，这时这个文件的后缀名是<code>.class</code>，这是我们的二进制流文件。</p>
+<p>现在有了翻译给机器听的<code>Hello.class</code>文件之后，这个文件就要加载进java虚拟机当中，让电脑自己去读程序运行了。java虚拟机读取<code>Hello.class</code>文件的过程，是<font color="#32CD32">类加载过程</font>。</p>
+<p>我们今天说的反射，它的原理就是这个<font color="#32CD32">类加载过程</font>。</p>
+<p><img src="/../../assets/%E5%8F%8D%E5%B0%84%E5%89%8D.jpg" alt="反射前"></p>
+<p>类加载的具体过程比较复杂，涉及到java虚拟机的很多内容，我们来说简化的过程。</p>
+<p>简单来说呢，<code>.java</code>文件里写了很多代码，但是归归类可以分成这么几种：</p>
+<ul>
+<li>干垃圾</li>
+<li>湿垃圾</li>
+<li>有害垃圾</li>
+<li>可回收垃圾</li>
+</ul>
+<p>java虚拟机中，也有相对应的区域，来分类存放写好的代码（以二进制数字的形式）：</p>
+<ul>
+<li>干垃圾桶</li>
+<li>湿垃圾桶</li>
+<li>有害垃圾桶</li>
+<li>可回收垃圾桶</li>
+</ul>
+<p>类加载就是一一对应，垃圾分类的过程。</p>
+<p>反射就是要在垃圾分类之后，问垃圾管理员要垃圾。</p>
+<blockquote>
+<p>你好，我是收废品的，请问有废易拉罐吗，给我一个。</p>
+</blockquote>
+<hr>
+<p>我们再来重新看一下维基百科对于反射的定义：反射是指计算机程序在运行时可以访问、检测和修改它本身状态或行为的一种能力。</p>
+<p>比如我想知道，某一个类，它叫什么，它有哪些成员变量。</p>
+<p>java虚拟机会在类加载过程中，生成一个Class类的对象，比如我之前写的那个<code>Hello.java</code>文件，java虚拟机将实例化一个Hello对象，我们之后可用直接用这个对象的各个方法，来进行反射操作（我们终于走到反射了）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Class testClass = Hello.class;</span><br><span class="line"><span class="comment">// 获取类的名字</span></span><br><span class="line">testClass.getName();</span><br><span class="line"><span class="comment">// 获取类的成员方法</span></span><br><span class="line">testClass.getDeclaredFields();</span><br></pre></td></tr></table></figure>
 
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-
-
+<p>所以现在，我们通过反射，可以获知某一个类叫什么名字、父类是什么、限定符是什么、有什么成员变量、有什么构造方法……等等关于这个类的一切，我想知道什么，全都可以知道了。</p>
+<p>那么我们现在梳理一下步骤：</p>
+<ol>
+<li>实例化一个Class类</li>
+<li>调用这个Class类的方法，以获取到想要的东西</li>
+</ol>
+<p>如果Class类的功能，你觉得不够用，或者用起来不顺手，还有别的几种类可以去用，分别是Constructor（构造方法）、Field（成员变量）、Method（成员方法）和其他。</p>
+<p>相关的方法列表有人帮忙总结出来了，详见下图。</p>
 <p><img src="/../../assets/%E5%8F%8D%E5%B0%84%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93.png" alt="1564150307754"></p>
+<hr>
 <p>参考文献：</p>
 <p><a href="https://www.imooc.com/article/8021" target="_blank" rel="noopener">https://www.imooc.com/article/8021</a></p>
 <p><a href="https://docs.oracle.com/javase/tutorial/reflect/index.html" target="_blank" rel="noopener">https://docs.oracle.com/javase/tutorial/reflect/index.html</a></p>
 <p><a href="https://zh.wikipedia.org/wiki/反射_(计算机科学)" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/%E5%8F%8D%E5%B0%84_(%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6)</a></p>
+<br>
+
+<p>第一篇怎么写的这么烂呜呜呜……不改了，没时间了，到新的一周了= =</p>
 
   </div>
 </article>
