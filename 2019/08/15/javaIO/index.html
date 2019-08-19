@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="八月的第三周，来学习java IO系统。 IO是Input（输入）和Output（输出）的简称，合在一起就是输入输出。我们这里说的输入输出，都是相对于java程序而言的，我把硬盘中的文件读到java程序里，这是输入；我把java程序中的图片上传到博客里，这是输出。了解输入输出的第一件事，就是搞清楚入和出的方向是什么。 IO系统是一个超级庞大的系统，不论是方法（函数）还是设计模式，光从数量上就令">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java IO">
+<meta property="og:url" content="http://hellopz.netlify.com/2019/08/15/javaIO/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="八月的第三周，来学习java IO系统。 IO是Input（输入）和Output（输出）的简称，合在一起就是输入输出。我们这里说的输入输出，都是相对于java程序而言的，我把硬盘中的文件读到java程序里，这是输入；我把java程序中的图片上传到博客里，这是输出。了解输入输出的第一件事，就是搞清楚入和出的方向是什么。 IO系统是一个超级庞大的系统，不论是方法（函数）还是设计模式，光从数量上就令">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/IO%E5%9F%BA%E7%A1%80%E7%B1%BB.PNG">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E6%B5%81.png">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/1566051405465.png">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/IO%E5%9F%BA%E7%A1%80%E7%B1%BB%EF%BC%88%E5%88%86%E7%B1%BB%EF%BC%89.jpg">
+<meta property="og:updated_time" content="2019-08-18T15:43:31.308Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java IO">
+<meta name="twitter:description" content="八月的第三周，来学习java IO系统。 IO是Input（输入）和Output（输出）的简称，合在一起就是输入输出。我们这里说的输入输出，都是相对于java程序而言的，我把硬盘中的文件读到java程序里，这是输入；我把java程序中的图片上传到博客里，这是输出。了解输入输出的第一件事，就是搞清楚入和出的方向是什么。 IO系统是一个超级庞大的系统，不论是方法（函数）还是设计模式，光从数量上就令">
+<meta name="twitter:image" content="http://hellopz.netlify.com/assets/IO%E5%9F%BA%E7%A1%80%E7%B1%BB.PNG">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>java IO</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/java/">Java</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/08/13/Software Architecture/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2019/08/15/javaIO/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2019/08/15/javaIO/&text=java IO"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2019/08/15/javaIO/&is_video=false&description=java IO"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#File类"><span class="toc-number">1.</span> <span class="toc-text">File类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#InputStream类、OutputStream类"><span class="toc-number">2.</span> <span class="toc-text">InputStream类、OutputStream类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-传输的是什么东西？"><span class="toc-number">2.1.</span> <span class="toc-text">1. 传输的是什么东西？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-流是什么？"><span class="toc-number">2.2.</span> <span class="toc-text">2. 流是什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-这两个类怎么用？"><span class="toc-number">2.3.</span> <span class="toc-text">3.  这两个类怎么用？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Reader类、Writer类"><span class="toc-number">3.</span> <span class="toc-text">Reader类、Writer类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#装饰者模式"><span class="toc-number">4.</span> <span class="toc-text">装饰者模式</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        java IO
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2019-08-15T01:58:38.000Z" itemprop="datePublished">2019-08-15</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/java/">java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>八月的第三周，来学习java IO系统。</p>
+<p>IO是Input（输入）和Output（输出）的简称，合在一起就是<code>输入输出</code>。我们这里说的输入输出，都是相对于java程序而言的，我把硬盘中的文件读到java程序里，这是输入；我把java程序中的图片上传到博客里，这是输出。了解输入输出的第一件事，就是搞清楚<font color="#32CD32"><strong>入</strong></font>和<font color="#32CD32"><strong>出</strong></font>的方向是什么。</p>
+<p>IO系统是一个超级庞大的系统，不论是方法（函数）还是设计模式，光从数量上就令人望而生畏。这周尽量多学，学到哪里算哪里吧。</p>
+<hr>
+<p>任何有关java IO的学习，永远是从5个基础的类开始的。</p>
+<p><img src="/assets/IO%E5%9F%BA%E7%A1%80%E7%B1%BB.PNG" alt="IO基础类"></p>
+<p>其中最为基础的是前三个：File类、InputStream类、OutputStream类，它们分别代表着<code>文件</code>、<code>输入</code>、<code>输出</code>。</p>
+<p>举一个简单的例子：我把<code>文件</code>读取到java程序中，这里就是在<code>输入</code>，而我保存数据到<code>文件</code>中去，这里就是在<code>输出</code>。</p>
+<p>下面两个类：Reader类、Writer类，同样是输入和输出，区别在于这两个传输的单位是字符，而前面那两个，传输的是字节。</p>
+<h1 id="File类"><a href="#File类" class="headerlink" title="File类"></a>File类</h1><p>File者，文件也。</p>
+<p>但是File类实际上可以表示两方面：文件、文件夹（目录）。</p>
+<p>File类是一个盘古开天辟地时的类，从JDK1.0就存在了。最常见的实例化方式是把<code>文件路径</code>输入进去，就像这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">File file = <span class="keyword">new</span> File(<span class="string">"src/test.txt"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>路径就是文件在计算机中的位置，有绝对路径和相对路径之分，比如这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">绝对路径：<span class="string">"C:/JavaProgram/javaIO/src/test.txt"</span></span><br><span class="line">相对路径：                      <span class="string">"src/test.txt</span></span><br></pre></td></tr></table></figure>
+
+<p><font color="#32CD32">相对</font>的意思就是，已经默认在某一个文件夹中了，前面那些路径就不用写了。</p>
+<p>小总结一下：写清楚路径，通过路径拿到一个文件。</p>
+<p>我认为对File类认识到这个地步就足够了。</p>
+<h1 id="InputStream类、OutputStream类"><a href="#InputStream类、OutputStream类" class="headerlink" title="InputStream类、OutputStream类"></a>InputStream类、OutputStream类</h1><p>InputStream类、OutputStream类，这两个类是输入类和输出类，in是输入，out是输出，很明显。</p>
+<p>这两个类也是盘古开天辟地时候的类，在JDK1.0就存在了。</p>
+<p>（刚才忘了说，JDK是java开发的工具包，JDK1.0就是第一代开发工具包的意思，现在主流的开发包处在第7、8代，最新的已经到第12代了。）</p>
+<p>我认为要了解清楚这两个类，需要搞清楚三件事情。</p>
+<h2 id="1-传输的是什么东西？"><a href="#1-传输的是什么东西？" class="headerlink" title="1. 传输的是什么东西？"></a>1. 传输的是什么东西？</h2><p>上古类就该有上古类的样子，这两个类在输入输出时，传输的东西那都是最最最基本的单位：字节（就是1010……那串数字）。</p>
+<p>因此InputStream的名字其实不是<code>输入</code>，而是<code>字节输入流</code>，OutputStream也不是<code>输出</code>，而是<code>字节输出流</code>。</p>
+<h2 id="2-流是什么？"><a href="#2-流是什么？" class="headerlink" title="2. 流是什么？"></a>2. 流是什么？</h2><p>流（stream），这个概念基本就是java IO系统的核心了。</p>
+<p>InputStream就是Input流，OutputStream就是Output流，想搞清楚这两个类是怎么工作的，最重要的就是理解“流”是什么。</p>
+<p>我认为，“流”是一条中介管道，是连通java程序与外部存储的管道。它根本就没有流动，它是静态的，是装载着数据的一条中介管道。</p>
+<p><img src="/assets/%E6%B5%81.png" alt="流"></p>
+<p>如图，我要把数据，从<code>java程序</code>传输到<code>存储硬盘</code>中，中途就会经过一条漫长的<code>管道</code>。这条管道有一个一个的小格子，每一个格子里面都放着一字节的数据。这整条管道，就叫做流。如果是一条输出管道，那就是输出流，如果是一条输入管道，那就是输入流。</p>
+<p>我觉得“流”这个名字很具有迷惑性，让人感觉好像是数据在流动一样，但是我看了几天之后觉得并没有，这就是一条静态的、被分隔为很多很多小格子的，管道，每一个格子里面装着一字节的数据。（但是底层应该不是这么实现的，我是做等效看待了）</p>
+<ul>
+<li>如果是输入流，那么把文件扔进管道，管道自动地将文件中的数据，按顺序一字节一字节地填充到管道的一个个小格子当中，每一格都是一字节的数据。数据并不会自动流过去，而是java程序自己顺着格子，拿走自己想要的数据。</li>
+<li>如果是输出流，那么把java程序数据扔进管道，管道自动地将想要输出出去的数据，按顺序一字节一字节地填充到管道的一个个小格子当中，每一格都是一字节的数据。同样，数据也不会自动流到硬盘当中，而是有专门的函数，把这些数据顺着格子拷贝到硬盘里。</li>
+</ul>
+<p>说了这么多虚的，该看看具体的代码了。</p>
+<h2 id="3-这两个类怎么用？"><a href="#3-这两个类怎么用？" class="headerlink" title="3.  这两个类怎么用？"></a>3.  这两个类怎么用？</h2><p>我们用InputStream类入手，看一个简单的例子。</p>
+<p>我现在写入两行代码，将文件放进输入流当中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">File file = <span class="keyword">new</span> File(<span class="string">"src/test.txt"</span>);</span><br><span class="line">InputStream inputStream = <span class="keyword">new</span> FileInputStream(file);</span><br></pre></td></tr></table></figure>
+
+<p>这两行代码，可以理解为干了这么件事：</p>
+<p>现在有一个txt文件，里面就写了一句英文，“Hello,pz.”，然后把这个文件扔进输入流中，输入流作为一条管道，分出了9个格子，每个格子放进去一个字母或是标点符号，就像是下面这张图一样。</p>
+<p><img src="/assets/1566051405465.png" alt="1566051405465"></p>
+<p>（数据是以010101……这种二进制数来表示的，比如字母H的二进制表示是01001000，转换成十进制后就是72，也就是上图管道中的第一个格子）</p>
+<p>现在流已经存在了，要开始读取数据了。</p>
+<p>InputStream类有一个方法read()，专门用来读取数据。但是由于java多态的特性，这一个read方法有三种使用方式。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">inputStream.read();</span><br><span class="line">inputStream.read(<span class="keyword">byte</span>[] b);</span><br><span class="line">inputStream.read(<span class="keyword">byte</span>[] b, <span class="keyword">int</span> off, <span class="keyword">int</span> len);</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>空参read()方法：</p>
+<p>每次读一个格子的数据（读取一字节），并且返回这个数据。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i = -<span class="number">1</span>;</span><br><span class="line">i = inputStream.read();</span><br></pre></td></tr></table></figure>
+
+<p>以上面两行代码为例，我首先声明了<code>i</code>是一个整型数，然后去读取输入流的read()方法，第一次会读到72（字母H），然后如果你再执行一遍read()方法，就能读到下一个格子里的101（字母e），再执行一遍read()方法，就能读到108（字母l）……一直读到最后一个格子里的46（标点符号.），再读的话就没有东西了，就会返回-1。</p>
+<p>通过空参read()方法，能够每次读取一字节的数据，当读完时会返回-1。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 每次读取一个字节，然后在控制台打印出来这个字节，直到读空为止</span></span><br><span class="line"><span class="keyword">int</span> i = -<span class="number">1</span>;</span><br><span class="line"><span class="keyword">while</span> ((i = inputStream.read()) != -<span class="number">1</span>) &#123;</span><br><span class="line">	System.out.print((<span class="keyword">char</span>) i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>参数是一个数组的read()方法：</p>
+<p>每次读取数组长度的数据，返回读取的长度，同时把数据存放在数组中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i = -<span class="number">1</span>;</span><br><span class="line"><span class="keyword">byte</span>[] b = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span>];</span><br><span class="line">i = inputStream.read(b);</span><br></pre></td></tr></table></figure>
+
+<p>请注意，这里非常有迷惑性。</p>
+<p>我们刚才使用的read()方法，用<code>i</code>去读取，<code>i</code>里面直接存放数据。</p>
+<p>但是，我们现在把一个数组当做参数，扔进read()方法里，还是用<code>i</code>去读取，但是现在<code>i</code>里面存放的，是读取的长度。</p>
+<p>比如说上面写的这三行代码，依旧是声明了<code>i</code>是一个整型数，同时声明了<code>b</code>是一个长度为10的字节数组。现在我们去使用read()方法，<code>i</code>的值不再是72（字母H）了，而是9，因为输出流的长度是9（“Hello,pz.”一共九个字节)，我们用一个长度是10的数组去读取它，一口气把这9个字节全读完了。现在数据不装在<code>i</code>里面了，而是直接装在数组<code>b</code>里面。</p>
+<p>也就是说，现在<code>i == 9</code>，<code>b == {72, 101, 108, 108, 111, 44, 112, 122, 46, 0}</code>，<code>b</code>这个数组，长度为10，前面9个全都存放着字节数据，最后一位没赋值所以是0。</p>
+</li>
+<li><p>参数是一个数组、两个整型数的read()方法：</p>
+<p>依旧是把数据放在数组里面，但是只用数组的一部分，返回值依旧是读取的长度。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i = -<span class="number">1</span>;</span><br><span class="line"><span class="keyword">byte</span>[] b = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span>];</span><br><span class="line">i = inputStream.read(b, <span class="number">2</span>, <span class="number">5</span>);</span><br></pre></td></tr></table></figure>
+
+<p>跟第二种read()方法比，现在前两行的声明过程不变，第三行读取的时候，要求从数组<code>b</code>的下标为2（因为第1个数下标是0，下标为2也就是第3个数）的地方开始存放数据，一直放5个数据。</p>
+<p>对比一下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">i = inputStream.read(b);        <span class="comment">// b : &#123;72, 101, 108, 108, 111, 44 , 112, 122, 46, 0&#125;</span></span><br><span class="line">i = inputStream.read(b, <span class="number">2</span>, <span class="number">5</span>);	<span class="comment">// b : &#123;0,  0,   72,  101, 108, 108, 111, 0,   0,  0&#125;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>输入流，说完了。</p>
+<p>(我知道我说得很烂，但是我不想重写了= =)</p>
+<p>那么我们快速过一遍输出流。</p>
+<p>OutputStream输出流同样输出的是字节，输出时用到的方法叫做write()，它同样有三种表现方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">outputStream.write(<span class="keyword">int</span> b);                       <span class="comment">// 一次写入一个字节</span></span><br><span class="line">outputStream.write(<span class="keyword">byte</span>[] b);                    <span class="comment">// 一次写入一个数组的字节</span></span><br><span class="line">outputStream.write(<span class="keyword">byte</span>[] b, <span class="keyword">int</span> off, <span class="keyword">int</span> len);  <span class="comment">// 一次写入数组中从off位置开始的len个字节</span></span><br></pre></td></tr></table></figure>
+
+<p>使用起来和输入流没什么区别，只不过一个是读取，一个是写入。</p>
+<h1 id="Reader类、Writer类"><a href="#Reader类、Writer类" class="headerlink" title="Reader类、Writer类"></a>Reader类、Writer类</h1><p>Reader类、Writer类，这两个类也是输入和输出类，read读，是输入，write写，是输出，也很明显。</p>
+<p>这两个类不是盘古开天辟地时期的类，而是女娲造人时候的类，因为它们两个是JDK1.1出现的。</p>
+<p>跟InputStream类、OutputStream类相比，区别在于，前面两个是输入输出字节，这两个是输入输出字符。</p>
+<br>
+
+<p>我们来谈一下字节和字符。</p>
+<p>我认为可以这么理解，字节是计算机认识的文字，字符是人类认识的文字。比如计算机一看01001000这八个二进制数字，就知道这是一个字节，而我们人类一看到H，就知道这是一个字母（也就是一个字符）。</p>
+<p>字节和字符之间，是存在着对应关系的（术语叫做映射），一个字符就应该对应着一个（或几个）字节，比如字符H，对应的就是01001000这8个二进制数所组成的一个字节。这种对应关系我们叫编码和解码，其实就是“翻译翻译”，<code>字节 → 字符 ：解码</code>，<code>字符 → 字节 ：编码</code>，也就是<code>人话</code>和<code>机话</code>互相翻译，要不然人类说一个字母H，计算机怎么存下来呢？</p>
+<p>一个字节有8个二进制位，你算一算，2的8次方也就256，也就是说一个字节最多也就只有256种不同的情况，字符有数十万个，对应不过来啦，所以一个字符一般是对应两三个字节。（如果是英文，那一个字节256种情况倒也是够用了）</p>
+<p>有许多不同标准的字符集，比如中国字字符集、英文字符集、欧洲字符集等等，我把相关信息列在表格中：</p>
+<table>
+<thead>
+<tr>
+<th>编码类型</th>
+<th>解释</th>
+<th>1个字符占几个字节</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ASCII</td>
+<td>最基础的字符集，有字母和符号等</td>
+<td>1</td>
+</tr>
+<tr>
+<td>GBK</td>
+<td>中国字字符集（GB就是国标）</td>
+<td>中文字符占 2 个字节，英文字符占 1 个字节</td>
+</tr>
+<tr>
+<td>ISO-8859-1</td>
+<td>大部分的欧美字符</td>
+<td>1</td>
+</tr>
+<tr>
+<td>UTF-8</td>
+<td>Unicode编码的一种<br>最为常用，比如字符串转byte[]时就是</td>
+<td>变长编码，1-6个字节都有<br>中文字符占 3 个字节，英文字符占 1 个字节</td>
+</tr>
+<tr>
+<td>UTF-16</td>
+<td>Unicode编码的一种<br>有UTF-16be和UTF-16le两种<br>be就是Big Endian（大端）<br>le就是Little Endian（小端）</td>
+<td>变长编码（2或4），但是多数是2<br>java内存编码使用UTF-16be编码<br>因为char类型使用UTF-16be编码<br>中文字符和英文字符都占两个字节</td>
+</tr>
+</tbody></table>
+<p>我不打算写太多关于字符与字节的东西，只是简单记录一下。</p>
+<br>
+
+<p>好了我们说回输入输出。</p>
+<ul>
+<li>InputStream：字节输入流</li>
+<li>OutputStream：字节输出流</li>
+<li>Reader：字符输入流</li>
+<li>Writer：字符输出流</li>
+</ul>
+<p>InputStream类、OutputStream类输入输出的是<code>byte</code>。</p>
+<p>Reader类、Writer类输入输出的是<code>char</code>。</p>
+<p>就这点区别，没啥别的了。</p>
+<p>好吧我们还是惯例看看使用的方法：</p>
+<ul>
+<li><p>Reader类的read()方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">reader.read();</span><br><span class="line">reader.read(<span class="keyword">char</span>[] cbuf);</span><br><span class="line">reader.read(<span class="keyword">char</span>[] cbuf, <span class="keyword">int</span> off, <span class="keyword">int</span> len);</span><br><span class="line">reader.read(CharBuffer target);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Writer类的write()方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">writer.write();</span><br><span class="line">writer.write(<span class="keyword">char</span>[] cbuf);</span><br><span class="line">writer.write(<span class="keyword">char</span>[] cbuf, <span class="keyword">int</span> off, <span class="keyword">int</span> len);</span><br><span class="line">writer.write(String str);</span><br><span class="line">writer.write(String str, <span class="keyword">int</span> off, <span class="keyword">int</span> len);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>好吧，看起来多了几个方法。</p>
+<p>但说实话，我觉得本质上没什么区别，无非就是又包装了一下，用起来更顺手一些。流的使用上，是没有区别的。</p>
+<p>所以这两个类，我们就不再说了。</p>
+<br>
+
+<br>
+
+
+
+
+
+
+
+
+
+
+
+<p>让我们重看一遍一开始的那张图，这五个最为基础的类，可以再分成三类，一类跟文件打交道，一类跟字节打交道，一类跟字符打交道。</p>
+<p><img src="/assets/IO%E5%9F%BA%E7%A1%80%E7%B1%BB%EF%BC%88%E5%88%86%E7%B1%BB%EF%BC%89.jpg" alt="IO基础类分类"></p>
+<hr>
+<p>在表述逻辑无比混乱地写完java IO基础的五个类之后，我们来学习装饰者模式。（啊真的想重写，可是又没力气）</p>
+<h1 id="装饰者模式"><a href="#装饰者模式" class="headerlink" title="装饰者模式"></a>装饰者模式</h1><p>装饰者模式是这样的，我现在有一个类，但是我发现这个类的功能有限，我想给这个类增加几个功能，那么我就在这个类的外面，再套上一层，这么包装完之后呢，这个“被装饰过”的类，不单具有原先的功能，还有了一些新的功能。</p>
+<p>装饰者模式的主要动作就是，有了一个类，给它套上一层装饰，变成了一个新的类，这个类增加了功能。</p>
+<p>我们拿<code>字节输入流</code>举例子。</p>
+<p>我们在使用InputStream类时，java程序是一字节一字节地读取数据的，这一个个读，其实是很慢的。如果java程序能加一层缓存，每一次多读一点数据，就会快一些。</p>
+<p>我们现在希望实现的功能是：在原先InputStream类的基础之上，增加一个缓存的功能，因此我们是这么实现的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">InputStream is = <span class="keyword">new</span> FileInputStream(file);</span><br><span class="line">BufferedInputStream bs = <span class="keyword">new</span> BufferedInputStream(is);</span><br></pre></td></tr></table></figure>
+
+<p>首先还是先实例化了一个InputStream对象<code>is</code>，接着我们装饰了这个<code>is</code>，让它变成一个BufferedInputStream对象<code>bs</code>（就是一个buffer过的InputStream）。那么现在，我们不再去操作<code>is</code>，而是去操作<code>bs</code>了，<code>bs</code>是一个具有缓存功能的<code>is</code>，是一个更强大的<code>is</code>。</p>
+<p>（BufferedInputStream类具体强大在哪里呢？它也没多加什么新方法，它就是运行速度更快，快很多很多，读大文件的时候很明显。）</p>
+<p>java IO系统中，装饰者模式比比皆是，全都是拿到一个输入/输出类，然后装饰一下变成一个新的类，去操作这个新的类，去实现更多的功能。</p>
+<p>装饰者模式是一种设计模式，它的好处在于，如果我想给某些类实现一个新的功能，可以不通过继承，而是通过一个中间类去装饰一下即可。</p>
+<p>比如现在有一个<code>运动类</code>，运动类下面有很多子类：<code>跑步类</code>、<code>打球类</code>、<code>跳绳类</code>……我现在希望每一个运动类的子类，这么多类，都去实现<code>运动完之后拉伸</code>的方法。按照原来的思路，我要把所有子类全部都继承一遍，每一个新继承的类都多加上这么一个<code>运动完之后拉伸</code>的方法，那不是累死了吗。通过装饰者模式，我可以创建一个<code>运动后拉伸类</code>，这个类读取一个运动类，随便哪个子类都可以，在这一装饰之下，就新增了拉伸的方法。这样做动静很小。</p>
+<p>java IO系统这么青睐装饰者模式，主要是也是因为，特喵的java的IO相关类，实在是太多了……</p>
+<br>
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 pz
+  </div>
+  <div class="footer-right">
+    <nav>
+      pz阁下的blog
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+
