@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="九月的第二周，来看 Jpa 注解开发实体关联，Spring Cloud 下周再说。 被 Jpa 实体关联搞得有点烦，两个月了也没完全清晰，特来写一篇文章把常见关联情况都试一遍。  从ORM框架说起。 ORM（ Object-Relational Mapping ），对象关系映射。我们平常操纵的数据库都是关系型数据库（关系：表与表之间存在关系，例如从【部门表】可以查到【员工表】）。 Java 是">
+<meta name="keywords" content="java,Weekly Post">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jpa 实体关联注解">
+<meta property="og:url" content="http://hellopz.netlify.com/2019/09/08/jpa实体关联注解/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="九月的第二周，来看 Jpa 注解开发实体关联，Spring Cloud 下周再说。 被 Jpa 实体关联搞得有点烦，两个月了也没完全清晰，特来写一篇文章把常见关联情况都试一遍。  从ORM框架说起。 ORM（ Object-Relational Mapping ），对象关系映射。我们平常操纵的数据库都是关系型数据库（关系：表与表之间存在关系，例如从【部门表】可以查到【员工表】）。 Java 是">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E5%8D%95%E5%90%91%E4%B8%80%E5%AF%B9%E4%B8%80.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E4%B8%80%E5%AF%B9%E4%B8%80mappedBy.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E4%B8%80%E5%AF%B9%E5%A4%9A@JoinColumn.png">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/@JoinTable.png">
+<meta property="og:updated_time" content="2019-09-10T07:34:04.352Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="jpa 实体关联注解">
+<meta name="twitter:description" content="九月的第二周，来看 Jpa 注解开发实体关联，Spring Cloud 下周再说。 被 Jpa 实体关联搞得有点烦，两个月了也没完全清晰，特来写一篇文章把常见关联情况都试一遍。  从ORM框架说起。 ORM（ Object-Relational Mapping ），对象关系映射。我们平常操纵的数据库都是关系型数据库（关系：表与表之间存在关系，例如从【部门表】可以查到【员工表】）。 Java 是">
+<meta name="twitter:image" content="http://hellopz.netlify.com/assets/%E5%8D%95%E5%90%91%E4%B8%80%E5%AF%B9%E4%B8%80.jpg">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>jpa 实体关联注解</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/Weekly-Post/">Weekly Post</a></li>
+         
+          <li><a href="/tags/tips/">Tips</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/09/01/递归/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2019/09/08/jpa实体关联注解/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2019/09/08/jpa实体关联注解/&text=jpa 实体关联注解"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2019/09/08/jpa实体关联注解/&is_video=false&description=jpa 实体关联注解"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#注解填写属性"><span class="toc-number">1.</span> <span class="toc-text">注解填写属性</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#OneToOne-一对一映射"><span class="toc-number"></span> <span class="toc-text">@OneToOne 一对一映射</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#JoinColumn"><span class="toc-number">1.</span> <span class="toc-text">@JoinColumn</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OneToOne-mappedBy-“…”"><span class="toc-number">2.</span> <span class="toc-text">@OneToOne(mappedBy = “…”)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#OneToMany-一对多映射"><span class="toc-number"></span> <span class="toc-text">@OneToMany 一对多映射</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#JoinColumn-1"><span class="toc-number">1.</span> <span class="toc-text">@JoinColumn</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OneToMany-mappedBy-“…”"><span class="toc-number">2.</span> <span class="toc-text">@OneToMany(mappedBy = “…”)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ManyToOne-多对一映射"><span class="toc-number"></span> <span class="toc-text">@ManyToOne 多对一映射</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#JoinColumn-2"><span class="toc-number">1.</span> <span class="toc-text">@JoinColumn</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#❌-mappedBy"><span class="toc-number">2.</span> <span class="toc-text">❌ mappedBy</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ManyToMany-多对多映射"><span class="toc-number"></span> <span class="toc-text">@ManyToMany 多对多映射</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#JoinTable"><span class="toc-number">1.</span> <span class="toc-text">@JoinTable</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ManyToMany-mappedBy-“…”"><span class="toc-number">2.</span> <span class="toc-text">@ManyToMany(mappedBy = “…”)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JoinColumn-3"><span class="toc-number"></span> <span class="toc-text">@JoinColumn</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#mappedBy-“…”"><span class="toc-number"></span> <span class="toc-text">mappedBy = “…”</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#坑"><span class="toc-number"></span> <span class="toc-text">坑</span></a>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        jpa 实体关联注解
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2019-09-08T12:08:43.000Z" itemprop="datePublished">2019-09-08</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Weekly-Post/">Weekly Post</a>, <a class="tag-link" href="/tags/java/">java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>九月的第二周，来看 Jpa 注解开发实体关联，Spring Cloud 下周再说。</p>
+<p>被 Jpa 实体关联搞得有点烦，两个月了也没完全清晰，特来写一篇文章把常见关联情况都试一遍。</p>
+<hr>
+<p>从ORM框架说起。</p>
+<p>ORM（ Object-Relational Mapping ），对象关系映射。我们平常操纵的数据库都是关系型数据库（关系：表与表之间存在关系，例如从【部门表】可以查到【员工表】）。 Java 是一门面向对象的语言，它希望与对象打交道，而不是与数据库、与表打交道，通过 <code>ORM （对象关系映射）</code> 实现对象之间建立起关系。</p>
+<p>术语一些： ORM，把关系数据库的表结构映射到对象上。</p>
+<br>
+
+<p>我们首先厘清一下概念。</p>
+<p>从大类上分，有两类：数据库、实体。</p>
+<ul>
+<li><p>数据库：表 + 字段</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">├── 部门表</span><br><span class="line">│   ├── 部门ID （字段）</span><br><span class="line">│   └── 部门名（字段）</span><br><span class="line">└── 员工表</span><br><span class="line">    ├── 员工ID （字段）</span><br><span class="line">    └── 员工名（字段）</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>实体：类 + 属性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">├── 部门类</span><br><span class="line">│   ├── 部门ID （属性）</span><br><span class="line">│   └── 部门名（属性）</span><br><span class="line">└── 员工类</span><br><span class="line">    ├── 员工ID （属性）</span><br><span class="line">    └── 员工名（属性）</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<br>
+
+<p>数据库中，表之间的关联，是通过外键做到的，具体内容我们不讨论，这个去看数据库和 SQL 相关。</p>
+<p>实体中，类之间的关联，可以通过注解来实现，这是我们这篇要详细讨论的。</p>
+<br>
+
+<p>顺便一提命名规则。</p>
+<p>数据库的命名规则，基本使用下划线命名法，例如：department_id（部门ID）。</p>
+<p>实体的命名规则，基本使用驼峰命名法，例如：departmentId（部门ID）。</p>
+<hr>
+<p>注解是 JDK 1.5 引入的内容，原理基于反射，使用起来非常方便，Spring 中大量使用，具体不细叙。</p>
+<p>使用注解开发实体关联，有两种途径：</p>
+<ul>
+<li><p><code>@OneToOne</code>、<code>@OneToMany</code>、<code>@ManyToOne</code>、<code>@ManyToMany</code> 这四个注解是一类。</p>
+<p>除了 <code>@ManyToOne</code> 这个注解之外，其他三个注解都有 <code>mappedBy</code> 属性，用于关联实体。</p>
+</li>
+<li><p><code>@JoinColumn</code> 注解，用于关联实体。（但是还是要加上 <code>@OneToOne</code> 等关联注解的，两个注解一起使用）</p>
+</li>
+</ul>
+<p>要注意的是，这两种注解关联的方法，不能一起使用，只能选择一种使用。</p>
+<br>
+
+<h2 id="注解填写属性"><a href="#注解填写属性" class="headerlink" title="注解填写属性"></a>注解填写属性</h2><p>这两种注解，填写的属性是不同的。</p>
+<p> <code>mappedBy</code> ：类层面，关联的全都是【实体类】中的【属性名】</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// departmentId ：类中的属性名</span></span><br><span class="line"><span class="meta">@OneToOne</span>(mappedBy = <span class="string">"departmentId"</span>)</span><br></pre></td></tr></table></figure>
+
+<p> <code>@JoinColumn</code>：字段层面，关联的全都是【表】中的【字段名】</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// department_id ：表中的字段名</span></span><br><span class="line"><span class="meta">@JoinColumn</span>(name = <span class="string">"department_id"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>多说一句， <code>@Table</code>、 <code>@Column</code>、 <code>@JoinTable</code>、 <code>@JoinColumn</code>、<code>@JoinColumns</code>，这些都是一类的，填写的全都是数据库中的字段名（下划线命名法的那些）。</p>
+<hr>
+<p>正式开始。</p>
+<p>建两个实体类，<code>Department</code> 和 <code>Employee</code> ，各有 id 和 name 两个属性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="meta">@Table</span>(name = <span class="string">"pz_department"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Department</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123; <span class="comment">// 部门类</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@Column</span>(name = <span class="string">"department_id"</span>)</span><br><span class="line">    <span class="keyword">private</span> String departmentId;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Column</span>(name = <span class="string">"department_name"</span>)</span><br><span class="line">    <span class="keyword">private</span> String departmentName;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="meta">@Table</span>(name = <span class="string">"pz_employee"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Employee</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123; <span class="comment">// 员工类</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@Column</span>(name = <span class="string">"employee_id"</span>)</span><br><span class="line">    <span class="keyword">private</span> String employeeId;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Column</span>(name = <span class="string">"employee_name"</span>)</span><br><span class="line">    <span class="keyword">private</span> String employeeName;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>后续代码会略写。</p>
+<hr>
+<h1 id="OneToOne-一对一映射"><a href="#OneToOne-一对一映射" class="headerlink" title="@OneToOne 一对一映射"></a>@OneToOne 一对一映射</h1><p>场景：一个部门里只有一个员工，同样的，一个员工只属于一个部门。</p>
+<h2 id="JoinColumn"><a href="#JoinColumn" class="headerlink" title="@JoinColumn"></a>@JoinColumn</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Department</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123; <span class="comment">// 部门实体</span></span><br><span class="line">    <span class="comment">// ...（省略）</span></span><br><span class="line">    <span class="meta">@OneToOne</span></span><br><span class="line">    <span class="meta">@JoinColumn</span>(name = <span class="string">"own_employee_name"</span>, referencedColumnName = <span class="string">"employee_name"</span>)</span><br><span class="line">    <span class="keyword">private</span> Employee ownEmployee;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注解中的属性：</p>
+<ul>
+<li><code>name</code> ：【己方】实体的【数据库字段】</li>
+<li><code>referencedColumnName</code> ：【对方】实体的【数据库字段】（如果是主键，可以省略）</li>
+</ul>
+<p><img src="/assets/%E5%8D%95%E5%90%91%E4%B8%80%E5%AF%B9%E4%B8%80.jpg" alt="一对一 @JoinColumn"></p>
+<br>
+
+<h2 id="OneToOne-mappedBy-“…”"><a href="#OneToOne-mappedBy-“…”" class="headerlink" title="@OneToOne(mappedBy = “…”)"></a>@OneToOne(mappedBy = “…”)</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Department</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123; <span class="comment">// 部门实体</span></span><br><span class="line">    <span class="comment">// ...（省略）</span></span><br><span class="line">    <span class="meta">@OneToOne</span></span><br><span class="line">    <span class="meta">@JoinColumn</span>(name = <span class="string">"own_employee_id"</span>)</span><br><span class="line">    <span class="keyword">private</span> Employee ownEmployee;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Employee</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123; <span class="comment">// 员工实体</span></span><br><span class="line">    <span class="comment">// ...（省略）</span></span><br><span class="line">    <span class="meta">@OneToOne</span>(mappedBy = <span class="string">"ownEmployee"</span>)</span><br><span class="line">    <span class="keyword">private</span> Department belongDepartment;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于 <code>@OneToOne</code> 注解，<code>mappedBy</code> 只有一种使用方法，那就是对方先关联自己，自己反关联回去。（因此无法通过 <code>mappedBy</code> 来实现一对一的单向关联，如若一对一关系使用 <code>mappedBy</code> ，必定是双向关联）</p>
+<p>上面的代码实现了这样的功能：【部门类】首先关联了【员工类】（通过 <code>@JoinColumn</code> 注解），把员工作为自己的一个属性。【员工类】通过 <code>mappedBy</code> 反关联回去【部门类】，其中 <code>mappedBy</code> 所指向的值，就是部门类已经关联好的员工类属性。</p>
+<p>换句话说，一对一的关联关系是由【部门类】所创建和维护的，<code>mappedBy</code> 自身不关联，它只是顺着这层已经存在的单层关联，顺藤摸瓜地反关联回去。</p>
+<p><img src="/assets/%E4%B8%80%E5%AF%B9%E4%B8%80mappedBy.jpg" alt="一对一 mappedBy"></p>
+<hr>
+<h1 id="OneToMany-一对多映射"><a href="#OneToMany-一对多映射" class="headerlink" title="@OneToMany 一对多映射"></a>@OneToMany 一对多映射</h1><p>场景：一个部门里有多个员工。</p>
+<h2 id="JoinColumn-1"><a href="#JoinColumn-1" class="headerlink" title="@JoinColumn"></a>@JoinColumn</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Department</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123; <span class="comment">// 部门实体</span></span><br><span class="line">    <span class="comment">// ...（省略）</span></span><br><span class="line">    <span class="meta">@OneToMany</span></span><br><span class="line">    <span class="meta">@JoinColumn</span>(name = <span class="string">"employee_name"</span>, referencedColumnName = <span class="string">"own_employee_id"</span>)</span><br><span class="line">    <span class="keyword">private</span> List&lt;Employee&gt; ownEmployeeList;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注解中的属性：</p>
+<ul>
+<li><code>name</code> ：【对方】实体的【数据库字段】</li>
+<li><code>referencedColumnName</code> ：【己方】实体的【数据库字段】（如果是主键，可以省略）</li>
+</ul>
+<p>（发现了吗，刚好是跟一对一关系是反过来的）</p>
+<p><img src="/assets/%E4%B8%80%E5%AF%B9%E5%A4%9A@JoinColumn.png" alt="一对多@JoinColumn"></p>
+<p>这是个很有意思的事情，为什么这里反过来了呢？这个我们在后文的分析中再讨论。</p>
+<h2 id="OneToMany-mappedBy-“…”"><a href="#OneToMany-mappedBy-“…”" class="headerlink" title="@OneToMany(mappedBy = “…”)"></a>@OneToMany(mappedBy = “…”)</h2><p>一对多的情况下，<code>mappedBy</code> 有两种使用方式。</p>
+<ol>
+<li><p>跟一对一关联一样，首先对面已经关联好自己，自己只需要反向关联回去即可，<code>mappedBy</code> 的值是自己在对方类中的属性名。（在这种情况下，必须双向关联）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Department</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...（省略）</span></span><br><span class="line">    <span class="meta">@OneToMany</span>(mappedBy = <span class="string">"employeeName"</span>) <span class="comment">// 匹配自己在对方的实体属性</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;Employee&gt; ownEmployeeList;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>无需对方关联，直接去关联对方的外键属性。（在这种情况下，虽然使用了 <code>mappedBy</code> ，但是依旧是单向关联）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Department</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...（省略）</span></span><br><span class="line">    <span class="meta">@OneToMany</span>(mappedBy = <span class="string">"departmentId"</span>) <span class="comment">// 匹配对方的外键</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;Employee&gt; ownEmployeeList;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是这样单向关联有一个前提：对方的外键关联自己时，必须关联自己的主键。</p>
+<p>比较简单，就不画图了。</p>
+</li>
+</ol>
+<hr>
+<h1 id="ManyToOne-多对一映射"><a href="#ManyToOne-多对一映射" class="headerlink" title="@ManyToOne 多对一映射"></a>@ManyToOne 多对一映射</h1><p>场景：多个员工归属于同一个部门。</p>
+<h2 id="JoinColumn-2"><a href="#JoinColumn-2" class="headerlink" title="@JoinColumn"></a>@JoinColumn</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Employee</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123; <span class="comment">// 员工实体</span></span><br><span class="line">    <span class="comment">// ...（省略）</span></span><br><span class="line">    <span class="meta">@ManyToOne</span></span><br><span class="line">    <span class="meta">@JoinColumn</span>(name = <span class="string">"belong_department_name"</span>, referencedColumnName = <span class="string">"department_name"</span>)</span><br><span class="line">    <span class="keyword">private</span> Department belongDepartment;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注解中的属性：</p>
+<ul>
+<li><code>name</code> ：【己方】实体的【数据库字段】</li>
+<li><code>referencedColumnName</code> ：【对方】实体的【数据库字段】（如果是主键，可以省略）</li>
+</ul>
+<p>多对一关联（ ManyToOne ），和一对一关联（ OneToOne ），在使用 <code>@JoinColumn</code> 时，是一模一样的。</p>
+<p>也就是说，一对一、多对一的关联，和一对多的关联，在 <code>name</code> 和 <code>referencedColumnName</code> 上，是刚好相反的，这个我们一会分析。</p>
+<h2 id="❌-mappedBy"><a href="#❌-mappedBy" class="headerlink" title="❌ mappedBy"></a>❌ mappedBy</h2><p><code>@ManyToOne</code> 不存在 <code>mappedBy</code> 属性。</p>
+<p>因为 <code>mappedBy</code> 的原理是把关联的任务交给对面去做，员工有N个，部门只有1个，员工让部门去维护关联，一个部门是无法同时关联N个员工的，因此不存在 <code>mappedBy</code> 属性。</p>
+<hr>
+<h1 id="ManyToMany-多对多映射"><a href="#ManyToMany-多对多映射" class="headerlink" title="@ManyToMany 多对多映射"></a>@ManyToMany 多对多映射</h1><p>场景：一个部门内有多个员工，但是同时，一个员工也可以属于多个部门。</p>
+<h2 id="JoinTable"><a href="#JoinTable" class="headerlink" title="@JoinTable"></a>@JoinTable</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Department</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123; <span class="comment">// 部门实体</span></span><br><span class="line">    <span class="comment">// ...（省略）</span></span><br><span class="line">    <span class="meta">@ManyToMany</span></span><br><span class="line">    <span class="meta">@JoinTable</span>(name = <span class="string">"pz_ref"</span>,</span><br><span class="line">            joinColumns = &#123;<span class="meta">@JoinColumn</span>(name = <span class="string">"ref_department_id"</span>)&#125;,</span><br><span class="line">            inverseJoinColumns = &#123;<span class="meta">@JoinColumn</span>(name = <span class="string">"ref_employee_id"</span>)&#125;)</span><br><span class="line">    <span class="meta">@JSONField</span>(serialize = <span class="keyword">false</span>)</span><br><span class="line">    <span class="keyword">private</span> List&lt;Employee&gt; employeeList;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>多对多关联，是需要自己建一张中间表的。粗略一想就会发现，多对多，双方都是多，无法实现一方用外键关联另一方，所以必须有中间表。（但是不需要为这张中间表创建实体类）</p>
+<p>除了新增一张表之外，连注解也发生了改变。原先是 <code>@JoinColumn</code> ，<code>join</code> 到字段中，现在是 <code>@JoinTable</code> ，<code>join</code> 到表中。</p>
+<p>注解中的属性：</p>
+<ul>
+<li><code>name</code> ：【中间表】的【表名】</li>
+<li><code>joinColumns</code> ：【己方表】与【中间表】关联（按 @OneToMany 的方式来）</li>
+<li><code>inverseJoinColumns</code>：【对方表】与【中间表】关联（按 @OneToMany 的方式来）</li>
+</ul>
+<p><img src="/assets/@JoinTable.png" alt="@JoinTable"></p>
+<h2 id="ManyToMany-mappedBy-“…”"><a href="#ManyToMany-mappedBy-“…”" class="headerlink" title="@ManyToMany(mappedBy = “…”)"></a>@ManyToMany(mappedBy = “…”)</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Employee</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123; <span class="comment">// 员工实体</span></span><br><span class="line">    <span class="comment">// ...（省略）</span></span><br><span class="line">    <span class="meta">@ManyToMany</span>(mappedBy = <span class="string">"employeeList"</span>)</span><br><span class="line">    <span class="keyword">private</span> List&lt;Department&gt; departmentList;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>只有一种使用方法，跟一对一关联（ OneToOne ）、一对多关联（ OneToMany )都具有的使用方法一致：<code>mappedBy</code> 属性值是自己在对面实体类中的属性名，即必须双向映射。</p>
+<hr>
+<p>四类关联：一对一、一对多、多对一、多对多，已经都走过一遍了。现在分析一下两种注解方式（ <code>@JoinTable</code> 就懒得提了）。</p>
+<h1 id="JoinColumn-3"><a href="#JoinColumn-3" class="headerlink" title="@JoinColumn"></a>@JoinColumn</h1><p>我所理解的 <code>@JoinColumn</code> ，它的本质是 <code>@Column</code> ，从本质上来说，它并不是在做关联，它是在做映射，它把【数据库】和【实体】映射起来，使用这类注解能够实现：数据库中的一个字段，对应着，实体类中的一个字段。所以，它在做的事情，并不是把【部门】和【实体】关联起来，而是把【表】和【实体类】映射起来（但是与此同时，也就关联起来了两个实体)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@OneToOne</span></span><br><span class="line"><span class="meta">@JoinColumn</span>(name = <span class="string">"自己"</span>, referencedColumnName = <span class="string">"对方"</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@OneToMany</span></span><br><span class="line"><span class="meta">@JoinColumn</span>(name = <span class="string">"对方"</span>, referencedColumnName = <span class="string">"自己"</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@ManyToOne</span></span><br><span class="line"><span class="meta">@JoinColumn</span>(name = <span class="string">"自己"</span>, referencedColumnName = <span class="string">"对方"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>刚才我们发现，【1 - 1】、【N - 1】的使用方法是相同的，但是【1 - N】刚好反了过来，这是为什么。</p>
+<p>是因为，<code>@JoinColumn</code> 根本就不关心它所在的实体类是谁，它的 <code>name</code> 属性指向的，永远都是外键。因为外键始终在【多】的一方（一对一的话就默认自己是多），因此 <code>name</code> 属性值为【多的一方的外键】。</p>
+<p>有关 <code>@JoinColumn</code> 自动建表的事情，我还没有弄清楚。</p>
+<h1 id="mappedBy-“…”"><a href="#mappedBy-“…”" class="headerlink" title="mappedBy = “…”"></a>mappedBy = “…”</h1><p><code>mappedBy</code> 通常出现，都是为了做双向关联，而且对于 <code>@OneToOne</code> 和 <code>@ManyToOne</code> 而言，<code>mappedBy</code> 只能做双向关联。</p>
+<p>我们在文章开头就指出，<code>mappedBy</code> 是针对【实体类】而做操作的，它的值是本类在对方类的属性名。我们再理一遍，它要等对方关联自己之后，自己顺着这层【已经建立起来的联系】，反关联回去。</p>
+<p>这么做的道理是，A 关联 B，B 不应该再去建立新的关联关系，去重新关联 A（当然你硬要这么做也可以），而应该根据 A 关联 B 的这层关系，自动地找回去。这叫做：</p>
+<blockquote>
+<p>本类放弃控制关联关系，关联由对方去控制。</p>
+</blockquote>
+<br>
+
+<p>很奇怪的一件事是，对于三种能使用 <code>mappedBy</code> 属性的注解： <code>@OneToOne</code> 、<code>@OneToMany</code> 、 <code>@ManyToOne</code> ，它们有一种统一的使用方法（即本类在对方类的属性名）。但是对于 <code>@OneToMany</code> ，它有第二种使用方法，它仿佛可以不需要对面先建立联系，直接使用 <code>mappedBy</code> 指向对方类的外键属性。</p>
+<p>这样做的原理是，依旧让对方维护关联关系，但是必须由对方的【外键】关联己方的【主键】（如果使用 <code>@JoinColumn</code> 可以由对方的【外键】关联己方的【任意键】）。</p>
+<p>也就是说，在一对多的关系中，【一方】想去关联【多方】，但是又不想自己去维护关联关系（因为一对多时，维护关联关系的话，代码会自动地创建出来一张新表），因此【一方】使用 <code>mappedBy</code> 让对面来处理关联关系。对面是怎么做关联的呢，是通过外键关联主键的方式关联的。</p>
+<hr>
+<h1 id="坑"><a href="#坑" class="headerlink" title="坑"></a>坑</h1><p>最后说一说 Jpa 和注解关联的各种坑。</p>
+<br>
+
+<ol>
+<li><p>驼峰命名法和下划线命名法的自动转换</p>
+<p>我还没查清具体的原因，是 Spring 框架还是 hibernate ，总之现在框架能自动把数据库中的【下划线命名法】映射到实体类中的【驼峰命名法】。</p>
+<p>例如，正常来讲，实体类中的属性应该要通过 <code>@Column</code> 配置映射关系。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Table</span>(name = <span class="string">"pz_department"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Department</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这里通过 @Column 注解</span></span><br><span class="line">    <span class="comment">// 将部门表中的【department_name】字段映射到部门类中的【departmentName】</span></span><br><span class="line">    <span class="meta">@Column</span>(name = <span class="string">"department_name"</span>)</span><br><span class="line">    <span class="keyword">private</span> String departmentName;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是实际上，就是不加 <code>@Column</code> 注解，框架也能自动映射。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Table</span>(name = <span class="string">"pz_department"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Department</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 部门表中的【department_name】字段，自动映射到部门类中的【departmentName】</span></span><br><span class="line">    <span class="comment">// 框架能够自动将下划线命名，转换为驼峰命名</span></span><br><span class="line">    <span class="keyword">private</span> String departmentName;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是！一定不要这么做！</p>
+<p>因为在做关联时，有可能会生成新表，如果之前没有加 <code>@Column</code> 注解映射到数据库的话，新表的字段，将不会是原表中的字段名（下划线命名），而将是实体类中的属性名（驼峰命名），这时再去做关联，会报错。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Caused by: org.hibernate.MappingException: Unable to find column with logical name: employee_name in org.hibernate.mapping.Table(pz_employee) and its related supertables and secondary tables</span><br></pre></td></tr></table></figure>
+
+<p>报错信息：【employee_name】字段，在【pz_employee】表以及其他相关表中找不到。</p>
+<p>报错原因：因为在其他相关表（自动创建）中，字段名是【employeeName】。</p>
+<br>
+</li>
+<li><p>进行双向关联时，循环打印</p>
+<p>部门关联员工，员工关联回部门，部门再关联回员工……程序运行本身不会出现问题，但是如果打印出来，就会造成关联上的死循环，直至溢出。</p>
+<p>想要解决的话，就在其中一个类的该属性上加上 JSON 相关的注解，让这个属性不进行序列化。</p>
+<p>例如通过 <code>fastjson</code> 中的 <code>@JSONField(serialize = false)</code> 注解。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@JSONField</span>(serialize = <span class="keyword">false</span>)</span><br><span class="line"><span class="keyword">private</span> Department department;</span><br></pre></td></tr></table></figure>
+
+<br>
+</li>
+<li><p><code>@JoinColumn(name = &quot;...&quot;)</code> 属性映射不能重复</p>
+<p>上文中分析过，<code>@JoinColumn</code> 注解本质上是对数据库和实体类进行映射。如果某一数据库中的字段，已经映射到某属性上了，在 <code>@JoinColumn</code> 中的 <code>name</code> 属性里再次映射，就会出现问题：到底映射的是哪一个呢？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Column</span>(name = <span class="string">"belong_department_id"</span>)</span><br><span class="line"><span class="keyword">private</span> String belongDepartmentId;</span><br><span class="line"></span><br><span class="line"><span class="meta">@ManyToOne</span></span><br><span class="line"><span class="meta">@JoinColumn</span>(name = <span class="string">"belong_department_id"</span>, referencedColumnName = <span class="string">"department_id"</span>)</span><br><span class="line"><span class="keyword">private</span> Department belongDepartment;</span><br></pre></td></tr></table></figure>
+
+<p>例如上面这段代码，就会报错：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Caused by: org.hibernate.MappingException: Repeated column in mapping <span class="keyword">for</span> entity: com.app.ykym.modules.test.entityAndRepository.Employee column: belong_department_id (should be mapped with insert=<span class="string">"false"</span> update=<span class="string">"false"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>解决方法在报错信息里也说明了：重复映射的两个属性，选一个，让它 <code>insert=&quot;false&quot; update=&quot;false&quot;</code> （写在注解里），意思是让其中一个属性放弃更新和插入数据库的权限。</p>
+<p>（但是 <code>@OneToMany</code> 时，<code>@JoinColumn(name = &quot;...&quot;)</code> 是可以重复的）</p>
+</li>
+</ol>
+<br>
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 pz
+  </div>
+  <div class="footer-right">
+    <nav>
+      pz阁下的blog
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+
