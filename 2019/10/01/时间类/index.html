@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="此篇是十月第一周的内容，拖延症太严重了，不得已鸽掉了九月。 分四个部分讲，分别是 Java 基础时间类、Java sql 时间类、Joda Time 时间类、 java.time 时间类。 既然本篇主讲时间，就顺便把我的博文更新的周数算法讲一下：每月1日所在的周，是本月的第一周，如果这周的前几天属于上一个月，则这几天归入到本月所在周中，例如 2019 年 10 月 1 日是周二，则该周是 10">
+<meta name="keywords" content="Weekly Post,java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 的时间类">
+<meta property="og:url" content="http://hellopz.netlify.com/2019/10/01/时间类/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="此篇是十月第一周的内容，拖延症太严重了，不得已鸽掉了九月。 分四个部分讲，分别是 Java 基础时间类、Java sql 时间类、Joda Time 时间类、 java.time 时间类。 既然本篇主讲时间，就顺便把我的博文更新的周数算法讲一下：每月1日所在的周，是本月的第一周，如果这周的前几天属于上一个月，则这几天归入到本月所在周中，例如 2019 年 10 月 1 日是周二，则该周是 10">
+<meta property="og:locale" content="Chinese">
+<meta property="og:updated_time" content="2019-10-09T04:37:11.894Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 的时间类">
+<meta name="twitter:description" content="此篇是十月第一周的内容，拖延症太严重了，不得已鸽掉了九月。 分四个部分讲，分别是 Java 基础时间类、Java sql 时间类、Joda Time 时间类、 java.time 时间类。 既然本篇主讲时间，就顺便把我的博文更新的周数算法讲一下：每月1日所在的周，是本月的第一周，如果这周的前几天属于上一个月，则这几天归入到本月所在周中，例如 2019 年 10 月 1 日是周二，则该周是 10">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Java 的时间类</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/Weekly-Post/">Weekly Post</a></li>
+         
+          <li><a href="/tags/tips/">Tips</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/10/08/Spring-Cloud/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/09/08/jpa实体关联注解/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2019/10/01/时间类/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2019/10/01/时间类/&text=Java 的时间类"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2019/10/01/时间类/&is_video=false&description=Java 的时间类"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java-基础时间类"><span class="toc-number">1.</span> <span class="toc-text">Java 基础时间类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Date"><span class="toc-number">1.1.</span> <span class="toc-text">Date</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Calendar"><span class="toc-number">1.2.</span> <span class="toc-text">Calendar</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SimpleDateFormat"><span class="toc-number">1.3.</span> <span class="toc-text">SimpleDateFormat</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#java-sql-包中的时间类"><span class="toc-number">2.</span> <span class="toc-text">java.sql 包中的时间类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Joda-Time-时间类"><span class="toc-number">3.</span> <span class="toc-text">Joda Time 时间类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Joda-Time-的时间类"><span class="toc-number">3.1.</span> <span class="toc-text">Joda Time 的时间类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Joda-Time-的格式化与解析类"><span class="toc-number">3.2.</span> <span class="toc-text">Joda Time 的格式化与解析类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Joda-Time-的时间跨度类"><span class="toc-number">3.3.</span> <span class="toc-text">Joda Time 的时间跨度类</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#java-time-包中的时间类"><span class="toc-number">4.</span> <span class="toc-text">java.time 包中的时间类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#java-time-包的时间类"><span class="toc-number">4.1.</span> <span class="toc-text">java.time 包的时间类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java-time-包的格式化与解析类"><span class="toc-number">4.2.</span> <span class="toc-text">java.time 包的格式化与解析类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java-time-包的时间跨度类"><span class="toc-number">4.3.</span> <span class="toc-text">java.time 包的时间跨度类</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Java 的时间类
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2019-10-01T11:04:07.000Z" itemprop="datePublished">2019-10-01</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Weekly-Post/">Weekly Post</a>, <a class="tag-link" href="/tags/java/">java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>此篇是十月第一周的内容，拖延症太严重了，不得已鸽掉了九月。</p>
+<p>分四个部分讲，分别是 Java 基础时间类、Java sql 时间类、Joda Time 时间类、 <code>java.time</code> 时间类。</p>
+<p>既然本篇主讲时间，就顺便把我的博文更新的周数算法讲一下：每月1日所在的周，是本月的第一周，如果这周的前几天属于上一个月，则这几天归入到本月所在周中，例如 2019 年 10 月 1 日是周二，则该周是 10 月的第一周，同时 9 月 30 日也算作 10 月的第一周，而不属于 9 月的第六周。这种周数算法的原因在于，我喜欢一点点任务透支的感觉，以及重新开始的感觉。本周数算法从 10 月起正式生效，之前的博文既往不咎。</p>
+<hr>
+<h1 id="Java-基础时间类"><a href="#Java-基础时间类" class="headerlink" title="Java 基础时间类"></a>Java 基础时间类</h1><p>Java 的基础时间类有三个，分别是 <code>java.util</code> 包下的 <font color="#32CD32"><strong>Date</strong></font> 类和 <font color="#32CD32"><strong>Calendar</strong></font> 类，以及 <code>java.text</code> 包下的  <font color="#32CD32"><strong>SimpleDateFormat</strong></font> 类。</p>
+<p>简单提两嘴这两个包，<code>java.util</code> 包是 Java 的实用工具类库包，包含 Java 的集合类、时间类、事件模型类等；<code>java.text</code> 包是跟文本、格式化打交道的包，比如处理时间、数字等。这两个包都是 Java 的上古基础包。</p>
+<br>
+
+<h2 id="Date"><a href="#Date" class="headerlink" title="Date"></a>Date</h2><p>Date 类是 Java 里时间类中的老爹，它出场早，脾气倔，在保留着日期和时间最基本用法的同时，总能用其偏执的使用思路让人觉得拧巴。但是在程序员懒得找其他替代品时，它又几乎是第一选择，因为它的确是足够基础，当然了，使用时还要容忍它的反人类。</p>
+<p>Date 类有两种构造函数，一种是获取当前时间，一种是根据你的输入时间来实例化时间。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 当前时间</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Date</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(System.currentTimeMillis());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 指定时间</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Date</span><span class="params">(<span class="keyword">long</span> var1)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.fastTime = var1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Date 类有很多方法，大部分均已标记 <code>@Deprecated</code> （已废弃），剩下的几个基本只有一个方法能用：<code>getTime()</code> ，而这个方法非常硬核，它 get 到的 Time 不是年月日，而是一个 <code>long</code> 类型的毫秒数，表示在格林尼治时间 1900 年开始之后，经过了多少毫秒。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Date date = <span class="keyword">new</span> Date();</span><br><span class="line">System.out.println(date.getTime());</span><br><span class="line"></span><br><span class="line"><span class="comment">// 控制台打印结果：1569456444308</span></span><br></pre></td></tr></table></figure>
+
+<p>Date 类的反人类处</p>
+<ul>
+<li>Date 类计算年份时，是跟 1900 年进行比较的，比如今年（2019 年）对于 Date 类而言，它是 119 年，当调用 <code>getYear()</code> 方法时（该方法已被官方建议不要使用），它会说这是 119 年。</li>
+<li>Date 类计算月份是，是从 0 开始计算的，因此这个月（9 月）对于 Date 类而言，它是 8 。</li>
+<li><code>getDay()</code> 方法是获取当周的第几天， <code>getDate()</code> 方法是获取当月的第几天（这两个方法也已被遗弃）。</li>
+<li>Date 类自己的一切 <code>getXXX()</code> 方法，实际上只剩下了 <code>getTime()</code> 方法，表示获取当前时间（精确到毫秒）与 1900 年 1 月 1 日 0 时 0 分 0 秒这一瞬间（包含时差），中间间隔的毫秒数，其他获取年月日等时间的方法均被遗弃，官方建议使用 Calendar 类。</li>
+<li>Date 类的 <code>getTime()</code> 方法是指获取毫秒数，比如现在时间的 <code>getTime()</code> 的值为 1569454704886 ，太硬核了。更硬核的是，Date 类的构造函数只剩下两种能用，一种是无参构造（得到当下的时间），另一种是以刚才的那个毫秒数为参数。</li>
+<li>Date 类的值不是 final 的，是可以在实例化之后通过 <code>setTime()</code> 改变值的，非线程安全。</li>
+<li>当调用 Date 类的 <code>toString()</code> 方法时，它会打印出例如 <code>Tue Sep 10 00:00:00 CST 2019</code> （中国标准时间 2019 年 9 月 10 日 0 时 0 点 0 分）的值，你发现这里包含时区信息 CST，但令人无语的是，这个时区信息是 Date 类在调用 <code>toString()</code> 方法时，根据系统时区动态打印的。换句话说，刚才那个时间的程序在中国执行，时区是 CST，在美国执行，那时区就是 PDT。</li>
+</ul>
+<br>
+
+<h2 id="Calendar"><a href="#Calendar" class="headerlink" title="Calendar"></a>Calendar</h2><p>calendar 是日历的意思，因此见名知意，Calendar 类是用来跟年月日等时间打交道的类。</p>
+<p>Calendar 类本身是一个抽象类，它代表着日历类的标准与规范，有 GregorianCalendar 类（格林尼治日历时间）等实现类。实例化一个 Calendar 类，如果不使用子类，那就要通过工厂方法获得了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Calendar类的实例化方法</span></span><br><span class="line">Calendar calendar = Calendar.getInstance();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 下面这种是错误的</span></span><br><span class="line">Calendar calendar = <span class="keyword">new</span> Calendar();</span><br></pre></td></tr></table></figure>
+
+<p>这里通过 <code>Calendar.getInstance()</code> 获得的，是一个 GregorianCalendar 对象。</p>
+<p>Calendar 类最实用的方法是它的 <code>get()</code> 方法，用这个方法获取年、月、日、周、小时等等 17 类不同的信息。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取calendar的年份信息 如2019</span></span><br><span class="line"><span class="keyword">int</span> year = calendar.get(Calendar.YEAR);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取calendar的月份信息 如9</span></span><br><span class="line"><span class="keyword">int</span> month = calendar.get(Calendar.MONTH);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取calendar的当月天数信息，如10</span></span><br><span class="line"><span class="keyword">int</span> date = calendar.get(Calendar.DATE);</span><br></pre></td></tr></table></figure>
+
+<p>上面诸如 <code>Calendar.YEAR</code> 之类的值，其实是 Calendar 类定义的常量值，<code>Calendar.YEAR</code> 其实就是 1，换句话说，下面两行代码是一样的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> year1 = calendar.get(Calendar.YEAR);</span><br><span class="line"><span class="keyword">int</span> year2 = calendar.get(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+<p>通过 Calendar 类的 <code>get()</code> 方法能得到 17 类不同的时间信息，这 17 个常量值列在下面：</p>
+<table>
+<thead>
+<tr>
+<th>常量名</th>
+<th>常量值</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ERA</td>
+<td>0</td>
+<td>纪元（0：BC 即公元前，1：AD 即公元后）</td>
+</tr>
+<tr>
+<td>YEAR</td>
+<td>1</td>
+<td>年</td>
+</tr>
+<tr>
+<td>MONTH</td>
+<td>2</td>
+<td>月</td>
+</tr>
+<tr>
+<td>WEEK_OF_YEAR</td>
+<td>3</td>
+<td>本年第几周</td>
+</tr>
+<tr>
+<td>WEEK_OF_MONTH</td>
+<td>4</td>
+<td>本月第几周</td>
+</tr>
+<tr>
+<td>DATE</td>
+<td>5</td>
+<td>本月第几日</td>
+</tr>
+<tr>
+<td>DAY_OF_MONTH</td>
+<td>5</td>
+<td>本月第几日，与 DATE 完全相同</td>
+</tr>
+<tr>
+<td>DAY_OF_YEAR</td>
+<td>6</td>
+<td>本年第几日</td>
+</tr>
+<tr>
+<td>DAY_OF_WEEK</td>
+<td>7</td>
+<td>本周第几日</td>
+</tr>
+<tr>
+<td>DAY_OF_WEEK_IN_MONTH</td>
+<td>8</td>
+<td>当前月第几周</td>
+</tr>
+<tr>
+<td>AM_PM</td>
+<td>9</td>
+<td>上午/下午（0：AM 即上午，1：PM 即下午）</td>
+</tr>
+<tr>
+<td>HOUR</td>
+<td>10</td>
+<td>当天第几个小时（12 小时制）</td>
+</tr>
+<tr>
+<td>HOUR_OF_DAY</td>
+<td>11</td>
+<td>当天第几个小时（24 小时制）</td>
+</tr>
+<tr>
+<td>MINUTE</td>
+<td>12</td>
+<td>当小时第多少分钟</td>
+</tr>
+<tr>
+<td>SECOND</td>
+<td>13</td>
+<td>当分钟第多少秒</td>
+</tr>
+<tr>
+<td>MILLISECOND</td>
+<td>14</td>
+<td>当秒第多少毫秒</td>
+</tr>
+<tr>
+<td>ZONE_OFFSET</td>
+<td>15</td>
+<td>距 GMT 时区偏移时间（以毫秒为单位，mdzz）</td>
+</tr>
+<tr>
+<td>DST_OFFSET</td>
+<td>16</td>
+<td>夏令时偏移时间（以毫秒为单位）</td>
+</tr>
+</tbody></table>
+<p>具体的使用可以参考这一篇文章：<a href="https://blog.csdn.net/cqx13763055264/article/details/81088635" target="_blank" rel="noopener">《Calendar的基本使用和属性说明》</a>，整理得很细致。</p>
+<p>Calendar 类相比于 Date 类更为先进的地方是，它可以通过人类能理解的方式设置和变更时间，例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置了一个时间：2019年9月1日0时0分0秒</span></span><br><span class="line">calendar.set(<span class="number">2019</span>, Calendar.JANUARY, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 把时间往前12个月</span></span><br><span class="line">calendar.add(Calendar.MONTH, -<span class="number">12</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 把时间往后8个月（但是只改变月份，不改变其他年份等其他时间）</span></span><br><span class="line">calendar.roll(Calendar.MONTH, <span class="number">8</span>);</span><br></pre></td></tr></table></figure>
+
+<p>但让人依旧无语的是，Calendar 类的月份也是从 0 开始的。此外 Calendar 类不支持格式化。</p>
+<br>
+
+<h2 id="SimpleDateFormat"><a href="#SimpleDateFormat" class="headerlink" title="SimpleDateFormat"></a>SimpleDateFormat</h2><p>SimpleDateFormat 类是一个【格式化】和【解析日期】的工具类，即 <code>Date -&gt; Text</code> 或者 <code>Text -&gt; Date</code>，而且能够按照要求格式转换，如输出 <code>2019-09-10 12:00:00</code> 这种时间文本。</p>
+<p>下面就是最常见的用法，声明好格式之后，使用 <code>format()</code> 方法把时间转换成字符串。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SimpleDateFormat simpleDateFormat = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd HH:mm:ss zzz"</span>);</span><br><span class="line">String dateStr = simpleDateFormat.format(date);</span><br><span class="line"></span><br><span class="line"><span class="comment">// dateStr : "2019-09-26 23:49:26 CST"</span></span><br></pre></td></tr></table></figure>
+
+<p>另一种常见的用法是把字符串转换成时间，但是要异常处理，毕竟是处理字符串。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SimpleDateFormat simpleDateFormat = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd HH:mm:ss zzz"</span>);</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    Date date = simpleDateFormat.parse(<span class="string">"2019-09-26 23:49:26 CST"</span>);</span><br><span class="line">&#125; <span class="keyword">catch</span> (ParseException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// date.toString() : Thu Sep 26 23:49:26 CST 2019</span></span><br></pre></td></tr></table></figure>
+
+<p>字母与时间的对应关系如下（<a href="https://aisia.moe/java6api-cn/java/text/SimpleDateFormat.html" target="_blank" rel="noopener">数据来源</a>）：</p>
+<table>
+<thead>
+<tr>
+<th>字母</th>
+<th>日期或时间元素</th>
+<th>表示</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>G</code></td>
+<td>Era 标志符</td>
+<td><a href="https://aisia.moe/java6api-cn/java/text/SimpleDateFormat.html#text" target="_blank" rel="noopener">Text</a></td>
+<td><code>AD</code></td>
+</tr>
+<tr>
+<td><code>y</code></td>
+<td>年</td>
+<td><a href="https://aisia.moe/java6api-cn/java/text/SimpleDateFormat.html#year" target="_blank" rel="noopener">Year</a></td>
+<td><code>1996</code>; <code>96</code></td>
+</tr>
+<tr>
+<td><code>M</code></td>
+<td>年中的月份</td>
+<td><a href="https://aisia.moe/java6api-cn/java/text/SimpleDateFormat.html#month" target="_blank" rel="noopener">Month</a></td>
+<td><code>July</code>; <code>Jul</code>; <code>07</code></td>
+</tr>
+<tr>
+<td><code>w</code></td>
+<td>年中的周数</td>
+<td><a href="https://aisia.moe/java6api-cn/java/text/SimpleDateFormat.html#number" target="_blank" rel="noopener">Number</a></td>
+<td><code>27</code></td>
+</tr>
+<tr>
+<td><code>W</code></td>
+<td>月份中的周数</td>
+<td><a href="https://aisia.moe/java6api-cn/java/text/SimpleDateFormat.html#number" target="_blank" rel="noopener">Number</a></td>
+<td><code>2</code></td>
+</tr>
+<tr>
+<td><code>D</code></td>
+<td>年中的天数</td>
+<td><a href="https://aisia.moe/java6api-cn/java/text/SimpleDateFormat.html#number" target="_blank" rel="noopener">Number</a></td>
+<td><code>189</code></td>
+</tr>
+<tr>
+<td><code>d</code></td>
+<td>月份中的天数</td>
+<td><a href="https://aisia.moe/java6api-cn/java/text/SimpleDateFormat.html#number" target="_blank" rel="noopener">Number</a></td>
+<td><code>10</code></td>
+</tr>
+<tr>
+<td><code>F</code></td>
+<td>月份中的星期</td>
+<td><a href="https://aisia.moe/java6api-cn/java/text/SimpleDateFormat.html#number" target="_blank" rel="noopener">Number</a></td>
+<td><code>2</code></td>
+</tr>
+<tr>
+<td><code>E</code></td>
+<td>星期中的天数</td>
+<td><a href="https://aisia.moe/java6api-cn/java/text/SimpleDateFormat.html#text" target="_blank" rel="noopener">Text</a></td>
+<td><code>Tuesday</code>; <code>Tue</code></td>
+</tr>
+<tr>
+<td><code>a</code></td>
+<td>Am/pm 标记</td>
+<td><a href="https://aisia.moe/java6api-cn/java/text/SimpleDateFormat.html#text" target="_blank" rel="noopener">Text</a></td>
+<td><code>PM</code></td>
+</tr>
+<tr>
+<td><code>H</code></td>
+<td>一天中的小时数（0-23）</td>
+<td><a href="https://aisia.moe/java6api-cn/java/text/SimpleDateFormat.html#number" target="_blank" rel="noopener">Number</a></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>k</code></td>
+<td>一天中的小时数（1-24）</td>
+<td><a href="https://aisia.moe/java6api-cn/java/text/SimpleDateFormat.html#number" target="_blank" rel="noopener">Number</a></td>
+<td><code>24</code></td>
+</tr>
+<tr>
+<td><code>K</code></td>
+<td>am/pm 中的小时数（0-11）</td>
+<td><a href="https://aisia.moe/java6api-cn/java/text/SimpleDateFormat.html#number" target="_blank" rel="noopener">Number</a></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>h</code></td>
+<td>am/pm 中的小时数（1-12）</td>
+<td><a href="https://aisia.moe/java6api-cn/java/text/SimpleDateFormat.html#number" target="_blank" rel="noopener">Number</a></td>
+<td><code>12</code></td>
+</tr>
+<tr>
+<td><code>m</code></td>
+<td>小时中的分钟数</td>
+<td><a href="https://aisia.moe/java6api-cn/java/text/SimpleDateFormat.html#number" target="_blank" rel="noopener">Number</a></td>
+<td><code>30</code></td>
+</tr>
+<tr>
+<td><code>s</code></td>
+<td>分钟中的秒数</td>
+<td><a href="https://aisia.moe/java6api-cn/java/text/SimpleDateFormat.html#number" target="_blank" rel="noopener">Number</a></td>
+<td><code>55</code></td>
+</tr>
+<tr>
+<td><code>S</code></td>
+<td>毫秒数</td>
+<td><a href="https://aisia.moe/java6api-cn/java/text/SimpleDateFormat.html#number" target="_blank" rel="noopener">Number</a></td>
+<td><code>978</code></td>
+</tr>
+<tr>
+<td><code>z</code></td>
+<td>时区</td>
+<td><a href="https://aisia.moe/java6api-cn/java/text/SimpleDateFormat.html#timezone" target="_blank" rel="noopener">General time zone</a></td>
+<td><code>Pacific Standard Time</code>; <code>PST</code>; <code>GMT-08:00</code></td>
+</tr>
+<tr>
+<td><code>Z</code></td>
+<td>时区</td>
+<td><a href="https://aisia.moe/java6api-cn/java/text/SimpleDateFormat.html#rfc822timezone" target="_blank" rel="noopener">RFC 822 time zone</a></td>
+<td><code>-0800</code></td>
+</tr>
+</tbody></table>
+<p>虽然使用 SimpleDateFormat 类能进行文本处理了，但是使用起来还是挺不方便的，而且还要考虑异常处理，此外它还线程不安全。</p>
+<hr>
+<h1 id="java-sql-包中的时间类"><a href="#java-sql-包中的时间类" class="headerlink" title="java.sql 包中的时间类"></a><code>java.sql</code> 包中的时间类</h1><p>在 java 中有一个与数据库相对应的类包，是 <code>java.sql</code> 包，该包下有三个对应数据库时间类型的类，分别是 <font color="#32CD32"><strong>Date</strong></font> 类、 <font color="#32CD32"><strong>Time</strong></font> 类和 <font color="#32CD32"><strong>TimeStamp</strong></font> 类，这是三个废物类，一无是处。</p>
+<p>这三个类是与数据库中的时间数据类型完全对应的：</p>
+<table>
+<thead>
+<tr>
+<th>数据库的时间类型</th>
+<th>java.sql 时间类型</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DATE</td>
+<td>Date</td>
+<td>2019-09-01</td>
+</tr>
+<tr>
+<td>TIME</td>
+<td>Time</td>
+<td>12:00:00</td>
+</tr>
+<tr>
+<td>TIMESTAMP</td>
+<td>Timestamp</td>
+<td>2019-09-01 12:00:00.000</td>
+</tr>
+</tbody></table>
+<p>说这三个类废物，不是没有根据的：</p>
+<ol>
+<li>这三个时间类的构造方法都只有一种（另一种官方废弃不建议使用），那就是【当下时间距离 1970 年 1 月 1 日 0 时 0 分 0 秒 0 毫秒】的毫秒数，反人类。</li>
+<li>这三个时间类没有诸如 <code>getDate()</code> 之类获取时间的方法，它们有什么方法呢，只有转换成别的时间类的方法 ：)</li>
+<li>除了这三个类之外，别的时间类也可以对接数据库。</li>
+</ol>
+<p>一无是处。</p>
+<br>
+
+<hr>
+<h1 id="Joda-Time-时间类"><a href="#Joda-Time-时间类" class="headerlink" title="Joda Time 时间类"></a>Joda Time 时间类</h1><p>从上面两部分的时间类看得出，用 JDK 自带的时间类编程，还是比较痛苦的：其一，想完成某个需求，可能需要好几个时间类同时使用；其二，上述时间类还存在着许多例如月份从 0 开始计数、时区信息伪造等暗坑。</p>
+<p>这种痛苦的局面在 JDK 8 得到了解决，因为 JDK 8 设计了全新的时间类，但是低版本的 JDK 依旧痛苦。想解决这种痛苦，就要使用第三方类库，Joda Time 就是一个优秀的第三方时间类库。</p>
+<p>此外想吐槽的一点是，Joda Time 有一种死心塌地的备胎感，因为它的官网在所有地方都在反复提及：如果使用 JDK 8 及其之后的版本，应该使用 JDK 8 提供的 <code>java.time</code> 包中的时间类，不要使用 Joda Time。真是让人感动，当然我猜这是因为 Joda Time 的作者参与了 JDK 8 的 <code>java.time</code> 包的设计，人家暗中备胎转正了。</p>
+<br>
+
+<p><code>org.joda.time</code> 包下的类，大致可以分为三种：</p>
+<ol>
+<li>时间类（类似于上文的 Date 类）</li>
+<li>格式化与解析类（类似于上文的 SimpleDateFormat 类）</li>
+<li>时间跨度类</li>
+</ol>
+<p>时间类就是真正用来记录如 <code>2019-10-07 22:48:03</code> 这类时间的类，格式化与解析类是把时间类型和字符串类型进行相互转换的类，时间跨度类是记录如 <code>2年零3个月</code> 这类间隔时间的类。</p>
+<p>接下来逐个类型讲解。</p>
+<br>
+
+<h2 id="Joda-Time-的时间类"><a href="#Joda-Time-的时间类" class="headerlink" title="Joda Time 的时间类"></a>Joda Time 的时间类</h2><p>首先要注意：<font color="#FF0000"><strong>Joda Time 所设计的时间类，统统都不可改变（immutable）</strong></font>，跟 String 是一样的，一经实例化，不得改变其值，从源头上实现了线程安全。当需要改变时间时，Joda Time 会返回一个全新的 Joda 实例，也跟 String 的设计是一样的。</p>
+<p><code>org.joda.time</code> 包下有五个常用的时间类，以表格形式列在下面：</p>
+<table>
+<thead>
+<tr>
+<th>类名</th>
+<th>作用</th>
+<th>示例（2019 年 10 月 1 日 12 时整）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DateTime</td>
+<td>日期+时间（含时区信息）</td>
+<td>2019-10-01T00:00:00.000+08:00</td>
+</tr>
+<tr>
+<td>Instant</td>
+<td>日期+时间（格林威治时间，存疑）</td>
+<td>2019-10-01T12:00:00.000Z</td>
+</tr>
+<tr>
+<td>LocalDateTime</td>
+<td>日期+时间（不含时区信息）</td>
+<td>2019-10-01T12:00:00.000</td>
+</tr>
+<tr>
+<td>LocalDate</td>
+<td>日期（不含时区信息）</td>
+<td>2019-10-01</td>
+</tr>
+<tr>
+<td>LocalTime</td>
+<td>时间（不含时区信息）</td>
+<td>12:00:00.000</td>
+</tr>
+</tbody></table>
+<p><font color="#32CD32"><strong>Instant</strong></font> 类是指时间轴上一个确定的时间点（精确到微妙），但是我自认为用处实在是不多，还是其他四个类：<font color="#32CD32"><strong>DateTime</strong></font> 类、<font color="#32CD32"><strong>LocalDateTime</strong></font> 类、<font color="#32CD32"><strong>LocalDate</strong></font> 类、<font color="#32CD32"><strong>LocalTime</strong></font> 类使用比较频繁，如果需要时区信息则使用第一个，如果不需要时区信息，那就使用后面三个以“Local”开头的类。</p>
+<p>以上五个时间类，使用方法可以用随心所欲来形容，你想怎么用就怎么用。以 <font color="#32CD32"><strong>DateTime</strong></font> 类为例，介绍 Joda Time 时间类的主要用法：</p>
+<ol>
+<li><p>得到一个时间对象</p>
+<p>有超级多的方法，以下只列举几种：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 当前时间</span></span><br><span class="line">DateTime dateTime1 = <span class="keyword">new</span> DateTime();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 任意一种时间类的实例，自动转换</span></span><br><span class="line">DateTime dateTime2 = <span class="keyword">new</span> DateTime(dateTime1);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 手动填写年月日时间等信息，有9种填写规则</span></span><br><span class="line">DateTime dateTime3 = <span class="keyword">new</span> DateTime(<span class="number">2019</span>, <span class="number">10</span>, <span class="number">1</span>, <span class="number">12</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 自1970年1月1日0日整之后的毫秒数</span></span><br><span class="line">DateTime dateTime4 = <span class="keyword">new</span> DateTime(<span class="number">1569902400000L</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用静态方法，读取一个字符串转换成时间</span></span><br><span class="line">DateTime dateTime5 = DateTime.parse(<span class="string">"2019-10-01T12:00:00.000+08:00"</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>获取时间信息</p>
+<p>同样有超级多的方法，以下只列举几种：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取当前月份</span></span><br><span class="line"><span class="keyword">int</span> monthOfYear = dateTime.getMonthOfYear();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取当天过了多少秒</span></span><br><span class="line"><span class="keyword">int</span> secondOfDay = dateTime.getSecondOfDay();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取自1970年1月1日0时之后过了多少微秒</span></span><br><span class="line"><span class="keyword">long</span> millis = dateTime.getMillis();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改时间信息（会返回一个全新的 DateTime 实例）</p>
+<p>再次有超级多的方法，以下只列举几种：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 天数 + 1（plus)</span></span><br><span class="line">DateTime plusDateTime = dateTime.plusDays(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 小时数 - 10（minus）</span></span><br><span class="line">DateTime minusDateTime = dateTime.minusHours(<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置月份为 8 月（with）</span></span><br><span class="line">DateTime withDateTime = dateTime.withMonthOfYear(<span class="number">8</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>其他操作</p>
+<p>再再次有超级多的方法，以下只列举几种：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 该时间是否比当下时间早</span></span><br><span class="line"><span class="keyword">boolean</span> beforeNow = dateTime.isBeforeNow();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对比另一个时间（随意一个时间类的实例），判断是否在其之后</span></span><br><span class="line"><span class="keyword">boolean</span> afterTime = dateTime.isAfter(dateTime2);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 转换成废物的java.util.date类</span></span><br><span class="line">Date date = dateTime.toDate();</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>我知道你懒得看，你只要知道，Joda Time 几乎无所不能，使用时随心所欲，就可以了。</p>
+<br>
+
+<h2 id="Joda-Time-的格式化与解析类"><a href="#Joda-Time-的格式化与解析类" class="headerlink" title="Joda Time 的格式化与解析类"></a>Joda Time 的格式化与解析类</h2><p>Joda Time 的格式化与解析类，常用的有三个类，分别是 <font color="#32CD32"><strong>DateTimeFormatter</strong></font> 类、<font color="#32CD32"><strong>DateTimeFormat</strong></font> 类和 <font color="#32CD32"><strong>DateTimeFormatterBuilder</strong></font> 类。其实不使用这三个类，也可以实现时间解析与格式化处理，直接用字符串指定好样式就可以了，使用这三个类是为了简便和统一操作。</p>
+<ol>
+<li><p><font color="#32CD32"><strong>DateTimeFormatter</strong></font> 类</p>
+<p>时间解析与格式化处理类，用于日期和时间与字符串之间的转换。</p>
+<p>当<code>时间类 -&gt; 字符串</code>时，使用时间类的<code>toString(DateTimeFormatter formatter)</code>方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DateTimeFormatter dateTimeFormatter = DateTimeFormat.fullDateTime();</span><br><span class="line">String dateTimeStr = dateTime.toString(dateTimeFormatter);</span><br><span class="line"></span><br><span class="line"><span class="comment">// dateTimeStr: "2019年10月1日 星期二 下午01时00分00秒 CST"</span></span><br></pre></td></tr></table></figure>
+
+<p>当<code>字符串 -&gt; 时间类</code>时，使用时间类的静态方法<code>parse(String str, DateTimeFormatter formatter)</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DateTime dateTime = DateTime.parse(<span class="string">"2019年10月1日 星期二 下午01时00分00秒 CST"</span>, dateTimeFormatter);</span><br><span class="line"></span><br><span class="line"><span class="comment">// dateTime.toString: "2019-10-01T13:00:00.000-05:00"</span></span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<ol start="2">
+<li><p><font color="#32CD32"><strong>DateTimeFormat</strong></font> 类</p>
+<p>这是 <font color="#32CD32"><strong>DateTimeFormatter</strong></font> 类的工厂类，提供各种创建  <font color="#32CD32"><strong>DateTimeFormatter</strong></font> 类的实例方法。</p>
+<table>
+<thead>
+<tr>
+<th>工厂方法名</th>
+<th>示例（ 2019 年 10 月 1 日 13 时整）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>fullDateTime()</td>
+<td>2019年10月1日 星期二 下午01时00分00秒 CST</td>
+</tr>
+<tr>
+<td>fullDate()</td>
+<td>2019年10月1日 星期二</td>
+</tr>
+<tr>
+<td>fullTime()</td>
+<td>下午01时00分00秒 CST</td>
+</tr>
+<tr>
+<td>longDateTime()</td>
+<td>2019年10月1日 下午01时00分00秒</td>
+</tr>
+<tr>
+<td>longDate()</td>
+<td>2019年10月1日</td>
+</tr>
+<tr>
+<td>longTime()</td>
+<td>下午01时00分00秒</td>
+</tr>
+<tr>
+<td>mediumDateTime()</td>
+<td>2019-10-1 13:00:00</td>
+</tr>
+<tr>
+<td>mediumDate()</td>
+<td>2019-10-1</td>
+</tr>
+<tr>
+<td>mediumTime()</td>
+<td>13:00:00</td>
+</tr>
+<tr>
+<td>shortDateTime()</td>
+<td>19-10-1 下午01:00</td>
+</tr>
+<tr>
+<td>shortDate()</td>
+<td>19-10-1</td>
+</tr>
+<tr>
+<td>shortTime()</td>
+<td>下午01:00</td>
+</tr>
+<tr>
+<td>forPattern(String pattern)</td>
+<td>自定义格式</td>
+</tr>
+<tr>
+<td>forStyle(String style)</td>
+<td>按样式，建议阅读<a href="https://www.joda.org/joda-time/apidocs/org/joda/time/format/DateTimeFormat.html#forStyle-java.lang.String-" target="_blank" rel="noopener">官方API</a></td>
+</tr>
+<tr>
+<td>patternForStyle(String style, Locale locale)</td>
+<td>根据地区告知样式内容，返回一个样式字符串<br>如样式是”MM”且地区为中国时，返回：yyyy’年’M’月’d’日’ EEEE ahh’时’mm’分’ss’秒’ z</td>
+</tr>
+</tbody></table>
+</li>
+</ol>
+<ol start="3">
+<li><p><font color="#32CD32"><strong>DateTimeFormatterBuilder</strong></font> 类</p>
+<p>这个类是用作生成复杂时间样式的类，可以自由拼接时间，自由指定间隔样式等等，例如“十月 01 日 星期二 下午”。这个类本身是可以改变的（非线程安全），但是它可以转换成 <font color="#32CD32"><strong>DateTimeFormatter</strong></font> 类，此时就是不能改变的（线程安全）。</p>
+<p>本类的操作跟 StringBuilder 类几乎是一致的，使用场景不多，用起来也比较顺手，只贴出一段代码示例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">DateTimeFormatterBuilder dateTimeFormatterBuilder = <span class="keyword">new</span> DateTimeFormatterBuilder()</span><br><span class="line">    .appendEraText()              <span class="comment">// 纪元（由于是Text，不需要自己指定精度）</span></span><br><span class="line">    .appendLiteral(<span class="string">' '</span>)           <span class="comment">// 分隔（此处用空格分隔）</span></span><br><span class="line">    .appendYear(<span class="number">4</span>, <span class="number">4</span>)             <span class="comment">// 年（参数表示数字精度，最少4位，最多四位）</span></span><br><span class="line">    .appendLiteral(<span class="string">' '</span>)</span><br><span class="line">    .appendMonthOfYear(<span class="number">2</span>)         <span class="comment">// 月份</span></span><br><span class="line">    .appendLiteral(<span class="string">' '</span>)</span><br><span class="line">    .appendDayOfMonth(<span class="number">2</span>)          <span class="comment">// 日</span></span><br><span class="line">    .appendLiteral(<span class="string">' '</span>)</span><br><span class="line">    .appendDayOfWeekText()        <span class="comment">// 周几</span></span><br><span class="line">    .appendLiteral(<span class="string">" 该天已度过"</span>) <span class="comment">// 分隔（此处用语句分隔）</span></span><br><span class="line">    .appendFractionOfDay(<span class="number">2</span>, <span class="number">2</span>)    <span class="comment">// 当天已过去多少百分比</span></span><br><span class="line">    .appendLiteral(<span class="string">"%"</span>);</span><br><span class="line">DateTimeFormatter dateTimeFormatter = dateTimeFormatterBuilder.toFormatter();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 打印示例：公元 2019 10 01 星期二 该天已度过54%</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<br>
+
+<h2 id="Joda-Time-的时间跨度类"><a href="#Joda-Time-的时间跨度类" class="headerlink" title="Joda Time 的时间跨度类"></a>Joda Time 的时间跨度类</h2><p>Joda Time 设计了三个类，用来表示时间跨度，分别是 <font color="#32CD32"><strong>Duration</strong></font> 类、<font color="#32CD32"><strong>Period</strong></font> 类和 <font color="#32CD32"><strong>Interval</strong></font> 类。</p>
+<ul>
+<li><font color="#32CD32"><strong>Duration</strong></font> 类保存了一个精确的毫秒数，比如你设置它为一天，它会记录下这是 86400 秒（如有毫秒会精确到小数点后三位）。</li>
+<li><font color="#32CD32"><strong>Period</strong></font> 类保存了一段时间，例如 1 年 10 个月 1 小时 1 毫秒（它记录成 P1Y10MT-1H-0.001S）</li>
+<li><font color="#32CD32"><strong>Interval</strong></font> 类保存了一个开始时刻和一个结束时刻，因而也能够表示一段时间。</li>
+</ul>
+<p>我觉得官方 API 的说明对理解很有帮助：</p>
+<blockquote>
+<p>Duration: An immutable duration specifying a length of time in milliseconds.</p>
+<p>Period: An immutable time period specifying a set of duration field values.</p>
+<p>Interval: Interval is the standard implementation of an immutable time interval.</p>
+</blockquote>
+<p>虽然在我测试和学习之后，感觉这三个类有蛮多道道，也有设计精巧的地方，但我认为，这三个类没有太多的应用场景，时间跨度不是一个常见的需求，用到的时候看一看方法名就能大致猜到了，不写了。</p>
+<br>
+
+<hr>
+<h1 id="java-time-包中的时间类"><a href="#java-time-包中的时间类" class="headerlink" title="java.time 包中的时间类"></a><code>java.time</code> 包中的时间类</h1><p>当我们迎来 JDK 8 时，我们再也不需要 Joda Time 之类的第三方类库了，因为官方给我们提供了全新的时间类，这些类都属于 <code>java.time</code> 包下。</p>
+<p>官方提供的全新时间类，仍然可以分成三种类型：</p>
+<ol>
+<li>时间类（类似于上文的 Date 类）</li>
+<li>格式化与解析类（类似于上文的 SimpleDateFormat 类）</li>
+<li>时间跨度类</li>
+</ol>
+<p>当一个个类接触下去之后，你会发现 JDK 8 所提供的 <code>java.time</code> 包中的时间类，和 Joda Time 是何其相似，相似到你觉得简直像是 Joda Time 备胎转正，我猜想这跟 Joda Time 的作者参与到 <code>java.time</code> 包的开发中有关。</p>
+<p>我感觉这两个类库的设计，最主要的区别在于，Joda Time 习惯于 new 一个对象出来，而 <code>java.time</code> 习惯于用静态工厂方法实例化一个对象出来。</p>
+<br>
+
+<h2 id="java-time-包的时间类"><a href="#java-time-包的时间类" class="headerlink" title="java.time 包的时间类"></a><code>java.time</code> 包的时间类</h2><p><code>java.time</code> 包中的时间类设计，几乎与 Joda Time 一模一样，也是有五个类。</p>
+<table>
+<thead>
+<tr>
+<th>类名</th>
+<th>作用</th>
+<th>示例（2019 年 10 月 1 日 12 时整）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ZonedDateTime</td>
+<td>日期+时间（含时区信息）</td>
+<td>2019-10-01T00:00:00.000+08:00[Asia/Shanghai]</td>
+</tr>
+<tr>
+<td>Instant</td>
+<td>日期+时间（格林威治时间，存疑）</td>
+<td>2019-10-01T12:00:00.000Z</td>
+</tr>
+<tr>
+<td>LocalDateTime</td>
+<td>日期+时间（不含时区信息）</td>
+<td>2019-10-01T12:00:00.000</td>
+</tr>
+<tr>
+<td>LocalDate</td>
+<td>日期（不含时区信息）</td>
+<td>2019-10-01</td>
+</tr>
+<tr>
+<td>LocalTime</td>
+<td>时间（不含时区信息）</td>
+<td>12:00:00.000</td>
+</tr>
+</tbody></table>
+<p>你若将 <code>java.time</code> 包与 Joda Time 所表示时间的五个类进行比较，你会发现，后四个类的类名、作用、具体示例是一模一样的，完全相同，只有第一个【包含时区信息的日期+时间】的类，两个是稍有不同的。</p>
+<p>在 Joda Time 中类名是 <font color="#32CD32"><strong>DateTime</strong></font>，而在 <code>java.time</code> 包中是 <font color="#32CD32"><strong>ZonedDateTime</strong></font>，更明显地表现出这是一个跟时区有关系的类，这两个类通过 <code>toString()</code> 方法打印出来，也仅仅是最末尾相差了一处地区信息：[Asia/Shanghai]，除此之外，分毫未差。</p>
+<p>这五个类在使用上也几乎没什么区别，最主要的的区别只有一处，那就是：JDK 8 的 <code>java.time</code> 包中的时间类，不再具有 public 的构造方法，而只有类静态方法。</p>
+<p>也就是说，通过类构造方法实例化对象，是错误的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 错误！</span></span><br><span class="line">LocalDate localDate = <span class="keyword">new</span> LocalDate();</span><br></pre></td></tr></table></figure>
+
+<p>因为这个类构造方法是私有（private）的，不对外公开。</p>
+<p>实例化对象，需要使用类静态方法（有很多个静态方法，这里只展示两个有代表性的）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 静态方法 now() 当前时间</span></span><br><span class="line">LocalDate localDate = LocalDate.now();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 静态方法 of()  构造时间</span></span><br><span class="line">LocalDate localDate = LocalDate.of(<span class="number">2019</span>, <span class="number">10</span>, <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h2 id="java-time-包的格式化与解析类"><a href="#java-time-包的格式化与解析类" class="headerlink" title="java.time 包的格式化与解析类"></a><code>java.time</code> 包的格式化与解析类</h2><p><code>java.time</code> 包省去了 <font color="#32CD32"><strong>DateTimeFormat</strong></font> 类，将其方法合并到 <font color="#32CD32"><strong>DateTimeFormatter</strong></font> 类中，实例化一个 <font color="#32CD32"><strong>DateTimeFormatter</strong></font> 对象也就只能用这个类自己的静态工厂方法，但是使用起来和 Joda Time 并没有什么太大的区别。</p>
+<p><code>java.time</code> 包保留了 <font color="#32CD32"><strong>DateTimeFormatterBuilder</strong></font> 类，使用起来跟 Joda Time 也是几乎完全一样。</p>
+<p>这部分不写了，具体的内容可以参考这篇文章：<a href="https://www.twle.cn/c/yufei/java8/java8-basic-datetime-format-api.html" target="_blank" rel="noopener">《Java 8 新日期时间 API ( 下 ) - 格式化》</a></p>
+<br>
+
+<h2 id="java-time-包的时间跨度类"><a href="#java-time-包的时间跨度类" class="headerlink" title="java.time 包的时间跨度类"></a><code>java.time</code> 包的时间跨度类</h2><p><code>java.time</code> 包去除掉了 Joda Time 中鸡肋的 <font color="#32CD32"><strong>Interval</strong></font> 类（保存一个开始时间和一个结束时间），保留下了另外两个类：<font color="#32CD32"><strong>Duration</strong></font> 类和 <font color="#32CD32"><strong>Period</strong></font> 类。</p>
+<p>跟 Joda Time 的设计稍微不同，<font color="#32CD32"><strong>Duration</strong></font> 类保存了一个精确到纳秒的时间（例如 5 小时零 1 纳秒是 PT5H0.000000001S），但是 <font color="#32CD32"><strong>Period</strong></font> 类是一致的，仍然是保存一段时间。在使用上，<font color="#32CD32"><strong>Duration</strong></font> 类更偏向于时间（time），而 <font color="#32CD32"><strong>Period</strong></font> 类更偏向于日期（calendar）。</p>
+<p>具体的方法、使用的逻辑，与 Joda Time 如出一辙，那就写到这里吧。</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 pz
+  </div>
+  <div class="footer-right">
+    <nav>
+      pz阁下的blog
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+

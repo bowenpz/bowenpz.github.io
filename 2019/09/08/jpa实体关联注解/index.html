@@ -6,22 +6,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="description" content="九月的第二周，来看 Jpa 注解开发实体关联，Spring Cloud 下周再说。 被 Jpa 实体关联搞得有点烦，两个月了也没完全清晰，特来写一篇文章把常见关联情况都试一遍。  从ORM框架说起。 ORM（ Object-Relational Mapping ），对象关系映射。我们平常操纵的数据库都是关系型数据库（关系：表与表之间存在关系，例如从【部门表】可以查到【员工表】）。 Java 是">
-<meta name="keywords" content="java,Weekly Post">
+    <meta name="description" content="九月的第二周，来看 Jpa 注解开发实体关联，Spring Cloud 下周再说。 被 Jpa 实体关联搞得有点烦，两个月了也没完全清晰，特来写一篇文章把常见关联情况都试一遍。  从 ORM 框架说起。 ORM（ Object-Relational Mapping ），对象关系映射。我们平常操纵的数据库都是关系型数据库（关系：表与表之间存在关系，例如从【部门表】可以查到【员工表】）。 Java">
+<meta name="keywords" content="Weekly Post,java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="jpa 实体关联注解">
 <meta property="og:url" content="http://hellopz.netlify.com/2019/09/08/jpa实体关联注解/index.html">
 <meta property="og:site_name" content="这里是pz阁下">
-<meta property="og:description" content="九月的第二周，来看 Jpa 注解开发实体关联，Spring Cloud 下周再说。 被 Jpa 实体关联搞得有点烦，两个月了也没完全清晰，特来写一篇文章把常见关联情况都试一遍。  从ORM框架说起。 ORM（ Object-Relational Mapping ），对象关系映射。我们平常操纵的数据库都是关系型数据库（关系：表与表之间存在关系，例如从【部门表】可以查到【员工表】）。 Java 是">
+<meta property="og:description" content="九月的第二周，来看 Jpa 注解开发实体关联，Spring Cloud 下周再说。 被 Jpa 实体关联搞得有点烦，两个月了也没完全清晰，特来写一篇文章把常见关联情况都试一遍。  从 ORM 框架说起。 ORM（ Object-Relational Mapping ），对象关系映射。我们平常操纵的数据库都是关系型数据库（关系：表与表之间存在关系，例如从【部门表】可以查到【员工表】）。 Java">
 <meta property="og:locale" content="Chinese">
 <meta property="og:image" content="http://hellopz.netlify.com/assets/%E5%8D%95%E5%90%91%E4%B8%80%E5%AF%B9%E4%B8%80.jpg">
 <meta property="og:image" content="http://hellopz.netlify.com/assets/%E4%B8%80%E5%AF%B9%E4%B8%80mappedBy.jpg">
 <meta property="og:image" content="http://hellopz.netlify.com/assets/%E4%B8%80%E5%AF%B9%E5%A4%9A@JoinColumn.png">
 <meta property="og:image" content="http://hellopz.netlify.com/assets/@JoinTable.png">
-<meta property="og:updated_time" content="2019-09-10T07:34:04.352Z">
+<meta property="og:updated_time" content="2019-09-10T07:46:23.837Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jpa 实体关联注解">
-<meta name="twitter:description" content="九月的第二周，来看 Jpa 注解开发实体关联，Spring Cloud 下周再说。 被 Jpa 实体关联搞得有点烦，两个月了也没完全清晰，特来写一篇文章把常见关联情况都试一遍。  从ORM框架说起。 ORM（ Object-Relational Mapping ），对象关系映射。我们平常操纵的数据库都是关系型数据库（关系：表与表之间存在关系，例如从【部门表】可以查到【员工表】）。 Java 是">
+<meta name="twitter:description" content="九月的第二周，来看 Jpa 注解开发实体关联，Spring Cloud 下周再说。 被 Jpa 实体关联搞得有点烦，两个月了也没完全清晰，特来写一篇文章把常见关联情况都试一遍。  从 ORM 框架说起。 ORM（ Object-Relational Mapping ），对象关系映射。我们平常操纵的数据库都是关系型数据库（关系：表与表之间存在关系，例如从【部门表】可以查到【员工表】）。 Java">
 <meta name="twitter:image" content="http://hellopz.netlify.com/assets/%E5%8D%95%E5%90%91%E4%B8%80%E5%AF%B9%E4%B8%80.jpg">
     
     
@@ -73,6 +73,8 @@
     <br/>
     <span id="actions">
       <ul>
+        
+        <li><a class="icon" href="/2019/10/01/时间类/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
         <li><a class="icon" href="/2019/09/01/递归/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
@@ -139,7 +141,7 @@
 <p>九月的第二周，来看 Jpa 注解开发实体关联，Spring Cloud 下周再说。</p>
 <p>被 Jpa 实体关联搞得有点烦，两个月了也没完全清晰，特来写一篇文章把常见关联情况都试一遍。</p>
 <hr>
-<p>从ORM框架说起。</p>
+<p>从 ORM 框架说起。</p>
 <p>ORM（ Object-Relational Mapping ），对象关系映射。我们平常操纵的数据库都是关系型数据库（关系：表与表之间存在关系，例如从【部门表】可以查到【员工表】）。 Java 是一门面向对象的语言，它希望与对象打交道，而不是与数据库、与表打交道，通过 <code>ORM （对象关系映射）</code> 实现对象之间建立起关系。</p>
 <p>术语一些： ORM，把关系数据库的表结构映射到对象上。</p>
 <br>
