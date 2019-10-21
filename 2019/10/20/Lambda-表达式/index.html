@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="十月的第三周，来学习 Lambda 表达式。 这周休息一下，本来呢要学习 Java 8 的函数式编程特性，Lambda 表达式只是其中的一部分，结果为了写之前的博文每周都欠债，这周水一下……  先来讨论，lambda 表达式是干什么的。 Java 是一门面向对象的语言，万物皆对象，做什么也都离不开对象。对象内可能有属性，可能有对象，也有可能有方法，就比如说：我，18 岁（属性），有只猫（对象）">
+<meta name="keywords" content="Weekly Post,java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lambda 表达式">
+<meta property="og:url" content="http://hellopz.netlify.com/2019/10/20/Lambda-表达式/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="十月的第三周，来学习 Lambda 表达式。 这周休息一下，本来呢要学习 Java 8 的函数式编程特性，Lambda 表达式只是其中的一部分，结果为了写之前的博文每周都欠债，这周水一下……  先来讨论，lambda 表达式是干什么的。 Java 是一门面向对象的语言，万物皆对象，做什么也都离不开对象。对象内可能有属性，可能有对象，也有可能有方法，就比如说：我，18 岁（属性），有只猫（对象）">
+<meta property="og:locale" content="Chinese">
+<meta property="og:updated_time" content="2019-10-21T23:55:55.985Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Lambda 表达式">
+<meta name="twitter:description" content="十月的第三周，来学习 Lambda 表达式。 这周休息一下，本来呢要学习 Java 8 的函数式编程特性，Lambda 表达式只是其中的一部分，结果为了写之前的博文每周都欠债，这周水一下……  先来讨论，lambda 表达式是干什么的。 Java 是一门面向对象的语言，万物皆对象，做什么也都离不开对象。对象内可能有属性，可能有对象，也有可能有方法，就比如说：我，18 岁（属性），有只猫（对象）">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Lambda 表达式</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/Weekly-Post/">Weekly Post</a></li>
+         
+          <li><a href="/tags/tips/">Tips</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/10/08/Spring-Cloud/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2019/10/20/Lambda-表达式/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2019/10/20/Lambda-表达式/&text=Lambda 表达式"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2019/10/20/Lambda-表达式/&is_video=false&description=Lambda 表达式"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Lambda 表达式
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2019-10-20T14:26:07.000Z" itemprop="datePublished">2019-10-20</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Weekly-Post/">Weekly Post</a>, <a class="tag-link" href="/tags/java/">java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>十月的第三周，来学习 Lambda 表达式。</p>
+<p>这周休息一下，本来呢要学习 Java 8 的函数式编程特性，Lambda 表达式只是其中的一部分，结果为了写之前的博文每周都欠债，这周水一下……</p>
+<hr>
+<p>先来讨论，lambda 表达式是干什么的。</p>
+<p>Java 是一门面向对象的语言，万物皆对象，做什么也都离不开对象。对象内可能有属性，可能有对象，也有可能有方法，就比如说：我，18 岁（属性），有只猫（对象），我喜欢撸猫（方法）。Java 面向对象的体现就在于，我多少岁、有什么、做什么（也就是对象的属性、方法等等），前提都在于“我”的存在。</p>
+<p>所以说，Java 里存在着对象，也存在着行为（方法），但是行为一定要有对象作为前提，不存在脱离了对象的行为。就好比说我喜欢撸猫，【喜欢撸猫】这个行为，一定是要有“人存在”作为前提的，不存在着没有执行动作人的行为。</p>
+<p>可如果，我只需要行为，不在乎对象是谁呢？</p>
+<p>我举一个例子。比如说，有一个列表需要排序，排序是一种行为，但是列表本身没有排序的能力。那么，列表要实现排序这种行为，就要先找一个【排序者】，让它去执行排序这个行为。这是一条很清晰的逻辑线：列表要排序，先找一个【排序人】，让它去排序。这个逻辑看上去很正常，可问题在于，列表根本就不在乎，到底是谁去执行排序这个行为，列表在乎的，只是它需要排序这个行为本身。在这种场景下，我们只需要行为，而不需要去关心拥有行为能力的那个对象是谁。</p>
+<p>说得再清晰一些：我们不想传入对象，我们只想传入行为。</p>
+<p>这就是 lambda 表达式存在的意义。</p>
+<hr>
+<p>所有教程介绍 lambda 表达式，上来就是一通劈头盖脸的匿名内部类代码，你想清楚逻辑就知道为什么要这么介绍。我们的目标是什么，是为了传入行为，而不在乎对象是谁。原来怎么解决的，用匿名内部类，虽然为了传入行为还是传入了对象，但是这个对象是一个匿名的对象。理解了吗，为什么用匿名内部类，是为了用一个匿名的对象传入我们想要的行为，对象是谁不重要，行为本身才重要。</p>
+<p>Jdk 8 之后，函数式编程出头了，lambda 表达式出现了，既然对象是谁不重要，那么我们也就不用匿名了，干脆只传行为就行了。</p>
+<p>你看这行代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">button.addActionListener(event -&gt; System.out.println(<span class="string">"按钮被点击了"</span>));</span><br></pre></td></tr></table></figure>
+
+<p>这一行代码的意思是：在小括号内，我传入了一个行为，而且我只传入了一个行为。</p>
+<p>我对于 lambda 表达式的解释到此为止，我建议再去看看这篇知乎问答：<a href="https://www.zhihu.com/question/20125256/answer/324121308" target="_blank" rel="noopener">《Lambda 表达式有何用处？如何使用？》</a>，写得行云流水，逻辑上非常舒畅。如果看后面的内容觉得云里雾里，可以再回头看一下这篇回答。</p>
+<hr>
+<p>当我要开始写 lambda 表达式具体如何使用时，内容分成了两部分：</p>
+<ol>
+<li>lambda 表达式怎么使用（语法）</li>
+<li>lambda 表达式用在哪里</li>
+</ol>
+<p>实际上，我一直都对 lambda 表达式的语法不存疑惑，它在语法上就已经足够让人看懂了，即使是不会写，但也能大致看懂别人写的代码想做什么。我一直以来不理解的地方在于，lambda 表达式到底要用在哪里，当我写哪些代码的时候，可以使用 lambda 表达式？</p>
+<p>所以我们先来看，lambda 表达式要用在哪里，lambda 表达式的类型究竟是什么。</p>
+<br>
+
+<p>我们先搞清楚，lambda 表达式的类型是什么。</p>
+<p>在 Java 中，lambda 表达式依旧是一个类，它是一个接口的实现类。</p>
+<p>我们来举一个例子，一个列表排序的例子。</p>
+<ol>
+<li><p>一个排序的场景</p>
+<p>我们自定义一个 Person 类（代码略），该类有两个属性：姓名、年龄。我们实例化三个 Person 对象，然后把这三个 Person 对象放进一个列表里。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Person person1 = <span class="keyword">new</span> Person(<span class="string">"张三"</span>, <span class="number">21</span>);</span><br><span class="line">Person person2 = <span class="keyword">new</span> Person(<span class="string">"李四"</span>, <span class="number">20</span>);</span><br><span class="line">Person person3 = <span class="keyword">new</span> Person(<span class="string">"王五"</span>, <span class="number">22</span>);</span><br><span class="line">List&lt;Person&gt; personList = Arrays.asList(person1, person2, person3);</span><br></pre></td></tr></table></figure>
+
+<p>此时这个列表里面有三个对象，它们的排列顺序是往里添加的顺序，也就是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// [Person&#123;name='张三', age=21&#125;, Person&#123;name='李四', age=20&#125;, Person&#123;name='王五', age=22&#125;]</span></span><br></pre></td></tr></table></figure>
+
+<p>我们现在希望，这个列表里面的三个 Person 对象，能够按照年龄的大小排序。我们可以通过 lambda 表达式来实现排序（暂且先看着，不要理语法）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">personList.sort((a, b) -&gt; a.getAge() - b.getAge());</span><br><span class="line"></span><br><span class="line"><span class="comment">// [Person&#123;name='李四', age=20&#125;, Person&#123;name='张三', age=21&#125;, Person&#123;name='王五', age=22&#125;]</span></span><br></pre></td></tr></table></figure>
+
+<p>你看，此时这个列表里面，就按照年龄排序了。</p>
+</li>
+<li><p>拆解看实现过程</p>
+<p>上面通过 lambda 表达式实现了按照年龄排序，只用了一行代码。实际上这是两行代码合了起来。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">personList.sort((a, b) -&gt; a.getAge() - b.getAge());</span><br><span class="line"><span class="comment">//  ↓↓↓  （实际上，上面这行代码，就是下面这两行代码的组合）</span></span><br><span class="line">Comparator&lt;Person&gt; comparator = (a, b) -&gt; a.getAge() - b.getAge();</span><br><span class="line">personList.sort(comparator);</span><br></pre></td></tr></table></figure>
+
+<p>你观察那句 lambda 表达式，即 <code>(a, b) -&gt; a.getAge() - b.getAge()</code>，它被赋给了 Comparator，而 Comparator 实际上就是一个接口，一个负责排序的接口。</p>
+<p>那么这行代码：<code>Comparator&lt;Person&gt; comparator = (a, b) -&gt; a.getAge() - b.getAge();</code>，它的意思是说：</p>
+<ul>
+<li>我们写了一句 lambda 表达式。</li>
+<li>这句 lambda 表达式，实际上是 Comparator 接口的一个实现类。</li>
+</ul>
+</li>
+</ol>
+<br>
+
+<p>我们来思考一下，通过 lambda 表达式，到底做了一件什么事情。</p>
+<p>在通常情况下，某一个方法需要一个接口的具体实现类的对象，那我们就要自己去写一个类，让该类继承接口，实现接口的方法，从而获得一个实现了接口的类，就像下面这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyComparator</span> <span class="keyword">implements</span> <span class="title">Comparator</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(Object o1, Object o2)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 重写方法</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>（如果觉得这样子很繁琐，也可以通过匿名内部类的方式去实现。）</p>
+<p>而通过 lambda 表达式，我们不再需要自己写一个类出来，让这个类去继承接口实现方法，这非常麻烦，而且会模糊掉我们的目的。我们不再新建一个类，而是使用 lambda 表达式，lambda 表达式本身，就是一个接口的实现类。</p>
+<p>这样做最大的好处（在我看来），就是我们无视了对象，直视行为本身。</p>
+<p>你重新来看这行排序代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">personList.sort((a, b) -&gt; a.getAge() - b.getAge());</span><br></pre></td></tr></table></figure>
+
+<p>你不用管它是什么意思，实现了什么功能，你是不是能非常直观地看出，小括号里面【在做某件事】，括号里面它是一个很清晰可知的行为。我们通过拆解代码能知道，括号里面的这句 lambda 表达式，实际上是一个类，但是在代码的直观性上，它是什么不重要，在这里，它就代表了一个行为。</p>
+<p>简洁，直观。</p>
+<hr>
+<p>我再次把 lambda 表达式的类型表述一遍：</p>
+<blockquote>
+<p>lambda 表达式是函数式接口的一个实例，但 Lambda 表达式本身不包含它要实现的函数式接口的信息，这要由它所在的上下文推断出来。</p>
+</blockquote>
+<p>这句话摘自<a href="http://www.lambdafaq.org/what-is-the-type-of-a-lambda-expression/" target="_blank" rel="noopener">《What is the type of a lambda expression?》</a>。这句话表达了两件事：</p>
+<ol>
+<li>lambda 表达式的类型是一个函数式接口</li>
+<li>lambda 表达式本身不含接口信息，接口信息是编译器根据上下文猜出来的。</li>
+</ol>
+<p>第一条多了一点信息，它说 lambda 表达式的类型不光是接口，还是函数式接口。这个我觉得顺带一提就可以了，函数式接口的意思是，只包含一个抽象方法声明的接口。你设想一下，lambda 表达式的作用是传入行为，一个方法对应一个行为，如果接口中有多个抽象方法，那岂不是就有多个可传入的行为，那一条 lambda 表达式肯定做不到。我们这里是反推了，其实函数式接口的概念应该先于 lambda 表达式。</p>
+<p>这第二条，就要说到 lambda 表达式的语法了。</p>
+<br>
+
+<p>lambda 表达式的基本样板长这样子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(      ) -&gt; </span><br><span class="line">(      ) -&gt; &#123;       &#125;</span><br></pre></td></tr></table></figure>
+
+<p>左边的小括号放参数，右边要不然没有大括号，放表达式；要不然有大括号，放执行语句。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">()              5</span><br><span class="line">x               2 * x</span><br><span class="line">(x, y)      -&gt;  x + y</span><br><span class="line">(int x)         &#123; return 2 * x; &#125;</span><br><span class="line">(String s)      System.out.println(s)</span><br></pre></td></tr></table></figure>
+
+<p>以上是几个例子，大致观察一下就能看出，lambda 表达式是一种崇尚简洁的表达式，大小括号、参数类型、返回体等等都是能省则省，总之能让编译器分析上下文猜出来的，都尽量不写。如果原接口声明了参数类型，那么就可以不在 lambda 表达式中写清楚数据类型，如果原接口声明了返回值类型，并且比较简单，那么在 lambda 表达式中就可以只写一句表达式，而无需写执行语句，编译器会猜到我们想返回这个表达式。</p>
+<p>例如，对于这句 lambda 表达式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(x, y) -&gt; x + y</span><br></pre></td></tr></table></figure>
+
+<p>你可以写成这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">int</span> x, <span class="keyword">int</span> y) -&gt; &#123; <span class="keyword">return</span> x + y; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是当所有的信息（包括很多冗余信息）都写出来时，会让代码丧失掉直观性，你可能无法看一眼就知道这句 lambda 表达式想做什么。因此在编译器能够分析出来的前提下，应当尽量少写，让 lambda 表达式想传入的行为变得尽可能直观。</p>
+<p>本篇就写到这里。</p>
+<br>
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 pz
+  </div>
+  <div class="footer-right">
+    <nav>
+      pz阁下的blog
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+
