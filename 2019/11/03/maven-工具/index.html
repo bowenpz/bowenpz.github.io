@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="十一月的第一周，来学习和整理 Maven。 用维基的话讲，Maven 是一个项目管理以及自动构建的工具（初听还是有些一头雾水的）。我开始工作之后，几乎天天和 Maven 打交道，但是仿佛又对它很生疏，特用一周的时间来学习与整理相关知识。  Maven 是 Apache 公司所创造的项目管理工具。项目管理这个词，在计算机编程方面没那么容易解释，你可以理解为编程中除了写代码那部分之外的工作，例如编">
+<meta name="keywords" content="Weekly Post,java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Maven 工具">
+<meta property="og:url" content="http://hellopz.netlify.com/2019/11/03/maven-工具/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="十一月的第一周，来学习和整理 Maven。 用维基的话讲，Maven 是一个项目管理以及自动构建的工具（初听还是有些一头雾水的）。我开始工作之后，几乎天天和 Maven 打交道，但是仿佛又对它很生疏，特用一周的时间来学习与整理相关知识。  Maven 是 Apache 公司所创造的项目管理工具。项目管理这个词，在计算机编程方面没那么容易解释，你可以理解为编程中除了写代码那部分之外的工作，例如编">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/maven%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84.png">
+<meta property="og:updated_time" content="2019-11-05T15:32:48.625Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Maven 工具">
+<meta name="twitter:description" content="十一月的第一周，来学习和整理 Maven。 用维基的话讲，Maven 是一个项目管理以及自动构建的工具（初听还是有些一头雾水的）。我开始工作之后，几乎天天和 Maven 打交道，但是仿佛又对它很生疏，特用一周的时间来学习与整理相关知识。  Maven 是 Apache 公司所创造的项目管理工具。项目管理这个词，在计算机编程方面没那么容易解释，你可以理解为编程中除了写代码那部分之外的工作，例如编">
+<meta name="twitter:image" content="http://hellopz.netlify.com/assets/maven%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Maven 工具</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/Weekly-Post/">Weekly Post</a></li>
+         
+          <li><a href="/tags/tips/">Tips</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/10/27/线程入门/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2019/11/03/maven-工具/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2019/11/03/maven-工具/&text=Maven 工具"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2019/11/03/maven-工具/&is_video=false&description=Maven 工具"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#项目基本信息"><span class="toc-number">1.</span> <span class="toc-text">项目基本信息</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#项目依赖"><span class="toc-number">2.</span> <span class="toc-text">项目依赖</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#继承、聚合"><span class="toc-number">3.</span> <span class="toc-text">继承、聚合</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#clean-生命周期"><span class="toc-number">4.</span> <span class="toc-text">clean 生命周期</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#default-生命周期"><span class="toc-number">5.</span> <span class="toc-text">default 生命周期</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#site-生命周期"><span class="toc-number">6.</span> <span class="toc-text">site 生命周期</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Maven 工具
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2019-11-03T14:06:39.000Z" itemprop="datePublished">2019-11-03</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Weekly-Post/">Weekly Post</a>, <a class="tag-link" href="/tags/java/">java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>十一月的第一周，来学习和整理 Maven。</p>
+<p>用维基的话讲，Maven 是一个项目管理以及自动构建的工具（初听还是有些一头雾水的）。我开始工作之后，几乎天天和 Maven 打交道，但是仿佛又对它很生疏，特用一周的时间来学习与整理相关知识。</p>
+<hr>
+<p>Maven 是 Apache 公司所创造的项目管理工具。项目管理这个词，在计算机编程方面没那么容易解释，你可以理解为编程中除了写代码那部分之外的工作，例如编译、打包、引入依赖资源等等这类打杂的事情。</p>
+<br>
+
+<p>在 Maven 出现之前，Ant 是 Java 世界的主流项目管理工具，所有人在介绍 Maven 的时候，总是会先讲几句 Ant 如何拧巴、如何不优雅，然后才话归正题说起 Maven。我并没有用过 Ant，我猜测很多像我一样的萌新也是直接上手 Maven，而从没使用过 Ant 的，我们这类人每次看 Maven 的教程都会一脸懵逼：“Ant 是什么？我们这说 Maven 呢你提它干嘛？”</p>
+<p>看了许久，大概能猜到 Maven 和经常被鞭尸的 Ant 的区别：Ant 是一个很传统的项目管理工具，想实现什么，自己写去，麻烦也得自己写；Maven 是一个【约定大于配置】的项目管理工具，帮你写好了大部分东西、配好了大部分操作，你稍微一改就能用了（前提是你要遵守约定）。</p>
+<br>
+
+<p>在 Maven 的官网中，有一篇名为《Maven 的哲学》的文章，里面粗略介绍了 Maven 的设计哲学。其中有这么一句话：</p>
+<blockquote>
+<p>Maven is about the application of patterns in order to achieve an infrastructure which displays the characteristics of visibility, reusability, maintainability, and comprehensibility. </p>
+</blockquote>
+<p>我认为这句话里最重要的词是“patterns”，这个词直译是模式、范例。我觉得呢，pattern 是一个很有哲学思辨性的词，印象中它最早出现应该是在柏拉图的理念论里面，柏拉图认为有两个世界，一个是理想世界，一个是现实世界，现实世界中的一切都以理想世界中的“范型”（pattern）为模板创造出来。</p>
+<p>不要有抵制心理，这是个很简单的概念，举个例子：世界上有那么多人，每个人都各有不同，但大家都属于同一类事物：人。按照柏拉图的理解，一定有另一个世界，那里有人这个模板，我们这个世界上的所有人，都是从另一个世界上的那个模板拷贝而来的。如果用编程术语来描述的话，这就是对象与类之间的关系，一个是抽象化的，一个是实例化的。</p>
+<p>Maven 自述哲学思想的这段话，我理解的意思是，Maven 设置了一个公用模板，如果你使用 Maven 来管理项目，你就可以使用那个默认的模板，稍微改一点东西就可以了。这是一种和 Spring Boot 一样的配置思路，即约定大于配置，我们约定好了，你就别自己配置了。这样做有两种好处，一种是减少开发时间，一种是标准化、规范化，以方便大家交流。</p>
+<br>
+
+<p>但我是觉得吧，Maven 所指的“patterns”，说的不光是约定大于配置这件事，它当然包括这个，但是不只是。因为 Maven 本身不光是一个解决项目配置问题的工具，它做的事情是项目管理，管理这个概念就广泛了很多，包括依赖、编译、部署等等，当然，其中也包括配置。我理解的 Maven，它在配置方面采用约定大于配置的思路，但是在其他地方，也是本着【模块化】、【范型化】、【标准化】这一类的思路来处理的。</p>
+<p>这个慢慢体会。</p>
+<hr>
+<p>对我而言，学习 Maven 首先遇到的问题是，我分不清楚那一堆项目管理的功能，究竟是 Maven 的，还是 IDE 的（此处应该配一个扶额焦虑的表情）。在我写这篇博文之前，很多 Maven 的设计与功能，我都以为是 IDEA 帮我做的，毕竟我每一次构建项目，都是打开 IDEA 软件，使用 Maven 来构建工程的，而且一切过程都是全程默认下一步做的，搞得我现在都分不清这两个工具的功能边界了……</p>
+<br>
+
+<p>用 Maven 构建项目，首先注意到的，是文件的目录结构。多建几次就会发现，每次新建出来的项目（project），或者是模块（module），文件的目录索引都是一样的，基本都长下面这个样子：</p>
+<p><img src="/assets/maven%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84.png" alt="maven目录结构"></p>
+<p>这种目录结构是 Maven 构建出来的，统一化的文件索引方式，好处之一在于，各开发者在开发时，存放文件的位置几乎没有差别（而且符合直觉），能够维持团队高效运作；好处之二在于，固定的文件存放路径，能够让第三方工具 Maven 帮助我们管理项目，而不是我们自己做繁复的操作。</p>
+<p>这种目录结构，最重要的是三部分：<code>src</code>、<code>target</code>、<code>pom.xml</code>。他们分别对应着：源代码、编译文件、配置文件。稍详细一点的信息看下面：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">├── src                src即source，代表源文件目录</span><br><span class="line">│   ├── main             主程序</span><br><span class="line">│   │   ├── java           存放java源代码，几乎所有代码文件都在这里</span><br><span class="line">│   │   └── resources      存放资源文件，例如application.xml</span><br><span class="line">│   └── test             测试程序</span><br><span class="line">│       └── java           内存放测试代码</span><br><span class="line">│</span><br><span class="line">├── target             输出目录</span><br><span class="line">│   ├── classes          编译输出目录</span><br><span class="line">│   └── test-classes     测试编译输出目录</span><br><span class="line">│</span><br><span class="line">└── pom.xml            配置文件</span><br></pre></td></tr></table></figure>
+
+<p>我觉得这部分没什么好关注的，看几次就记得很牢固了，这种目录结构还是很符合直觉的。</p>
+<p>上文说到，重要的有三部分：<code>src</code>、<code>target</code>、<code>pom.xml</code>，这前两个着实没什么可介绍的，一个放源码，一个放编译文件，但第三个 <code>pom.xml</code> （Maven 的配置文件），还是要单独学习的。</p>
+<hr>
+<p>POM 的全程是 Project Object Model，项目对象模型。Maven 是一个项目管理工具，它要面对的是项目，它面对项目的管理方式是 POM，把项目当做对象一样管理。这种面向对象的处理方式，跟 Java 是一个路数的，只不过 Java 的编码语言是 Java，Maven 的编码语言是 xml。</p>
+<p>初看 Maven 的配置文件（pom.xml），xml 这种语言在字符数量上实在是令人畏惧，这一大堆的代码让人一头雾水，感觉要配置的东西很繁琐，很混乱。</p>
+<p>以下是一段配置得较为简单，但还是能够运行的 pom.xml 文件代码：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">project</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.pz<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>joda-time<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>joda-time<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.10.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我在四处找 Maven 教程和总结贴的时候，看到了一篇博文（但是我后来找不到了，抱歉不能链接来源了），他提供了一种新的认知思路：既然 POM 就是将项目视作对象，以面向对象的方式进行管理，那么我们可以把 xml 的代码转换成 Java 代码来理解。上面的那段 xml 代码，如果是用 java 代码来看待的话，应该是这样子的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Project</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> modelVersion;</span><br><span class="line">    <span class="keyword">private</span> String groupId;</span><br><span class="line">    <span class="keyword">private</span> String artifactId;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> version;</span><br><span class="line">    <span class="keyword">private</span> Dependency dependencies;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> Class Dependency &#123;</span><br><span class="line">        <span class="keyword">private</span> String groupId;</span><br><span class="line">        <span class="keyword">private</span> String artifactId;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> version;</span><br><span class="line">        <span class="keyword">private</span> String scope = compile;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样就清晰很多，便于初次看到 xml 代码来理解了。</p>
+<br>
+
+<p>下面分类型，挑选一部分经常要使用的配置项来总结一下。</p>
+<p>pom.xml 文件能够配置的地方特别多，在此全部总结出来不现实，以后遇到了现查就可以了。参考这篇<a href="https://www.runoob.com/maven/maven-pom.html" target="_blank" rel="noopener">《POM 标签大全详解》</a>去查阅更多配置解释（在网页内容的下半部分）。</p>
+<h1 id="项目基本信息"><a href="#项目基本信息" class="headerlink" title="项目基本信息"></a>项目基本信息</h1><p>以这段代码为例：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">project</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.pz<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>test<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>从头文件说起，这部分不是 Maven 的 pom.xml 文件所专有的，而是一切 xml 文件都要配置的。</p>
+<ul>
+<li><p><strong>xmlns</strong></p>
+<p>全称是 xml name space，即 xml 命名空间。</p>
+<p>命名空间的意思是，有两个 xml 文件都使用了同一个名字，比如 A.xml 文件是一个人员文件，里面用 name 这个名字表示人名，与此同时 B.xml 文件是一个公司文件，里面用 name 这个名字表示公司名。当两个文件同时执行时，如果不指定 xml 文件的命名空间，那么就会造成混乱。</p>
+<p>通常情况下，如果要指定命名空间，应该是 <code>xmlns:a</code>、<code>xmlns:b</code> 之类的写法，表示 a 的命名空间、b 的命名空间是什么，这里什么都不写，是表示默认的命名空间。</p>
+<p><code>xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;</code> 这一行的右边是一个字符串（更准确的讲，是一个 url 地址字符串），这个字符串表示该命名空间的唯一标识符。通常情况下，这个字符串会是一个 url 地址，点开之后能够看到详细的对于该命名空间的说明。但是在这里，如果你尝试的话，这个 url 并打不开，这个后面再说。</p>
+</li>
+<li><p><strong>xmlns:xsi</strong></p>
+<p>根据上面对于 xmlns 的解释，这里应该就是声明 xsi 命名空间了。</p>
+<p>xsi 的全称是 xml schema instance，这个命名空间并不是偶然出现的，它已经成为了一种业界规范，是表示 xml 文档结构（ XSD，xml scheme definition）的命名空间。xml 文档结构，就是整个 xml 文件需要有哪些内容，这些内容的格式、默认值等等是什么，我们所写的 pom.xml 文件，都是基于它的 xml 文档结构来写的。由于文档结构是非常重要的东西，因此为它单独指定一个命名空间。</p>
+<p>这次你点开后面的网址，就能看见对于 xsi 这个命名空间的简单说明了。</p>
+</li>
+<li><p><strong>xsi:schemaLocation</strong></p>
+<p>这个的意思是：xsi 的 schemaLocation 是什么，翻译之后的意思是：xml 文档结构的具体内容应该会存放在某个文件里，那么这个文件在哪里？</p>
+<p>你去观察这行代码，发现在 <code>xsi:schemaLocation</code> 之后有两个 url 地址，而且第一个 url 地址，居然就是 xmlns 默认命名空间的指定地址。实际上，这两个 url 地址是以 key-value 的形式出现的，key 是该 xml 默认命名空间的值（那当然也就是 xmlns 所指定的那个 url 地址），value 是该 xml 文档结构文档的位置。</p>
+<p>如果你打开后面那个 url 地址，你会真的看到一个文件，而且你单纯从格式上就能判断出来，这就是该 xml 文件的文档结构的具体内容。</p>
+</li>
+</ul>
+<br>
+
+<p>示例代码中，中间一共有六个配置项，逐一介绍：</p>
+<ul>
+<li><p><strong>modelVersion</strong></p>
+<p>Maven 工程的模型版本，就目前而言只有一种参数可能：<code>4.0.0</code>。</p>
+<p>但是即使如此，这一项也必须显式地配置出来，因为未来 Maven 可能会有更多的版本，例如 <code>4.0.1</code>、<code>5.0.0</code> 等等。到那时，如果遇到了没有配置模型版本的 xml 文件，将无法向前兼容。</p>
+<br>
+</li>
+<li><p><strong>groupId</strong></p>
+<p>公司或组织名称，是指本项目的归属人是谁。</p>
+</li>
+<li><p><strong>artifactId</strong></p>
+<p>项目名称，例如一个公司有10个项目，各个项目相互区别就是通过这个 ID。</p>
+<p>groupId 和 artifactId 两个 ID 一起构成了唯一索引，也就是说，一个 groupId 加上一个 artifactId，在这个世界上只能出现一次（除非是同一个项目的不同版本）。</p>
+</li>
+<li><p><strong>version</strong></p>
+<p> 项目当前版本，格式为：主版本.次版本.增量版本-限定版本号。</p>
+<p>限定版本号有两种：SNAPSHOT（快照）和  RELEASE（发布）。前者表示不稳定版本，可能会经常发生变化，后者是相对稳定的版本，版本不会频繁变动。</p>
+<p>与 groupId 和 artifactId 联合构成 GAV，这三个值加在一起，可以精准地指向【一个特定版本的项目】。当别的项目要引入依赖，把别的项目加载进来时，必须指定这三个值。</p>
+<br>
+</li>
+<li><p><strong>packaging</strong></p>
+<p>项目打包之后的类型，有很多种，例如 jar、war、pom 等等，默认使用 jar（也就是说如果你不写这一行也可以，默认是 <code>&lt;packaging&gt;jar&lt;/packaging&gt;</code>）。</p>
+<p>pom 类型是父 pom.xml 文件所使用的，比如有一个公共的 pom.xml 文件，其中配置了很多共性的配置，有四个子模块的 pom.xml 文件都可以直接引用该 pom.xml 文件，少配置一些内容。这个公共的 pom.xml 文件，就是父 pom 文件，它的构建类型就是 pom（即 <code>&lt;packaging&gt;pom&lt;/packaging&gt;</code>）。</p>
+</li>
+<li><p><strong>name</strong></p>
+<p>项目的名称，Maven 生成文档时用的。</p>
+</li>
+</ul>
+<p>还有很多很多很多可以配置的地方，这里只介绍了一点点（但是足够日常使用了）。</p>
+<h1 id="项目依赖"><a href="#项目依赖" class="headerlink" title="项目依赖"></a>项目依赖</h1><p>以这段代码为例：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">project</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">&lt;!-- 省略了一些必要配置，只保留了依赖配置 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>joda-time<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>joda-time<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.10.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这段示例 xml 代码共引入了两个外部依赖，分别是 junit（测试单元）和 joda-time（一个很好用的第三方时间类）。</p>
+<ul>
+<li><p><strong>dependencies</strong></p>
+<p>在 dependencies 内可以存放多个 dependency，表示项目所引入的所有依赖。Maven 将自动地去仓库里寻找依赖包，从本地开始找，没有就去仓库找，再没有就去远程仓库找，每次在仓库里找到了都会下载到本地。如果依赖之间有版本上的冲突，先根据依赖深度判决，深度相同再根据先来后到的原则判决。</p>
+</li>
+<li><p><strong>dependency</strong></p>
+<p>一个依赖包，其中包括 groupId、artifactId、version 等标签。</p>
+</li>
+<li><p><strong>groupId</strong>、<strong>artifactId</strong>、<strong>version</strong></p>
+<p>GAV 三参数，依赖包所必需的标签，通过这三个标签才能找到一个特定版本的依赖包。</p>
+</li>
+<li><p><strong>scope</strong></p>
+<p>依赖作用的范围，例如值为 test 时表示，只会在测试时引用该依赖，正式的版本不会依赖。</p>
+<p>共有种，分别是：compile（全程，默认配置）、provided（类似于全程，但打包期可以被替代）、test（测试）、runtime（除了编译的全程阶段）、system（类似于全程，但依赖从本地文件抓取）。</p>
+</li>
+<li><p>其他</p>
+<p>在父 pom 文件中，还可以配置 dependencyManagement，用法上和 dependencies 类似，可以作为集中化的依赖配置中心，可以配置依赖的版本号、作用域等等，子 pom 文件如果声明了一个 dependency，并且只配置了 groupId、artifactId 这两个参数，其他参数就会从父 pom 文件的 dependencyManagement 里找。（当然，如果自己填了其他参数，会以子配置为准）</p>
+</li>
+</ul>
+<h1 id="继承、聚合"><a href="#继承、聚合" class="headerlink" title="继承、聚合"></a>继承、聚合</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.app.pz<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>pz-platform<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">modules</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">module</span>&gt;</span>pz-app-common<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">module</span>&gt;</span>pz-app-api<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">module</span>&gt;</span>pz-app<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">module</span>&gt;</span>pz-app-server<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">modules</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>继承和聚合通常是对应存在的，父 pom 文件会标明聚合（modules）内容表示它的作用模块有哪些，子 pom 文件会标明继承（parent）内容，表示它继承自哪个 pom 文件。</p>
+<ul>
+<li><p><strong>parent</strong></p>
+<p>parent 表示继承， 子 pom 可以使用 <code>parent</code> 指定父 pom。</p>
+<p>parent 内需要明确写明的标签，依然是 GAV 三标签。</p>
+</li>
+<li><p><strong>modules</strong></p>
+<p>modules 表示聚合，Java 的文件结构中，一个项目可以有多个模块，modules 内即是模块。</p>
+<p>聚合内只需要放模块的名字即可。</p>
+</li>
+</ul>
+<br>
+
+<p>其他配置内容，例如 build、profile、plugin 等，用到再说吧。</p>
+<hr>
+<p>接下来看 Maven 的生命周期。</p>
+<p>看了好多篇教程和博文，它们对 Maven 的生命周期的解释与描述，总让我觉得是相互冲突的，甚至在同一篇文章中都是冲突的。之后渐渐发现，原来 Maven 的生命周期并不只有一个，而是有三个，分别是 clean、default（or build）、site。也就是说“Maven 的生命周期”这种说法是不正确的，Maven 本身并没有生命周期，而应该是 Maven 的 <code>clean 生命周期</code>、<code>default 生命周期</code>、<code>site 生命周期</code>。再换句话说，“生命周期”这四个字，描述的不是 Maven，而是那三个词。</p>
+<p>生命周期这个说法，在编程中是一个非常常见的概念。我觉得 Maven 在这里也使用生命周期这个词，是为了表达【阶段性】的概念。我以人为例，人的生命周期是 幼年 -&gt; 青年 -&gt; 中年 -&gt; 老年，那么当人值中年时，必定已经经历了幼年和青年。Maven 的三个生命周期，各自都有一些阶段，你可以不执行完全部的生命周期，可以只执行到中间的某个阶段，但是当你执行到这个阶段时，你一定已经执行完，在这之前的所有阶段了。</p>
+<p>以下的内容主要参考来源为：<a href="https://www.runoob.com/maven/maven-build-life-cycle.html" target="_blank" rel="noopener">《Maven 构建生命周期》</a>。</p>
+<h1 id="clean-生命周期"><a href="#clean-生命周期" class="headerlink" title="clean 生命周期"></a>clean 生命周期</h1><p>clean 生命周期包含三个阶段：</p>
+<ul>
+<li>pre-clean：执行一些需要在 clean 之前完成的工作</li>
+<li>clean： 移除所有上一次构建生成的文件</li>
+<li>post-clean：执行一些需要在 clean 之后立刻完成的工作</li>
+</ul>
+<p>这三个阶段，如果使用命令行执行的话，那么是这样子的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mvn pre-clean</span><br><span class="line"></span><br><span class="line">mvn clean</span><br><span class="line"></span><br><span class="line">mvn post-clean</span><br></pre></td></tr></table></figure>
+
+<p>再提一遍，下文不再提了。当执行 <code>mvn clean</code> 语句时，表示执行 pre-clean 阶段和 clean 阶段。当执行 <code>mvn post-clean</code> 语句时，表示执行 pre-clean 阶段、clean 阶段和 post-clean 阶段。总之，之前的阶段，全部执行。</p>
+<p>具体的执行过程、原理，不叙。</p>
+<h1 id="default-生命周期"><a href="#default-生命周期" class="headerlink" title="default 生命周期"></a>default 生命周期</h1><p>你光看 default 这个词就能看出来，这是 Maven 最重要的那个生命周期。这是 Maven 的构建生命周期，项目的编译、测试、打包、部署等等，都属于这个生命周期的范围。</p>
+<p>default 生命周期共有 23 个阶段，其中重要的阶段是：</p>
+<ul>
+<li>validate：验证项目是否正确且所有必须信息是可用的</li>
+<li>compile：编译代码</li>
+<li>test：运行测试（例如 JUnit 单元）</li>
+<li>package：打包，创建 jar 包、war 包等等</li>
+<li>verify：对测试结果进行检查</li>
+<li>install：把打包的内容安装到本地仓库中</li>
+<li>deploy：把打包的内容部署到远程仓库中</li>
+</ul>
+<h1 id="site-生命周期"><a href="#site-生命周期" class="headerlink" title="site 生命周期"></a>site 生命周期</h1><p>site 生命周期用于创建报告文档、部署站点等等，包括以下四个阶段：</p>
+<ul>
+<li>pre-site：执行一些需要在生成站点文档之前完成的工作</li>
+<li>site：生成项目的站点文档</li>
+<li>post-site： 执行一些需要在生成站点文档之后完成的工作，并且为部署做准备</li>
+<li>site-deploy：将生成的站点文档部署到特定的服务器上</li>
+</ul>
+<hr>
+<p>本来还想写写 Maven 的插件，哎懒了，反正大概就是在执行生命周期的某个阶段，打开 IDE 一般都会默认集成一些 Maven 的插件，可以不用自己写指令了。</p>
+<p>这篇就写到这里叭。</p>
+<br>
+
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 pz
+  </div>
+  <div class="footer-right">
+    <nav>
+      pz阁下的blog
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+
