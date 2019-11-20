@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="十一月的第二周，来学习版本控制系统。 整顿一下，最近写博文总是拖到下一周的周一或者周二才完成，这周一定要努力在周日结束之前发文。  版本控制系统是一个初听有点唬人的名字，版本、控制、系统，这三个词都是带几分黑金属性的气质词汇，合在一起颇有架势。它代表的是这样一个概念：我希望有一个文件库，里面不光存放了所有文件，还保留了每一次的修改信息，如果我想查看某个文件三天前是什么样子的，我仍能看到。 当下">
+<meta name="keywords" content="Weekly Post">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SVN 与 Git">
+<meta property="og:url" content="http://hellopz.netlify.com/2019/11/24/SVN-与-Git/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="十一月的第二周，来学习版本控制系统。 整顿一下，最近写博文总是拖到下一周的周一或者周二才完成，这周一定要努力在周日结束之前发文。  版本控制系统是一个初听有点唬人的名字，版本、控制、系统，这三个词都是带几分黑金属性的气质词汇，合在一起颇有架势。它代表的是这样一个概念：我希望有一个文件库，里面不光存放了所有文件，还保留了每一次的修改信息，如果我想查看某个文件三天前是什么样子的，我仍能看到。 当下">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/SVN%E6%96%87%E4%BB%B6%E7%89%88%E6%9C%AC.jpg">
+<meta property="og:updated_time" content="2019-11-20T02:58:57.913Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SVN 与 Git">
+<meta name="twitter:description" content="十一月的第二周，来学习版本控制系统。 整顿一下，最近写博文总是拖到下一周的周一或者周二才完成，这周一定要努力在周日结束之前发文。  版本控制系统是一个初听有点唬人的名字，版本、控制、系统，这三个词都是带几分黑金属性的气质词汇，合在一起颇有架势。它代表的是这样一个概念：我希望有一个文件库，里面不光存放了所有文件，还保留了每一次的修改信息，如果我想查看某个文件三天前是什么样子的，我仍能看到。 当下">
+<meta name="twitter:image" content="http://hellopz.netlify.com/assets/SVN%E6%96%87%E4%BB%B6%E7%89%88%E6%9C%AC.jpg">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>SVN 与 Git</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/Weekly-Post/">Weekly Post</a></li>
+         
+          <li><a href="/tags/tips/">Tips</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/11/03/maven-工具/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2019/11/24/SVN-与-Git/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2019/11/24/SVN-与-Git/&text=SVN 与 Git"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2019/11/24/SVN-与-Git/&is_video=false&description=SVN 与 Git"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SVN"><span class="toc-number">1.</span> <span class="toc-text">SVN</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Git"><span class="toc-number">2.</span> <span class="toc-text">Git</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        SVN 与 Git
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2019-11-24T15:37:24.000Z" itemprop="datePublished">2019-11-24</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Weekly-Post/">Weekly Post</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>十一月的第二周，来学习版本控制系统。</p>
+<p>整顿一下，最近写博文总是拖到下一周的周一或者周二才完成，这周一定要努力在周日结束之前发文。</p>
+<hr>
+<p>版本控制系统是一个初听有点唬人的名字，版本、控制、系统，这三个词都是带几分黑金属性的气质词汇，合在一起颇有架势。它代表的是这样一个概念：我希望有一个文件库，里面不光存放了所有文件，还保留了每一次的修改信息，如果我想查看某个文件三天前是什么样子的，我仍能看到。</p>
+<p>当下常见的版本控制系统就两种，一种是 SVN，另一种是 Git。这两种系统从架构上，到功能实现上，再到价值观上，都是不一样的。总体来说，Git 处于鄙视链的上游地位，代表着信仰，SVN 处于备受唾弃可又怎么都淘汰不了的状态中，充满着妥协。（言重了，言重了）</p>
+<hr>
+<h1 id="SVN"><a href="#SVN" class="headerlink" title="SVN"></a>SVN</h1><p>我目前工作中使用的是 SVN，实际上我到写博文之前，都是没有使用过 Git 的。所以只能说基本整理一下 SVN 的使用逻辑与方法，但对于 Git 就是浅尝辄止了。</p>
+<p>SVN（Subversion），是阿帕奇（Apache）家出的版本控制系统，这家公司（或者应该叫基金会吧）从 HTTP 起家，贡献了 Maven、Kafka、Tomcat 等一堆开源软件或框架，实乃业界良心大佬。SVN 本是为了取代 CVS（一种上古的版本控制系统）而推出的，应当视作一种特定的软件/框架。但是目前看来，SVN 实在是太过成功，以至于成为了一种标杆的存在，代表着中心式的版本控制系统。</p>
+<br>
+
+<p>中心式的意思是，文件集中起来，由一台服务器进行管理，进行版本控制。如果一个团队有 10 个人，这 10 个人如果想提交代码，或是更新代码，则必须和中心服务器连接起来，提交则上传上去，更新则下载下来。除此之外，我认为中心式还有两层表现：</p>
+<ol>
+<li>中心只维护一套文件，换句话说，使用 SVN 控制的文件，只会有一种表现结果。如果 A 和 B 一起写东西，A 说豆腐脑要吃甜的，B 说豆腐脑要吃咸的，那么上传到中心服务器中的文件，豆腐脑要不然吃甜的，要不然吃咸的，不可以共存。而且，由于只有一套文件，如果文件的内容发生冲突了，提交时必须要自己合并代码，要不然你早点传文件占得先机，要不然就后传文件做冲突处理。</li>
+<li>版本的最终解释权和维护权，在中心。如果你和中心断开了连接，最直接的，你将无法提交代码，也无法更新代码；其次，你没有办法查看某个特定版本的文件，因为所有版本是什么样子的，只有中心才知道，如果觉得自己的代码写得有问题想回滚，那么请先连接中心。</li>
+</ol>
+<p>我们在讨论 SVN 和 Git 之间的区别时，大多数情况下，是在讨论<code>中心式管理</code>和<code>分布式管理</code>之间的区别。SVN 没有本地库，无法断网开发，几乎不搞分支等等，这些背后基本都是因为它中心式的架构。</p>
+<br>
+
+<p>SVN 的使用，说实话没什么好写的，因为日常操作实在是太过简单。</p>
+<p>平常能够使用 SVN 的地方有两处，一处是 IDE，写代码的时候用到，另一处是 SVN 的客户端 TortoiseSVN（小乌龟），不写代码的时候用到。</p>
+<p>使用 SVN，最稀疏平常的两个操作是<code>提交代码</code>和<code>下载（更新）代码</code>，提交代码是 commit，更新代码是 update，这两个操作都可以在 IDE 中通过点击鼠标完成（其他操作基本也都可以通过点鼠标完成）。</p>
+<p>除了这两项天天都会用到的操作之外，还有<code>检出代码</code>（checkout），即把最新的代码拷贝出来一份，<code>回滚代码</code>（revert），即把代码还原到上一次的提交状态。<code>对比代码</code>（compare with…），即对比自己写的代码和某个版本的代码，<code>显示版本历史</code>（show history），即查看每次的提交记录，以及最最最让人厌烦的<code>代码合并</code>（merge），这并不是一个 SVN 的功能，而是每次提交/更新代码时，如果你的代码和中心代码同时修改了某一处地方，造成了冲突，你需要手动合并。</p>
+<p>SVN 的客户端小乌龟，是在不需要写代码的时候使用到的，例如拷贝出来一份代码，修改配置文件的一点参数等等。</p>
+<p>实在话，SVN 的使用凭直觉去使用就可以了。</p>
+<br>
+
+<p>最后我们记录一点 SVN 使用背后的事情。</p>
+<p>SVN 是基于文件的来进行版本控制与管理的，如果有三个文件进行改动，就把这三个文件的变化内容记录下来，其他文件不变，并为此赋予一个版本号。<a href="https://git-scm.com/book/zh/v2/%E8%B5%B7%E6%AD%A5-Git-%E5%9F%BA%E7%A1%80" target="_blank" rel="noopener">下图</a>是 Git 文档对于 SVN 文件版本的演变示意图。</p>
+<p><img src="/assets/SVN%E6%96%87%E4%BB%B6%E7%89%88%E6%9C%AC.jpg" alt="SVN文件版本"></p>
+<p>我认为，浅尝辄止地认识 SVN 存储原理，需要认识到两个方面：</p>
+<ol>
+<li>SVN 的存储是基于文件的，而且它存储的是文件差异。如果文件内容有变化，记录下来，如果文件内容没有变化，无视。</li>
+<li>SVN 的版本号是全局的，它描述的是所有文件。所有人都可以向中心指定一个版本号，来获取一整套完整的文件。</li>
+</ol>
+<hr>
+<h1 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h1><p>惭愧地讲，我至今都没有在 IDE 中使用过 Git，本来想借着这篇博文开始使用，但是用的梯子太不稳定，我连不上高墙之外的 github。</p>
+<br>
+
+<p>Git 是 Linux 社区搞出来的东西，因为原先用的版本控制工具不让用了，Linux 内核组的大佬花了俩周捣鼓出来一个分布式版本控制系统，也就是 Git，这可真是大佬的任性与倔强……</p>
+<p>Git 是分布式版本控制系统的代表，分布式换个表述就是“去中心化”，这是 Git 的核心。稍一思索就会明白，Git 是一个典型的脱胎自 Linux 的产品，Linux 的开发人员是全球的草莽程序员，代码组起来讲究一个英雄不问出处，你指望一个中心式的版本控制系统是不可能的，Git 的出现就是为了实现分布式版本控制系统，分布式是刻在 Git 骨子里的。</p>
+<p>Git 为了实现分布式，在设计上就与 SVN 完全不同，主要体现在这些地方上：</p>
+<ol>
+<li><p>Git 同样有中心服务器（远程仓库），但是还有本地仓库。在 SVN 中你只能从中心拉取代码，但是在 Git 中你可以向另一个人的本地仓库处拉取代码。</p>
+<p>事实上，Git 在文件存储位置上的设计远非如此，它设计了四个区域：工作区、暂存区、本地仓库、远程仓库，写代码时你在工作区内写，写完之后保存在暂存区中，当你觉得应该提交代码了，就可以向本地仓库和远程仓库提交代码。</p>
+<p>这种设计造成了两点不同：第一，你可以在暂存区中“攒够”了代码之后再提交，暂存区中的代码可以有好几种版本，你选取一种最好的提交；第二，版本信息不再只保存在中心服务器中，每个人本地也有版本信息，你可以在脱网的情况下查看版本信息（例如对比代码、回滚代码）。</p>
+</li>
+<li><p>Git 可以随随便便开分支。分支是相对于主线的概念，在 SVN 中大家共用的那套文件一般情况下只会有一条主线，荣也同荣，损也同损，但在 Git 中你可以随便开一个分支，在主线之外处理自己的事情。例如开一个分支实现自己的某个想法，成立则合并进主线，不成立则扔掉这个分支。分支这个概念，使个人能够随便试错，也使团队可以包容多元。</p>
+<p>但是在我查资料的时候，发现很多大佬在讨论 merge 和 rebase 命令之间的选择问题，实际上是在讨论如何让共用版本的分支变少，让版本主线变得“清爽”。这个我大概要用到才能真的体会到，在此只是记录下来。</p>
+</li>
+</ol>
+<br>
+
+<p>Git 存储文件的原理，我至今不是很理解，这里记录一下我整理的材料以及认知程度。</p>
+<p>每一次提交代码时，Git 将生成一个全部文件的<code>快照</code>。这跟 SVN 的处理方式是完全不同的，SVN 通过记录文件的差异来存储最新的版本内容：我有 A 文件，我有一个文件记录新旧文件的差异，我就可以通过计算得出最新的 A1 文件。你应该注意到，SVN 存储是基于文件的，三个文件改动了就记录下三个差异文件，五个改动就记录五个。但是 Git 每次都是同时记录所有文件，以<code>快照</code>的原理来实现。</p>
+<p>我花了好几天，仍不理解快照是什么，我只知道快照不是什么。首先，快照不是文件差异，快照记录下的不光是差异，而是全部信息，有篇博文解释了这件事情：<a href="https://www.optbbs.com/thread-3985923-1-1.html" target="_blank" rel="noopener">《Git 快照与 SVN 文件差异区别》</a>，但是我对它的正确性存疑（因为没有其他相同观点的文章佐证）。其次，快照不是备份，备份相当于把文件拷贝一份保存在另外一个地方，可以独立存在，而快照需要基于原文件才能读取。</p>
+<p>使用快照的好处一在快，二在保存全部文件信息。似乎这是一种用空间换时间的技术方法，但我实在是知之甚少，不敢断言。</p>
+<br>
+
+<p>记录下两个学习 Git 的公认必备网站，<a href="https://www.liaoxuefeng.com/wiki/896043488029600" target="_blank" rel="noopener">《廖雪峰 Git 教程》</a>、<a href="https://git-scm.com/book/en/v2" target="_blank" rel="noopener">《Pro Git 电子版》</a>。总体感觉上，前者论术，后者论道。论术的那个，语言轻浮且不是我喜欢的那类轻浮，论道的那个，翻译腔重（或者说原文就不适合用中文理解），两个都不是我很喜欢的类型。在此记录一下，日后还是要勤读。</p>
+<hr>
+<p>就不该开篇立 flag，说什么周日前发文，这篇拖更两周才写完……</p>
+<br>
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 pz
+  </div>
+  <div class="footer-right">
+    <nav>
+      pz阁下的blog
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+
