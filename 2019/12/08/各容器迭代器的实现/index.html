@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="十二月的第二周，来学习迭代器在各个容器中的具体实现。 不知道自己能看多少，ArrayList 和 HashSet 的实现是应该必须看完的，如果时间有余也要看看 TreeSet 的实现（哈哈哈……不相信自己的苍白的微笑）。 这周的目标应该不是在迭代器上，而是在容器设计和怎么看源码这两件事上。迭代器是因和果，但从因走到果的那条路是更有价值的。  ArrayListArrayList 是可调整大小的">
+<meta name="keywords" content="Weekly Post,java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="各容器迭代器的实现">
+<meta property="og:url" content="http://hellopz.netlify.com/2019/12/08/各容器迭代器的实现/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="十二月的第二周，来学习迭代器在各个容器中的具体实现。 不知道自己能看多少，ArrayList 和 HashSet 的实现是应该必须看完的，如果时间有余也要看看 TreeSet 的实现（哈哈哈……不相信自己的苍白的微笑）。 这周的目标应该不是在迭代器上，而是在容器设计和怎么看源码这两件事上。迭代器是因和果，但从因走到果的那条路是更有价值的。  ArrayListArrayList 是可调整大小的">
+<meta property="og:locale" content="Chinese">
+<meta property="og:updated_time" content="2019-12-09T05:08:29.461Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="各容器迭代器的实现">
+<meta name="twitter:description" content="十二月的第二周，来学习迭代器在各个容器中的具体实现。 不知道自己能看多少，ArrayList 和 HashSet 的实现是应该必须看完的，如果时间有余也要看看 TreeSet 的实现（哈哈哈……不相信自己的苍白的微笑）。 这周的目标应该不是在迭代器上，而是在容器设计和怎么看源码这两件事上。迭代器是因和果，但从因走到果的那条路是更有价值的。  ArrayListArrayList 是可调整大小的">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>各容器迭代器的实现</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/Weekly-Post/">Weekly Post</a></li>
+         
+          <li><a href="/tags/tips/">Tips</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/12/01/Iterator-迭代器/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2019/12/08/各容器迭代器的实现/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2019/12/08/各容器迭代器的实现/&text=各容器迭代器的实现"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2019/12/08/各容器迭代器的实现/&is_video=false&description=各容器迭代器的实现"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ArrayList"><span class="toc-number">1.</span> <span class="toc-text">ArrayList</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#hasNext"><span class="toc-number">1.1.</span> <span class="toc-text">hasNext</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#next"><span class="toc-number">1.2.</span> <span class="toc-text">next</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#remove"><span class="toc-number">1.3.</span> <span class="toc-text">remove</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HashSet"><span class="toc-number">2.</span> <span class="toc-text">HashSet</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#HashIterator"><span class="toc-number">2.1.</span> <span class="toc-text">HashIterator</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hasNext-1"><span class="toc-number">2.2.</span> <span class="toc-text">hasNext</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nextNode"><span class="toc-number">2.3.</span> <span class="toc-text">nextNode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#remove-1"><span class="toc-number">2.4.</span> <span class="toc-text">remove</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        各容器迭代器的实现
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2019-12-08T01:39:37.000Z" itemprop="datePublished">2019-12-08</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Weekly-Post/">Weekly Post</a>, <a class="tag-link" href="/tags/java/">java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>十二月的第二周，来学习迭代器在各个容器中的具体实现。</p>
+<p>不知道自己能看多少，ArrayList 和 HashSet 的实现是应该必须看完的，如果时间有余也要看看 TreeSet 的实现（哈哈哈……不相信自己的苍白的微笑）。</p>
+<p>这周的目标应该不是在迭代器上，而是在容器设计和怎么看源码这两件事上。迭代器是因和果，但从因走到果的那条路是更有价值的。</p>
+<hr>
+<h1 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h1><p>ArrayList 是可调整大小的 List，实现了两种迭代器：迭代器、列表迭代器。</p>
+<p>列表迭代器是在原本迭代器的基础上增加了顺序，例如增加了<code>是否有前一个元素</code>、<code>下一个元素的坐标</code>等方法。</p>
+<p>我在这里只关注 ArrayList 实现的普通迭代器。</p>
+<br>
+
+<p>获取 ArrayList 的迭代器，与其他容器的方式一样，都是调用 <code>Iterator()</code> 方法，获得一个迭代器。（这里迭代器支持泛型）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Iterator&lt;E&gt; iterator = arrayList.iterator();</span><br></pre></td></tr></table></figure>
+
+<p>公共方法 <code>Iterator()</code>，返回了一个 ArrayList 类内部实现的迭代器 <code>Itr</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Iterator&lt;E&gt; <span class="title">iterator</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Itr();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Itr</span> <span class="keyword">implements</span> <span class="title">Iterator</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">// Itr类的内部实现...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那我们要关注的就是 <code>Itr</code> 类内部是怎么实现的。</p>
+<br>
+
+<p>ArrayList 的迭代器，<code>Itr</code> 类的基本骨架是这样子的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Itr</span> <span class="keyword">implements</span> <span class="title">Iterator</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> cursor;</span><br><span class="line">    <span class="keyword">int</span> lastRet = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> expectedModCount = modCount;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> E <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 还有其他两个方法</span></span><br><span class="line">    <span class="comment">// 包括jdk 1.8版本新增的方法forEachRemaining，以及一个私有的辅助方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ArrayList 在实现迭代器时，自己又定义了三个 int 类型的局部变量：<code>cursor</code>、<code>lastRet</code>、<code>expectedModCount</code>。我们先不看迭代器重写的方法是怎么实现，先关注这三个局部变量是做什么的。</p>
+<ul>
+<li><p><strong>cursor</strong> 坐标</p>
+<p>表示迭代器移动到了 ArrayList 的第几个元素，它会伴随着迭代器的移动而移动。</p>
+<p>用于判断迭代器的位置，也用于错误判断（比如越界）</p>
+</li>
+<li><p><strong>lastRet</strong> 上个坐标</p>
+<p>最开始是 -1，随着 cursor 一同增加，但始终比 cursor 小 1。</p>
+<p>用于判断迭代器刚刚经过的位置，来删除元素，或是错误判断。</p>
+</li>
+<li><p><strong>expectedModCount</strong> 列表结构变化次数</p>
+<p>这是一个很有趣的设计，它不光出现在 ArrayList 的迭代器里，而是出现在 ArrayList 的各个方法中。</p>
+<p>这个变量，记录的是列表改变了多少次结构（即列表内元素的数量，发生了多少次变化）。比如初始化一个 ArrayList 之后，add 了一个元素，那么 modCount 就是 1，又 add 了一个元素，那么 modCount 就是 2，之后 remove 了一个元素，列表的结构又发生了改变，modCount 变成了 3。modCount 记录的，就是列表的结构发生了多少次的变化（mod：modification)。</p>
+<p>记录列表结构发生变化的次数，这有什么意义呢。ArrayList 是一个非线程安全的类，当有多个线程共用时，很有可能一边新增或删除了列表的某个元素，另一边对此毫不知情而发生错误。对此，ArrayList 为迭代器专门设计了一个 transient 的变量 modCount，不论任何位置，只要改变了列表的结构，都把这一次记录下来。那么，当迭代器初始化时，记录下来 modCount，之后迭代器工作前简单比较一下，当初记录的次数和现在的次数是否相同，就能知道列表有没有发生结构性变化。虽然这不是一个很保险的方式（即使 modCount 相同也有可能出现问题），但是这种方式很轻便，也基本能覆盖大部分问题。</p>
+<p>实际上 modCount 并不是 ArrayList 独有的设计，在很多容器（ArrayList、LinkedList、HashMap……）都能看到这种设计：记录容器结构变化的次数，迭代器工作时能快速纠错。这被称为 Java 的 fail-fast 机制，一种用于容器的错误检错机制。</p>
+</li>
+</ul>
+<p>好了，那么开始看源码吧。</p>
+<br>
+
+<h2 id="hasNext"><a href="#hasNext" class="headerlink" title="hasNext"></a>hasNext</h2><p>极为简单，当前坐标是否达到容器的长度，达到则返回 false，没达到则返回 true。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> cursor != size;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为什么是容器的长度，而不是长度 - 1，这个要根据其他两个方法来看，cursor 坐标究竟指向哪个元素。</p>
+<br>
+
+<h2 id="next"><a href="#next" class="headerlink" title="next"></a>next</h2><p>next 方法的目的，是返回容器的下一个元素。对于列表而言，元素之间是有顺序的，按顺序返回即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">next</span><span class="params">()</span> </span>&#123; <span class="comment">// E 代表泛型</span></span><br><span class="line">    checkForComodification();</span><br><span class="line">    <span class="keyword">int</span> i = cursor;</span><br><span class="line">    <span class="keyword">if</span> (i &gt;= size)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</span><br><span class="line">    Object[] elementData = ArrayList.<span class="keyword">this</span>.elementData;</span><br><span class="line">    <span class="keyword">if</span> (i &gt;= elementData.length)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">    cursor = i + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> (E) elementData[lastRet = i];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>大致上分两个步骤：</p>
+<ol>
+<li><p>检查</p>
+<p>ArrayList 实现的 next 方法首先检查 modCount，如果列表发生结构性变化，快速失败。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 迭代器的内部方法</span></span><br><span class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">checkForComodification</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (modCount != expectedModCount)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>检查非常简单，比较迭代器初始化时的 modCount（expectedModCount），和当前列表的 modCount 是否相同，不同就是结构变了。</p>
+<p>然后还会检查 cursor 坐标是否指向了越界的位置。</p>
+</li>
+</ol>
+<ol start="2">
+<li><p>移动</p>
+<p>在检查完结构后，next 方法正式工作。</p>
+<p>它利用 cursor 来判断位置，返回列表的第 cursor 个元素，由于 ArrayList 的背后是由数组实现的，next 方法实际上返回的是数组的第 cursor 个元素，即 <code>return elementData[cursor];</code>。</p>
+<p>在迭代器执行 next 方法返回下一个元素的同时，它的两个类变量 cursor、lastRet 也自增 1。</p>
+</li>
+</ol>
+<p>观察发现，cursor 始终指向迭代器的下一个元素的位置，当 next 方法还没执行时，cursor 指向的是要返回的那个“下一个元素”，但当 next 方法要返回下个元素的时候，cursor 就又自增 1，指向了更下一个的元素。还有一种说法是，迭代器是以 cursor 为当前坐标的，next 方法是越过当前元素，到下一个元素的位置上，并返回刚刚越过去的那个元素。</p>
+<p>lastRet 是 cursor 的跟班，紧跟在 cursor 一步远的距离，做迭代器的校验工具人。</p>
+<br>
+
+<h2 id="remove"><a href="#remove" class="headerlink" title="remove"></a>remove</h2><p>remove 方法的目的，就是把迭代器的当前元素，在整个列表里剔除掉。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (lastRet &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException();</span><br><span class="line">    checkForComodification();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ArrayList.<span class="keyword">this</span>.remove(lastRet);</span><br><span class="line">        cursor = lastRet;</span><br><span class="line">        lastRet = -<span class="number">1</span>;</span><br><span class="line">        expectedModCount = modCount;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IndexOutOfBoundsException ex) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>照例还是分两步走，第一步校验。next 方法校验的是结构是否变化、下个位置是否越界。与之对称的，remove 方法校验的是结构是否变化，当前元素是否不存在。</p>
+<p>第二步移除。这里迭代器的 remove 方法，实际上就是列表自己的 remove 方法。列表的 remove 方法实际上是在调用 <code>System.arraycopy</code> 方法，将数组需要移除那个元素，之后的所有元素逐个往前挪位置，以达到数组复制的效果，是个开销不小的实现方法。不过仔细看，迭代器的 remove 方式是只能执行一次的，执行之后 lastRet 就归为初始的 -1 值，不能再 remove 了。</p>
+<hr>
+<h1 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h1><p>看了源码才知道，原来 HashSet 基本就是 HashMap，它的迭代器实现也是 HashMap 里面的。</p>
+<p>HashSet 内部维护一张 HashMap 表，HashMap 有 <code>key</code> 和 <code>value</code>，<code>key</code> 就是 HashSet 的值，而 <code>value</code> 统一都是一个空对象。当创建一个 HashSet 时，实际上就是在创建一张 HashMap，修改 set 的值实际上就是在修改 map 的键值对。可以从 HashSet 的 add 方法来粗略一窥：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// HashSet内部用map存储</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> HashMap&lt;E, Object&gt; map;</span><br><span class="line"></span><br><span class="line"><span class="comment">// HashSet存储时，key是集合的值，value是这个空对象</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Object PRESENT = <span class="keyword">new</span> Object();</span><br><span class="line"></span><br><span class="line"><span class="comment">// HashSet的add方法，增加元素实际上就是在往map里存键值对</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> map.put(e, PRESENT) == <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>向 HashSet 里增加一个元素，实际上就是在内部维护的 HashMap 里，存入一个 key 为想要增加的元素、value 为空对象的键值对。</p>
+<br>
+
+<p>HashMap 自己是没有迭代器的，因为 map 里的每个元素都是有两部分的键和值，迭代器无法同时迭代两个部分。但是迭代其中的一部分是可行的，例如迭代 key，或是迭代 value。实际上，HashSet 的迭代器，就是在迭代 key。</p>
+<p>在 HashMap 的源码中，与迭代器相关的内部类有四个，它们被码在同一个区域。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* ------------------------------------------------------------ */</span></span><br><span class="line"><span class="comment">// iterators</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">HashIterator</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">KeyIterator</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ValueIterator</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">EntryIterator</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 其实还有四个与 Spliterator 相关的迭代器类 （Spliterator：splitable iterator）</span></span><br><span class="line"><span class="comment">// 它们是可分隔迭代器，用于并行迭代，但我们目前忽视它们</span></span><br></pre></td></tr></table></figure>
+
+<p>这四个迭代器，第一个是抽象类，后面三个是我们能使用的类：</p>
+<ul>
+<li><font color="#32CD32"><strong>KeyIterator</strong></font>  key 迭代器</li>
+<li><font color="#32CD32"><strong>ValueIterator</strong></font>  value 迭代器</li>
+<li><font color="#32CD32"><strong>EntryIterator</strong></font>  key-value （键值对）迭代器</li>
+</ul>
+<p>第一个迭代器 <font color="#32CD32"><strong>HashIterator</strong></font> 是上面这三个迭代器的父类，它算是实现了迭代器的 hasNext、next、remove 三个方法，后面三个迭代器直接继承了它的 hasNext 和 remove 方法，简单写了 next 方法。</p>
+<p>是怎么简单实现 next 方法的呢，以 <font color="#32CD32"><strong>KeyIterator</strong></font> 类为例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// K 是泛型类，与迭代器的泛型类相同</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> K <span class="title">next</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> nextNode().key; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>就是返回了父类定义的键值对的 key 值，一行代码。</p>
+<p>其他两个类也是如此，返回 value 和返回 key-value，因此我们就不提 HashMap 的后面三个迭代器了，重点看第一个迭代器的实现。</p>
+<br>
+
+<p>从整体上看，HashIterator 类的骨架是这样的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">HashIterator</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Node 类是 HashMap 里定义的键值对类，它继承了 Map.Entry 类</span></span><br><span class="line">    Node&lt;K,V&gt; next;        </span><br><span class="line">    Node&lt;K,V&gt; current;     </span><br><span class="line">    <span class="keyword">int</span> expectedModCount;  </span><br><span class="line">    <span class="keyword">int</span> index;             </span><br><span class="line"></span><br><span class="line">    HashIterator() &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">final</span> Node&lt;K,V&gt; <span class="title">nextNode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一共四个内部变量，</p>
+<ul>
+<li><font color="#32CD32"><strong>next</strong></font>  下一个键值对</li>
+<li><font color="#32CD32"><strong>current</strong></font>  当前键值对</li>
+<li><font color="#32CD32"><strong>expectedModCount</strong></font>  预期 hashMap 的结构变化次数</li>
+<li><font color="#32CD32"><strong>index</strong></font> 当前键值对的坐标（HashMap 存放键值对，是以数组的方式来存储的）</li>
+</ul>
+<p>以及四个方法。</p>
+<ul>
+<li><font color="#32CD32"><strong>HashIterator</strong></font>  构造方法，初始化迭代器</li>
+<li><font color="#32CD32"><strong>hasNext</strong></font>  是否有下一个元素 </li>
+<li><font color="#32CD32"><strong>nextNode</strong></font>  下一个键值对</li>
+<li><font color="#32CD32"><strong>remove</strong></font>  删除当前元素</li>
+</ul>
+<p>四个内部变量，跟 ArrayList 实现迭代器的逻辑是相同的，就不写两遍了，看后面的四个方法是怎么实现的。</p>
+<br>
+
+<h2 id="HashIterator"><a href="#HashIterator" class="headerlink" title="HashIterator"></a>HashIterator</h2><p>HashMap 的迭代器的构造器，初始化了四个内部变量。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">HashIterator() &#123;</span><br><span class="line">    expectedModCount = modCount;</span><br><span class="line">    Node&lt;K,V&gt;[] t = table;</span><br><span class="line">    current = next = <span class="keyword">null</span>;</span><br><span class="line">    index = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (t != <span class="keyword">null</span> &amp;&amp; size &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">do</span> &#123;&#125; <span class="keyword">while</span> (index &lt; t.length &amp;&amp; (next = t[index++]) == <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>初始化 modCount 和 current 没什么好讲的，简单赋值。</p>
+<p><code>table</code> 是 HashMap 内部存储键值对的数组，具体内容这周不看，但是我们需要知道的是，这个数组内部并不是连续排列，一个键值对紧跟着一个键值对的，中间可能会有 null。</p>
+<p>为了考虑内部存储的结构，当前元素存储的下一个数组格子，可能没有存储任何东西，只是 null，因此需要跳过这些空格。为 next 变量赋值时，以及为 index 变量赋值时，是需要跳过空白格子的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">do</span> &#123;&#125; </span><br><span class="line"><span class="keyword">while</span> (index &lt; t.length &amp;&amp; (next = t[index++]) == <span class="keyword">null</span>);</span><br></pre></td></tr></table></figure>
+
+<p>（这行代码还真是紧凑……）</p>
+<br>
+
+<h2 id="hasNext-1"><a href="#hasNext-1" class="headerlink" title="hasNext"></a>hasNext</h2><p>迭代器是否有下个元素，去掉方法的结构体只有一行代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> next != <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h2 id="nextNode"><a href="#nextNode" class="headerlink" title="nextNode"></a>nextNode</h2><p>HashMap 的抽象迭代器并没有 next 方法，next 方法交由子类实现，但是它实现了 next 方法所必需的，搜索下一个键值对的逻辑。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">final</span> Node&lt;K,V&gt; <span class="title">nextNode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Node&lt;K,V&gt;[] t;</span><br><span class="line">    Node&lt;K,V&gt; e = next;</span><br><span class="line">    <span class="keyword">if</span> (modCount != expectedModCount)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">    <span class="keyword">if</span> (e == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</span><br><span class="line">    <span class="keyword">if</span> ((next = (current = e).next) == <span class="keyword">null</span> &amp;&amp; (t = table) != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">do</span> &#123;&#125; <span class="keyword">while</span> (index &lt; t.length &amp;&amp; (next = t[index++]) == <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> e;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先检查 HashMap 的结构是否发生变化（fail-fast 机制），然后检查存储键值对的数组是否为 null（即没有初始化过）。再之后是两行密度很高的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ((next = (current = e).next) == <span class="keyword">null</span> &amp;&amp; (t = table) != <span class="keyword">null</span>) &#123;</span><br><span class="line">	<span class="keyword">do</span> &#123;&#125; <span class="keyword">while</span> (index &lt; t.length &amp;&amp; (next = t[index++]) == <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这两行代码的含义是：</p>
+<ol>
+<li>为迭代器的当前元素赋值（也就是上一轮迭代器的 next 元素）。</li>
+<li>如果没遍历完存储的内容，那么让 index 移动，让 next 键值对往后挪。</li>
+<li>存储键值对的数组，可能存在 null 值，要跳过这些 null 值，让 next 变量指向真正的下一个元素，让 index 坐标指向真正的下一个元素的再下一个位置。</li>
+</ol>
+<p>从 HashMap 的迭代器，能够大概看出，HashMap 似乎用链表和数组两种方式来存储键值对，数组中放着一个个的链表节点，而链表节点又能指向下一个元素。在数组中的每个元素都连续排列的情况下，用链表检索下一个；当数组中出现“缝隙”，元素之间断开时，又用数组来检索下一个。</p>
+<p>没看 HashMap 的其他源码，不知道这种处理方式有什么好处。</p>
+<br>
+
+<h2 id="remove-1"><a href="#remove-1" class="headerlink" title="remove"></a>remove</h2><p>感觉 remove 方法没什么太多可说的，检查完然后调用 HashMap 的删除方法，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Node&lt;K,V&gt; p = current;</span><br><span class="line">    <span class="keyword">if</span> (p == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException();</span><br><span class="line">    <span class="keyword">if</span> (modCount != expectedModCount)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">    current = <span class="keyword">null</span>;</span><br><span class="line">    K key = p.key;</span><br><span class="line">    removeNode(hash(key), key, <span class="keyword">null</span>, <span class="keyword">false</span>, <span class="keyword">false</span>);</span><br><span class="line">    expectedModCount = modCount;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>写这篇迭代器的原因，是因为写业务代码时犯了错误，在 for-each 循环里调用了容器的 remove 方法，结果让生产代码回滚了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (String str : list) &#123;</span><br><span class="line">    <span class="comment">// 执行逻辑...</span></span><br><span class="line">    list.remove(str);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>for-each 实际上是用迭代器实现的（这个找不到源码，但可以从反编译代码中推断出来），容器使用了 remove 方法改变了结构，modCount 改变了，和迭代器中的 expectModCount 不相同，会直接抛异常（ConcurrentModificationException）。</p>
+<p>当时测试没有看出来，因为只测试了列表的倒数第二个元素。很有趣的是，列表迭代器中的每个元素都会报错，唯独倒数第二个不会报错，就这样侥幸通过了代码自测……至于为什么倒数第二个不会报错，这个跟坐标有关，就不写下去了。</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 pz
+  </div>
+  <div class="footer-right">
+    <nav>
+      pz阁下的blog
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+
