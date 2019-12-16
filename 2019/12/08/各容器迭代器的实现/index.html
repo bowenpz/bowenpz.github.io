@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="这里是pz阁下">
 <meta property="og:description" content="十二月的第二周，来学习迭代器在各个容器中的具体实现。 不知道自己能看多少，ArrayList 和 HashSet 的实现是应该必须看完的，如果时间有余也要看看 TreeSet 的实现（哈哈哈……不相信自己的苍白的微笑）。 这周的目标应该不是在迭代器上，而是在容器设计和怎么看源码这两件事上。迭代器是因和果，但从因走到果的那条路是更有价值的。  ArrayListArrayList 是可调整大小的">
 <meta property="og:locale" content="Chinese">
-<meta property="og:updated_time" content="2019-12-09T05:08:29.461Z">
+<meta property="og:updated_time" content="2019-12-09T07:01:14.056Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="各容器迭代器的实现">
 <meta name="twitter:description" content="十二月的第二周，来学习迭代器在各个容器中的具体实现。 不知道自己能看多少，ArrayList 和 HashSet 的实现是应该必须看完的，如果时间有余也要看看 TreeSet 的实现（哈哈哈……不相信自己的苍白的微笑）。 这周的目标应该不是在迭代器上，而是在容器设计和怎么看源码这两件事上。迭代器是因和果，但从因走到果的那条路是更有价值的。  ArrayListArrayList 是可调整大小的">
@@ -68,6 +68,8 @@
     <br/>
     <span id="actions">
       <ul>
+        
+        <li><a class="icon" href="/2019/12/15/HashMap-与-TreeMap/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
         <li><a class="icon" href="/2019/12/01/Iterator-迭代器/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
@@ -283,6 +285,7 @@
 </ol>
 <p>从 HashMap 的迭代器，能够大概看出，HashMap 似乎用链表和数组两种方式来存储键值对，数组中放着一个个的链表节点，而链表节点又能指向下一个元素。在数组中的每个元素都连续排列的情况下，用链表检索下一个；当数组中出现“缝隙”，元素之间断开时，又用数组来检索下一个。</p>
 <p>没看 HashMap 的其他源码，不知道这种处理方式有什么好处。</p>
+<p>（次日改：我智障了，我原来以为链表和数组是互补的，同时使用提高效率，其实链表的作用是让同一个数组格子能够存放多个元素，因为 HashMap 存储元素时，存储的位置是计算出来的，如果计算出来结果相同，那就要存在相同的地方。）</p>
 <br>
 
 <h2 id="remove-1"><a href="#remove-1" class="headerlink" title="remove"></a>remove</h2><p>感觉 remove 方法没什么太多可说的，检查完然后调用 HashMap 的删除方法，代码如下：</p>
