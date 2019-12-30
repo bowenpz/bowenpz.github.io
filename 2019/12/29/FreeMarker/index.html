@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="十二月的第六周，来学习 FreeMarker。 在我敲出上句话时，我甚至都不知道 FreeMarker 是什么……工作需要，硬头皮写。  FreeMarker 是一种模板引擎，通过 Java 语言使用。官方是这么解释“模板引擎”的：   （模板引擎是）一种基于模板和要改变的数据，用来生成输出文本的通用工具。  又是一个不说人话的解释。 我理解的模板引擎，就是让程序自动使用模板生成结果的工具，比">
+<meta name="keywords" content="Weekly Post,java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FreeMarker">
+<meta property="og:url" content="http://hellopz.netlify.com/2019/12/29/FreeMarker/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="十二月的第六周，来学习 FreeMarker。 在我敲出上句话时，我甚至都不知道 FreeMarker 是什么……工作需要，硬头皮写。  FreeMarker 是一种模板引擎，通过 Java 语言使用。官方是这么解释“模板引擎”的：   （模板引擎是）一种基于模板和要改变的数据，用来生成输出文本的通用工具。  又是一个不说人话的解释。 我理解的模板引擎，就是让程序自动使用模板生成结果的工具，比">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/FreeMarker%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3.png">
+<meta property="og:updated_time" content="2019-12-30T04:27:56.942Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="FreeMarker">
+<meta name="twitter:description" content="十二月的第六周，来学习 FreeMarker。 在我敲出上句话时，我甚至都不知道 FreeMarker 是什么……工作需要，硬头皮写。  FreeMarker 是一种模板引擎，通过 Java 语言使用。官方是这么解释“模板引擎”的：   （模板引擎是）一种基于模板和要改变的数据，用来生成输出文本的通用工具。  又是一个不说人话的解释。 我理解的模板引擎，就是让程序自动使用模板生成结果的工具，比">
+<meta name="twitter:image" content="http://hellopz.netlify.com/assets/FreeMarker%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>FreeMarker</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/Weekly-Post/">Weekly Post</a></li>
+         
+          <li><a href="/tags/tips/">Tips</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/12/22/正则表达式/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2019/12/29/FreeMarker/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2019/12/29/FreeMarker/&text=FreeMarker"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2019/12/29/FreeMarker/&is_video=false&description=FreeMarker"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        FreeMarker
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2019-12-29T04:33:51.000Z" itemprop="datePublished">2019-12-29</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Weekly-Post/">Weekly Post</a>, <a class="tag-link" href="/tags/java/">java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>十二月的第六周，来学习 FreeMarker。</p>
+<p>在我敲出上句话时，我甚至都不知道 FreeMarker 是什么……工作需要，硬头皮写。</p>
+<hr>
+<p>FreeMarker 是一种模板引擎，通过 Java 语言使用。<a href="http://freemarker.foofun.cn/" target="_blank" rel="noopener">官方</a>是这么解释“模板引擎”的：</p>
+<blockquote>
+<p> （模板引擎是）一种基于模板和要改变的数据，用来生成输出文本的通用工具。</p>
+</blockquote>
+<p>又是一个不说人话的解释。</p>
+<p>我理解的模板引擎，就是让程序自动使用模板生成结果的工具，比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">请假条：昨日偶感风寒，身体抱疾，兹请假一天。请假人：$&#123;name&#125;</span><br><span class="line">                                            ↓</span><br><span class="line">请假条：昨日偶感风寒，身体抱疾，兹请假一天。请假人：张三</span><br><span class="line">请假条：昨日偶感风寒，身体抱疾，兹请假一天。请假人：李四</span><br><span class="line">请假条：昨日偶感风寒，身体抱疾，兹请假一天。请假人：王二麻子</span><br></pre></td></tr></table></figure>
+
+<p>FreeMarker 能够读取模板中的占位符 <code>${...}</code>，并根据外部输入的值，自动替换掉占位符，生成最终的结果。</p>
+<p>如此一个替换文本的工具，广泛使用在 web 前端、配置文件、源代码中。它是一种老派的 old school 工具，现在前端都没什么人用了。</p>
+<hr>
+<p>一会再学习 FreeMarker 的语法，暂且认为 FreeMarker 就是在替换字符串，把 <code>${...}</code> 换成具体的值。</p>
+<p>最为基础的使用 FreeMarker 的方式，就是 IO 输入模板文件，然后 FreeMarker 咣咣工作，最终 IO 输出生成文件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 由于处理IO异常太过繁琐，模糊了主干内容，这里忽略处理异常的部分</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// IO输入模板文件</span></span><br><span class="line">Configuration configuration = <span class="keyword">new</span> Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);</span><br><span class="line">configuration.setDirectoryForTemplateLoading(<span class="keyword">new</span> File(<span class="string">"C:\\Users\\thinkpad\\Desktop"</span>));</span><br><span class="line">Template template = configuration.getTemplate(<span class="string">"template.ftl"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置替换值</span></span><br><span class="line">Map&lt;String, Object&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;(<span class="number">8</span>);</span><br><span class="line">map.put(<span class="string">"name"</span>, <span class="string">"张三"</span>);</span><br><span class="line">map.put(<span class="string">"age"</span>, <span class="number">18</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// IO输出结果文件</span></span><br><span class="line">File out = <span class="keyword">new</span> File(<span class="string">"C:\\Users\\thinkpad\\Desktop\\"</span> + <span class="string">"result.txt"</span>);</span><br><span class="line">Writer outWriter = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(<span class="keyword">new</span> FileOutputStream(out)));</span><br><span class="line">template.process(map, outWriter);</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>输入（template.ftl）</th>
+<th>输出（result.txt）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>人员信息<br>姓名：${name}<br>年龄：${age}</td>
+<td>人员信息<br>姓名：张三<br>年龄：18</td>
+</tr>
+</tbody></table>
+<br>
+
+<p>上面的代码是在做这样一件事：</p>
+<ol>
+<li>实例化一个 FreeMarker 对象出来（configuration）</li>
+<li>配置 FreeMarker 的参数，其中包括输入地址（模板）、输出地址（结果）、FreeMarker 的版本。</li>
+<li>给定想替换成的值，让 FreeMarker 去工作（替换）。</li>
+</ol>
+<br>
+
+<p>顺便提一嘴，模板文件 <code>template.ftl</code> 的后缀名是 <code>ftl</code>，全称是 FreeMarker Template Language，是 FreeMarker 的标准模板文件格式。</p>
+<p>上面这种方式，是显式地配置 FreeMarker，手动给定输出输出的文件地址，设定好 FreeMarker 的版本号，然后去使用。除了这种方式之外，还可以以配置文件的方式，在外部去设定好 FreeMarker 的各项参数，然后直接使用。比如在 Spring 框架下，都是外部设定好 FreeMarker 的参数，然后注入到要使用的地方。</p>
+<p>但是我看了看，有点复杂……算了，看看语法就行了，佛了。</p>
+<hr>
+<p>来看 FreeMarker 的语法。</p>
+<p>首先推荐<a href="http://freemarker.foofun.cn/dgui_template_overallstructure.html" target="_blank" rel="noopener">官方文档</a>，尽管官方的介绍有一些翻译腔，但是在语法介绍部分，是极尽所能地把用户当小白来教学。</p>
+<p><img src="/assets/FreeMarker%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3.png" alt="FreeMarker官方文档"></p>
+<p>（你看看这个恳切程度！）</p>
+<p>粗略地学习之后发现，FreeMarker 不仅仅是一个替换字符串的工具，而像是一个完整的语言体系，除了基本的替换，还有许多内置函数和逻辑控制，实际上要学习的内容是非常多的。</p>
+<p>本周又是摸鱼的一周，仅将常用的替换语法写在下面。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 配置准备替换的值</span></span><br><span class="line">Map&lt;String, Object&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;(<span class="number">8</span>);</span><br><span class="line">map.put(<span class="string">"name"</span>, <span class="string">"张三"</span>);</span><br><span class="line">Map person = <span class="keyword">new</span> HashMap();</span><br><span class="line">person.put(<span class="string">"age"</span>, <span class="number">17</span>);</span><br><span class="line">map.put(<span class="string">"person"</span>, person);</span><br><span class="line">List hobby = Arrays.asList(<span class="string">"唱"</span>, <span class="string">"跳"</span>, <span class="string">"RAP"</span>, <span class="string">"篮球"</span>);</span><br><span class="line">map.put(<span class="string">"hobby"</span>, hobby);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>模板文件</th>
+<th>输出文件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>人员信息<br><br>姓名：${name}<br><br>年龄：${person.age}<br><br>&lt;#if (person.age &gt;= 18)&gt;<br>成年<br>&lt;#else&gt;<br>未成年<br>&lt;/#if&gt;<br><br>爱好：&lt;#list hobby as h&gt;${h} &lt;/#list&gt;<br><br>当前时间：${.now?string[“yyyy-MM-dd HH:mm:ss”]}</td>
+<td>人员信息<br><br>姓名：张三<br><br>年龄：17<br><br>未成年<br><br>爱好：唱 跳 RAP 篮球 <br><br>当前时间：2019-12-29 09:40:58</td>
+</tr>
+</tbody></table>
+<br>
+
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 pz
+  </div>
+  <div class="footer-right">
+    <nav>
+      pz阁下的blog
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+
