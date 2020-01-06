@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="2020 年的第一周，来学习 Jenkins。  Jenkins 是一个人名，音译为詹金斯，读起来是一个很英国绅士的声音。 以 Jenkins 命名的这个工具/软件，是一个给编程开发人员当管家的存在，它的作用是自动化各种任务，包括构建、测试和部署软件，总之是给编程人员打下手。以一个英国绅士的名字命名，听起来就像是一个老管家，真的是很贴切。 Jenkins 不光名字起得贴切，连 logo 都设计">
+<meta name="keywords" content="Weekly Post,java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Jenkins">
+<meta property="og:url" content="http://hellopz.netlify.com/2020/01/05/Jenkins/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="2020 年的第一周，来学习 Jenkins。  Jenkins 是一个人名，音译为詹金斯，读起来是一个很英国绅士的声音。 以 Jenkins 命名的这个工具/软件，是一个给编程开发人员当管家的存在，它的作用是自动化各种任务，包括构建、测试和部署软件，总之是给编程人员打下手。以一个英国绅士的名字命名，听起来就像是一个老管家，真的是很贴切。 Jenkins 不光名字起得贴切，连 logo 都设计">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/JenkinsLogo.jpg">
+<meta property="og:updated_time" content="2020-01-06T03:43:04.428Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Jenkins">
+<meta name="twitter:description" content="2020 年的第一周，来学习 Jenkins。  Jenkins 是一个人名，音译为詹金斯，读起来是一个很英国绅士的声音。 以 Jenkins 命名的这个工具/软件，是一个给编程开发人员当管家的存在，它的作用是自动化各种任务，包括构建、测试和部署软件，总之是给编程人员打下手。以一个英国绅士的名字命名，听起来就像是一个老管家，真的是很贴切。 Jenkins 不光名字起得贴切，连 logo 都设计">
+<meta name="twitter:image" content="http://hellopz.netlify.com/assets/JenkinsLogo.jpg">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Jenkins</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/Weekly-Post/">Weekly Post</a></li>
+         
+          <li><a href="/tags/tips/">Tips</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/12/29/FreeMarker/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2020/01/05/Jenkins/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2020/01/05/Jenkins/&text=Jenkins"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2020/01/05/Jenkins/&is_video=false&description=Jenkins"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Jenkins
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2020-01-05T12:31:35.000Z" itemprop="datePublished">2020-01-05</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Weekly-Post/">Weekly Post</a>, <a class="tag-link" href="/tags/java/">java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>2020 年的第一周，来学习 Jenkins。</p>
+<hr>
+<p>Jenkins 是一个人名，音译为詹金斯，读起来是一个很英国绅士的声音。</p>
+<p>以 Jenkins 命名的这个工具/软件，是一个给编程开发人员当管家的存在，它的作用是自动化各种任务，包括构建、测试和部署软件，总之是给编程人员打下手。以一个英国绅士的名字命名，听起来就像是一个老管家，真的是很贴切。</p>
+<p>Jenkins 不光名字起得贴切，连 logo 都设计为一个管家，见图明义。很草的是，Jenkins 可以使用插件扩展功能，插件官网的配图，是管家穿着高达。</p>
+<p><img src="/assets/JenkinsLogo.jpg" alt="Jenkins logo"></p>
+<p>说回 Jenkins 的作用。如果用术语来解释 Jenkins，它是一款开源 CI&amp;CD 软件。</p>
+<p>CI&amp;CD 是编程运维中的概念，CI(Continuous Integration) 指持续集成，CD(Continuous Delivery) 指持续交付。我在阅读相关博文时，发现有两个 CD（Continuous Deployment 持续部署、Continuous Delivery 持续交付），但是一般提到时是指持续交付。</p>
+<p>CI&amp;CD 的意义在于解放人力，让集成、打包、部署等流水线式的固定工作，不再需要程序员/运维人员手动去做，而交由工具去做。这在项目快速迭代功能时尤其有必要，以前我每写好一个小功能点，都要手动用 Maven 清掉编译文件，重新打包，提交给发布人员，再由发布人员去更新，整套流程耗时耗心，还有可能犯人类的低级错误。有了 CI&amp;CD 的工具之后，开发人员只需要提代码到 SVN 或者 Git 上就可以了，剩下的部署交由工具完成。</p>
+<p>更多有关 CI&amp;CD 的概念可以参看博文<a href="https://linux.cn/article-9926-1.html?pr" target="_blank" rel="noopener">《什么是 CI/CD？》</a>。</p>
+<hr>
+<p>这周写 Jenkins 是一个非常错误的决定，因为我完全不知道写点什么……Jenkins 使用起来，就跟使用迅雷、QQ 音乐、360 杀毒软件似的，都是软件级别的交互，写起来跟写百度经验似的。而且我本地没有配置自己的 SVN 或 Git，使用 Jenkins 时都没有切身的实操体验。</p>
+<p>我暂且想写什么点，就写什么点了，尽可能地学习到东西。</p>
+<br>
+
+<p>嗯……果然看了一通，什么都写不了，要不然是接触不到，要不然是水平不足。基本上，Jenkins 的自定义配置都是靠 Shell 脚本语言来实现的，我 Linux 的使用水平实在是捉襟见肘，啧，佛掉了新年第一个周。</p>
+<p>下周补基础，看 Java 的容器设计。</p>
+<br>
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 pz
+  </div>
+  <div class="footer-right">
+    <nav>
+      pz阁下的blog
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+
