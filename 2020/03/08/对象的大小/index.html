@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="一晃都三月了，过了一个很古早的冬天呐。 冬眠回来，三月的第二周，来看 Java 对象的内存设计，这部分的学习是为之后学习 synchronized 关键字铺路的。本来想在学习锁时顺便提一嘴写完它，结果发现这坑有点大，还是要单独学。   我们这周学习的目的，是搞清楚存储在内存中的对象，它具体是如何存储的，存储时都需要存哪些信息，以及存这些信息的意义是什么。 比如看下面这段代码： 12List l">
+<meta name="keywords" content="Weekly Post,java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="对象的大小">
+<meta property="og:url" content="http://hellopz.netlify.com/2020/03/08/对象的大小/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="一晃都三月了，过了一个很古早的冬天呐。 冬眠回来，三月的第二周，来看 Java 对象的内存设计，这部分的学习是为之后学习 synchronized 关键字铺路的。本来想在学习锁时顺便提一嘴写完它，结果发现这坑有点大，还是要单独学。   我们这周学习的目的，是搞清楚存储在内存中的对象，它具体是如何存储的，存储时都需要存哪些信息，以及存这些信息的意义是什么。 比如看下面这段代码： 12List l">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84.png">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/JVM%E5%86%85%E5%AD%98%E5%AD%98%E5%82%A8%E5%AF%B9%E8%B1%A1.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E5%AF%B9%E8%B1%A1%E5%A4%B4.jpg">
+<meta property="og:updated_time" content="2020-03-08T12:00:31.169Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="对象的大小">
+<meta name="twitter:description" content="一晃都三月了，过了一个很古早的冬天呐。 冬眠回来，三月的第二周，来看 Java 对象的内存设计，这部分的学习是为之后学习 synchronized 关键字铺路的。本来想在学习锁时顺便提一嘴写完它，结果发现这坑有点大，还是要单独学。   我们这周学习的目的，是搞清楚存储在内存中的对象，它具体是如何存储的，存储时都需要存哪些信息，以及存这些信息的意义是什么。 比如看下面这段代码： 12List l">
+<meta name="twitter:image" content="http://hellopz.netlify.com/assets/JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>对象的大小</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/Weekly-Post/">Weekly Post</a></li>
+         
+          <li><a href="/tags/tips/">Tips</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2020/01/12/Java-容器/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2020/03/08/对象的大小/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2020/03/08/对象的大小/&text=对象的大小"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2020/03/08/对象的大小/&is_video=false&description=对象的大小"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Tips"><span class="toc-number">1.</span> <span class="toc-text">Tips</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#对象内容"><span class="toc-number"></span> <span class="toc-text">对象内容</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#对象头"><span class="toc-number"></span> <span class="toc-text">对象头</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#标记字段"><span class="toc-number">1.</span> <span class="toc-text">标记字段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#地址信息"><span class="toc-number">2.</span> <span class="toc-text">地址信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数组大小"><span class="toc-number">3.</span> <span class="toc-text">数组大小</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#（还有一点需要提及）"><span class="toc-number"></span> <span class="toc-text">（还有一点需要提及）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#备注"><span class="toc-number"></span> <span class="toc-text">备注</span></a>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        对象的大小
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2020-03-08T05:23:04.000Z" itemprop="datePublished">2020-03-08</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Weekly-Post/">Weekly Post</a>, <a class="tag-link" href="/tags/java/">java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>一晃都三月了，过了一个很古早的冬天呐。</p>
+<p>冬眠回来，三月的第二周，来看 Java 对象的内存设计，这部分的学习是为之后学习 synchronized 关键字铺路的。本来想在学习锁时顺便提一嘴写完它，结果发现这坑有点大，还是要单独学。</p>
+<br>
+
+<p>我们这周学习的目的，是搞清楚存储在内存中的对象，它具体是如何存储的，存储时都需要存哪些信息，以及存这些信息的意义是什么。</p>
+<p>比如看下面这段代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">List list = <span class="keyword">new</span> ArrayList;</span><br><span class="line">list.add(<span class="string">"hello, world!"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>上面这两行代码当中的 <code>list</code> 对象是如何存储起来的。</p>
+<hr>
+<p>要学习对象是怎么存储在内存当中的，就要从很原始的地方说起，先学习 JVM 的内存结构。</p>
+<p>这一块我是真的很欠缺，只知道一点基础的概念，我只把本次要用到的知识写在这里，其他的知识我还要慢慢学。有关 JVM 的内存结构，我学习的起点是<a href="https://www.bilibili.com/video/av62009886" target="_blank" rel="noopener">《【java】jvm内存模型全面解析》</a>视频，很推荐一看。</p>
+<p>JVM 在运行 Java 程序时，会管理一块内存区域，这一片区域被称为<code>运行时数据区域</code>，从结构上可以分为五个部分，分别是：</p>
+<ul>
+<li><code>Java 虚拟机栈</code>：线程私有，存储局部变量等</li>
+<li><code>本地方法栈</code>：线程私有，存储本地方法的变量等</li>
+<li><code>程序计数器</code>：线程私有，存储字节码的地址（程序执行到第几行了）</li>
+<li><code>堆</code>：线程共享，存储几乎所有对象</li>
+<li><code>方法区</code>：线程共享，存储类的结构信息（字段、构造方法等等）</li>
+</ul>
+<p>（下图来源自<a href="https://cyc2018.github.io/CS-Notes/#/notes/Java%20%E8%99%9A%E6%8B%9F%E6%9C%BA" target="_blank" rel="noopener">《CYC - Java 虚拟机 - 运行时数据区域》</a>，其内容整理非常值得反复阅读)</p>
+<p><img src="/assets/JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84.png" alt="JVM内存结构"></p>
+<p>我们今天要说的，只是<code>栈</code>和<code>堆</code>（栈指的是 Java 虚拟机栈）。非常浅薄地讲，<code>栈</code>存放的是局部变量以及对象的地址，<code>堆</code>存放的是对象的实体。（看书发现，栈中存放的并不一定是对象地址，但这是最常见的寻找堆对象的方式）</p>
+<p>简单制作了一张图，描述了代码、栈、堆之间的关系。</p>
+<p><img src="/assets/JVM%E5%86%85%E5%AD%98%E5%AD%98%E5%82%A8%E5%AF%B9%E8%B1%A1.jpg" alt="JVM内存存储对象"></p>
+<br>
+
+<h2 id="Tips"><a href="#Tips" class="headerlink" title="Tips"></a>Tips</h2><p>内存结构和内存模型并不是一个概念：</p>
+<p>当我们说内存结构时，通常是指<code>JVM 内存结构</code>，这是真实存在的，指的是上文介绍的 Java 虚拟机栈、堆、本地方法栈等等那五部分构成的 JVM 运行时数据区域，这是在<code>结构</code>上把 JVM 的内存分成了多个部分。</p>
+<p>当我们说内存模型时，通常是指<code>Java 内存模型</code>，这是虚拟存在的，指的是面对并发时 Java 是如何实现内存访问一致的，牵扯到了主内存和工作内存等知识，这是在<code>模型</code>和概念上，屏蔽各种硬件和操作系统的内存访问差异，来实现并发内存一致性。</p>
+<br>
+
+<hr>
+<p>简单说完了对象存放的位置，那么接下来就要进入这周学习的重点了：如何计算对象的大小。这个问题实际上可以拆成两个问题：</p>
+<ol>
+<li>对象由哪些部分组成？</li>
+<li>每部分各占多少字节？</li>
+</ol>
+<p>在这两个问题的基础上，自然会问出第三个问题：</p>
+<ol start="3">
+<li>组成对象的这些基础部分，各自是做什么的？</li>
+</ol>
+<p>PS：在看书的时候，发现自己所学习对象大小的这部分知识，实际上是 HotSpot 虚拟机的实现，而并非所有 Java 虚拟机的实现，但是目前基本上所有的 Java 程序都跑在 HostSpot 虚拟机上面。</p>
+<br>
+
+<p>所有对象都可以笼统地切分成两部分：<code>对象头</code>（Header）和<code>对象内容</code>（Instance Data）。</p>
+<p>举一个实际的例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于上面这个 Person 类，它实例化出来的对象同样具有对象头和对象内容两部分，<code>name</code> 和 <code>age</code> 都是对象的内部变量，属于对象内容，而对象头是其余一些辅助信息。</p>
+<br>
+
+<p>我绘制了一张图，画出了在最常见情况下（64 位虚拟机开启指针压缩），对象在内存中的结构，后文都是在解释这个结构的具体信息。</p>
+<p><img src="/assets/%E5%AF%B9%E8%B1%A1%E5%A4%B4.jpg" alt="对象头"></p>
+<h1 id="对象内容"><a href="#对象内容" class="headerlink" title="对象内容"></a>对象内容</h1><p>对象内容准确地讲应该叫做实例数据（Instance Data），比较简单，因此我们先讲完。</p>
+<p>正如之前提到的 Person 对象的例子，对象内的属性（包括基本数据类型 <code>int age</code> 和引用的另一个对象 <code>String name</code>），这些属性所占的内容大小，就是对象内容的大小。在该例子中，int 类型的 <code>age</code> 占 4 个字节（即 32 位），引用另一个对象时，存储的是对象的地址，地址是一个 int 类型的指针，因此 String 类型的 <code>name</code> 存储在 Person 对象中也占 4 个字节（即 32 位），两个属性加起来一共占 8 个字节。</p>
+<p>因此计算对象内容的大小，实际上就是分两部分，基本数据类型一类，占内容大小加起来，引用别的对象占一类，引用一个就是 4 字节（int 的大小），引用 N 个对象就占 N*4 个字节。</p>
+<p>下面列举了 8 种基本数据类型的大小。</p>
+<table>
+<thead>
+<tr>
+<th>基本数据类型</th>
+<th>大小（字节）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>byte</td>
+<td>1</td>
+</tr>
+<tr>
+<td>char</td>
+<td>2（表示一个 UTF-16be 编码单元，<a href="https://colobu.com/2019/01/04/how-many-charactors-in-a-java-string/" target="_blank" rel="noopener">生僻字用两个char</a>）</td>
+</tr>
+<tr>
+<td>short</td>
+<td>2</td>
+</tr>
+<tr>
+<td>int</td>
+<td>4</td>
+</tr>
+<tr>
+<td>flote</td>
+<td>4</td>
+</tr>
+<tr>
+<td>long</td>
+<td>8</td>
+</tr>
+<tr>
+<td>double</td>
+<td>8</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>通常是1</td>
+</tr>
+</tbody></table>
+<p>此外还要注意的一点是，如果 A 类继承自 B 类，那么计算 A 类的对象内容大小时，继承来的 B 类的属性也是要算在内的。比如计算 ArrayList 对象大小的时候，它的父类 AbstractList 中的属性，也是要计算在内的。</p>
+<br>
+
+<h1 id="对象头"><a href="#对象头" class="headerlink" title="对象头"></a>对象头</h1><p>对象头（Header）比较复杂，它包含着对象的“冗余信息”，这些信息或实现并发锁，或帮助垃圾分类，或包含类的信息。</p>
+<p>从整体上看，对象头包含三部分的信息，分别是</p>
+<ul>
+<li>标记字段</li>
+<li>地址</li>
+<li>数组长度</li>
+</ul>
+<h2 id="标记字段"><a href="#标记字段" class="headerlink" title="标记字段"></a>标记字段</h2><p>标记字段（Mark Word）是对象头中最复杂的内容，需要对照上面绘制的图来看。</p>
+<p>由于内存空间寸土寸金，在希望对象能够记录更多信息的同时，还要尽可能地压缩空间，在这种背景之下，32 位虚拟机的对象标记字段长 4 字节，64 位虚拟机的对象标记字段长 8 字节（现在基本都是 64 位了吧），并且都有着动态定义的数据结构，以便在极小的空间内存储尽量多的数据。32 位和 64 位的存储长度不同，仅仅是因为地址指针长度引起的变化，在存储的内容类型方面没有区别。</p>
+<p>（具体的标记字段信息可见文末的备注）</p>
+<p>以我当下的理解，标记字段主要实现了三个事情：</p>
+<ol>
+<li>对并发情况下的 synchronized 支持</li>
+<li>GC 垃圾回收</li>
+<li>保存 hashcode</li>
+</ol>
+<p>标记字段共有五种状态，分别是对应于 synchronized 的四种状态（无锁、偏向锁、轻量级锁和重量级锁），以及一种 GC 状态，这五种状态通过 2 位标志位实现（无锁和偏向锁的标志位相同）。</p>
+<p>因此，了解标记字段的具体信息，实际上就是在了解 synchronized 锁和垃圾回收的原理。这两部分都有点难，本文暂时不讨论了，有关 synchronized 的信息可以参考这篇文章<a href="https://www.itqiankun.com/article/bias-lightweight-synchronized-lock" target="_blank" rel="noopener">《彻底搞懂 Java 中的偏向锁，轻量级锁，重量级锁》</a>。</p>
+<h2 id="地址信息"><a href="#地址信息" class="headerlink" title="地址信息"></a>地址信息</h2><p>对象头中有一部分是地址信息，它实际上是一个类型指针，指向了该对象类型的地址。</p>
+<p>例如 person 对象的对象头中的地址信息，指向了 Person 类的地址（类在方法区）。</p>
+<p>在这种设计下，可以通过对象找到类，比如在 main() 方法中实例化一个 Person 对象 person，在内存中寻址的过程为：</p>
+<ol>
+<li>main() 方法的 Java 栈中记录着 person 对象的地址，</li>
+<li>根据这个地址在堆中找到了 person 对象，</li>
+<li>person 对象的头部又记录着 Person 类的地址，根据这个地址在方法区中找到了 Person 类。</li>
+</ol>
+<p>（实际上，在对象的头部中保留类的地址信息，通过对象找到类的位置，这种设计是 HotSpot 虚拟机的设计，也有别的虚拟机不这么设计，对象头中并不包含类的地址，不通过对象找类。）</p>
+<p>地址信息的大小并不是固定的，这跟系统位数有关，32 位的虚拟机，指针是 32 位长，地址信息只需要 32 （即 4 字节），但是对于 64 位的虚拟机，指针是 64 位长，因此地址信息也需要扩增到 64 位（即 8 字节）。</p>
+<p>32 位的虚拟机，理论上只能寻址到 4 GB 的内存空间（2^32 byte = 4 GB），而 64 位的虚拟机能寻址到更多地址。这样的提升是有代价的，一方面内存占用量变大了，原来只需要 4 个字节存储一个地址，现在需要 8 个字节了（如果不需要比 4GB 更多的内存，用这么大的空间是没有意义的），另一方面寻址时操作位数更长的指针，主内存和各级缓存移动数据时，占用的带宽也会增加。</p>
+<p>Java 虚拟机为了处理这个问题，提出了<strong>指针压缩</strong>。</p>
+<p>指针压缩的简易原理是这样的：32 位的指针，当然只能找到 4 GB 个内存位置，如果我有一块更大的内存区域，比如 10 GB，32 位的指针就不能指向这 10 GB 中的所有位置，但实际上并不需要找到这块内存中的所有位置，它只需要找到要操作的开始位置就可以了。<a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/heap-sizing.html" target="_blank" rel="noopener">这意味着 32 位的指针可以引用 40 亿个对象，而不是 40 亿个字节。</a>Java 对象的大小如果一定是 8 字节的整数倍（这个后文有讲），那么就可以使原来只能寻址 4 GB 的内存扩大 8 倍，到 32 GB 的内存。</p>
+<p>因此对于分配内存低于 4 GB 的虚拟机，默认开启指针压缩，指针大小就是 32 位长，对于分配内存在 4 - 32 GB 之间的虚拟机，可以开启指针压缩算法，使指针大小依旧维持在 32 位长，但是对于更大的内存，无法开启指针压缩，指针大小必须是 64 位长。（因此分配内存并不是越大越好，32 GB 处会有一个门槛）</p>
+<p>指针压缩并非毫无缺陷，这毕竟是多出来的算法，会增加 JVM 的计算量。</p>
+<p>总结：对象头中的地址信息大小，跟系统位数以及是否开启指针压缩有关，<code>32 位系统</code>、<code>开启了指针压缩的 64 位系统</code>的地址信息长 4 字节，<code>普通 64 位系统</code>的地址信息长 8 字节。</p>
+<h2 id="数组大小"><a href="#数组大小" class="headerlink" title="数组大小"></a>数组大小</h2><p>数组大小并不是必须的，数组才有，非数组没有。</p>
+<p>因为数组是 new 出来的，需要在堆上分配内存，在这个意义上讲，数组就是对象的一种。数组的长度是需要记录下来的，长度为 4 字节。</p>
+<p>int 也是 4 字节，这就很容易让人联想在一起。Java 中 int 是有符号整型数，是有负值的，int 的最大值是 2^31 - 1，用二进制表示为 01111111111111111111111111111111。数组的理论最大长度，也应该是 int 的最大值。</p>
+<p>实际的使用中可能会小一点。例如 ArrayList 内部维护的数组，它的最大长度是 <code>Integer.MAX_VALUE - 8</code>，注释称这是因为虚拟机的限制。又例如 HashMap 内部维护的数组，它的最大程度是 <code>1 &lt;&lt; 30</code>，这是 1 位运算之后能获得到的最大值（二进制为 01000000000000000000000000000000）。</p>
+<br>
+
+<h1 id="（还有一点需要提及）"><a href="#（还有一点需要提及）" class="headerlink" title="（还有一点需要提及）"></a>（还有一点需要提及）</h1><p>在计算完对象头和对象内容的大小之后，二者加起来并不一定是最终占内存的大小，还要考虑内存对齐的问题。</p>
+<p>所有对象的字节大小，必须是 8 的整数倍，如果对象头+对象内容算出来是 15 字节，那么最终对象大小为 16 字节，如果是 20 字节，那么最终对象大小是 24 字节，总之如果不满 8 的整数倍，都填充到 8 的整数倍，填充的部分叫做<code>对齐填充</code>（Padding），实际上就是占位符。</p>
+<p>对齐填充的原因在于，HotSpot 虚拟机的自动内存管理系统，要求对象的起始地址必须是 8 字节的整数倍（这样寻址更高效，而且实现了指针压缩），因此对象的大小也就必须是 8 字节的整数倍。</p>
+<br>
+
+<h1 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h1><p>在博文<a href="http://blog.kail.xyz/post/2018-08-01/java/java-object-header_and_lock.html" target="_blank" rel="noopener">《Java Object Header 和 锁》</a>中找到了三种情况（32 位虚拟机、64 位虚拟机、64 位虚拟机开启指针压缩）下，对象头的具体存储内容，这部分内容比较难找到，备注如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">32位</span><br><span class="line">|----------------------------------------------------------------------------------------|--------------------|</span><br><span class="line">|                                    Object Header (64 bits)                             |        State       |</span><br><span class="line">|-------------------------------------------------------|--------------------------------|--------------------|</span><br><span class="line">|                  Mark Word (32 bits)                  |      Klass Word (32 bits)      |                    |</span><br><span class="line">|-------------------------------------------------------|--------------------------------|--------------------|</span><br><span class="line">| identity_hashcode:25 | age:4 | biased_lock:1 | lock:2 |      OOP to metadata object    |       Normal       |</span><br><span class="line">|-------------------------------------------------------|--------------------------------|--------------------|</span><br><span class="line">|  thread:23 | epoch:2 | age:4 | biased_lock:1 | lock:2 |      OOP to metadata object    |       Biased       |</span><br><span class="line">|-------------------------------------------------------|--------------------------------|--------------------|</span><br><span class="line">|               ptr_to_lock_record:30          | lock:2 |      OOP to metadata object    | Lightweight Locked |</span><br><span class="line">|-------------------------------------------------------|--------------------------------|--------------------|</span><br><span class="line">|               ptr_to_heavyweight_monitor:30  | lock:2 |      OOP to metadata object    | Heavyweight Locked |</span><br><span class="line">|-------------------------------------------------------|--------------------------------|--------------------|</span><br><span class="line">|                                              | lock:2 |      OOP to metadata object    |    Marked for GC   |</span><br><span class="line">|-------------------------------------------------------|--------------------------------|--------------------|</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">64位</span><br><span class="line">|------------------------------------------------------------------------------------------------------------|--------------------|</span><br><span class="line">|                                            Object Header (128 bits)                                        |        State       |</span><br><span class="line">|------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                                  Mark Word (64 bits)                         |    Klass Word (64 bits)     |                    |</span><br><span class="line">|------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">| unused:25 | identity_hashcode:31 | unused:1 | age:4 | biased_lock:1 | lock:2 |    OOP to metadata object   |       Normal       |</span><br><span class="line">|------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">| thread:54 |       epoch:2        | unused:1 | age:4 | biased_lock:1 | lock:2 |    OOP to metadata object   |       Biased       |</span><br><span class="line">|------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                       ptr_to_lock_record:62                         | lock:2 |    OOP to metadata object   | Lightweight Locked |</span><br><span class="line">|------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                     ptr_to_heavyweight_monitor:62                   | lock:2 |    OOP to metadata object   | Heavyweight Locked |</span><br><span class="line">|------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                                                                     | lock:2 |    OOP to metadata object   |    Marked for GC   |</span><br><span class="line">|------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">64位（开启指针压缩）</span><br><span class="line">|--------------------------------------------------------------------------------------------------------------|--------------------|</span><br><span class="line">|                                            Object Header (96 bits)                                           |        State       |</span><br><span class="line">|--------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                                  Mark Word (64 bits)                           |    Klass Word (32 bits)     |                    |</span><br><span class="line">|--------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">| unused:25 | identity_hashcode:31 | cms_free:1 | age:4 | biased_lock:1 | lock:2 |    OOP to metadata object   |       Normal       |</span><br><span class="line">|--------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">| thread:54 |       epoch:2        | cms_free:1 | age:4 | biased_lock:1 | lock:2 |    OOP to metadata object   |       Biased       |</span><br><span class="line">|--------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                         ptr_to_lock_record                            | lock:2 |    OOP to metadata object   | Lightweight Locked |</span><br><span class="line">|--------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                     ptr_to_heavyweight_monitor                        | lock:2 |    OOP to metadata object   | Heavyweight Locked |</span><br><span class="line">|--------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                                                                       | lock:2 |    OOP to metadata object   |    Marked for GC   |</span><br><span class="line">|--------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<hr>
+<p>最后用一个例子检验上文中的内容，计算一个 HashMap 对象的大小。</p>
+<p>HashMap 类不是数组，在 64 位开启指针压缩的情况下，对象头只包括 8 字节的标记字段和 4 字节的地址指针，总共 12 字节。</p>
+<p>HashMap 类中分别有下列属性：</p>
+<ul>
+<li>entrySet （对象）</li>
+<li>hashSeed （int）</li>
+<li>loadFactor （float）</li>
+<li>modCount （int）</li>
+<li>size （int）</li>
+<li>table （数组，当对象处理）</li>
+<li>threshold （int）</li>
+</ul>
+<p>检查 HashMap 的所有父类，在 AbstractMap 中发现了两个新的属性：</p>
+<ul>
+<li>keySet （对象）</li>
+<li>values （对象）</li>
+</ul>
+<p>算下来一共是 9 个属性，每个属性很巧都是 4 字节，一共是 9×4 = 36 字节，因此 HashMap 的对象内容为 36 字节。</p>
+<p>HashMap 对象的对象头 12 字节 + 对象内容 36 字节总共是 48 字节，是 8 字节的倍数，无需对齐填充。</p>
+<p>因此一个 HashMap 对象的大小是 48 字节。</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 pz
+  </div>
+  <div class="footer-right">
+    <nav>
+      pz阁下的blog
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+

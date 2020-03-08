@@ -15,7 +15,7 @@
 <meta property="og:description" content="十二月的第四周，来学习正则表达式。 工作时经常需要用到正则表达式来校验字符串，每次遇到都怵怵的，这周来扫除一下盲区。  正则表达式（regular expression），根据英文也可简写为 regex。“正则”这个中文翻译颇有民国风度，所谓公正而乎法则，今已查不到何处还在用此词，似乎只有编程领域在用。 正则表达式只用于字符串，用来检查字符串是否符合某种规定（例如只有字母、又例如没有数字等），">
 <meta property="og:locale" content="Chinese">
 <meta property="og:image" content="http://hellopz.netlify.com/assets/1576558383714.png">
-<meta property="og:updated_time" content="2019-12-23T00:18:14.300Z">
+<meta property="og:updated_time" content="2020-03-08T15:57:08.121Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="正则表达式">
 <meta name="twitter:description" content="十二月的第四周，来学习正则表达式。 工作时经常需要用到正则表达式来校验字符串，每次遇到都怵怵的，这周来扫除一下盲区。  正则表达式（regular expression），根据英文也可简写为 regex。“正则”这个中文翻译颇有民国风度，所谓公正而乎法则，今已查不到何处还在用此词，似乎只有编程领域在用。 正则表达式只用于字符串，用来检查字符串是否符合某种规定（例如只有字母、又例如没有数字等），">
@@ -94,7 +94,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#非打印字符"><span class="toc-number">1.</span> <span class="toc-text">非打印字符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#特殊字符"><span class="toc-number">2.</span> <span class="toc-text">特殊字符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#限定字符"><span class="toc-number">3.</span> <span class="toc-text">限定字符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#null"><span class="toc-number">4.</span> <span class="toc-text">[ ]</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-1"><span class="toc-number">5.</span> <span class="toc-text">()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#贪婪"><span class="toc-number">6.</span> <span class="toc-text">贪婪</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#非打印字符"><span class="toc-number">1.</span> <span class="toc-text">非打印字符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#特殊字符"><span class="toc-number">2.</span> <span class="toc-text">特殊字符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#限定字符"><span class="toc-number">3.</span> <span class="toc-text">限定字符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#null"><span class="toc-number">4.</span> <span class="toc-text">[ ]</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-1"><span class="toc-number">5.</span> <span class="toc-text">()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#贪婪"><span class="toc-number">6.</span> <span class="toc-text">贪婪</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Pattern"><span class="toc-number"></span> <span class="toc-text">Pattern</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Matcher"><span class="toc-number"></span> <span class="toc-text">Matcher</span></a>
     </div>
   </span>
 </div>
@@ -427,18 +427,62 @@
 <p>本周就学习到这里了。</p>
 <br>
 
+<hr>
+<blockquote>
+<p>2020-03-08 补</p>
+<p>发现平常在 Java 中使用 Pattern 类和 Matcher 类还是很频繁的，之前学习得不细致，得回来补一下。</p>
+</blockquote>
+<h1 id="Pattern"><a href="#Pattern" class="headerlink" title="Pattern"></a>Pattern</h1><p>Pattern 类可以理解成是正则表达式，可以使用 Pattern 对象来对字符串进行正则校验。</p>
+<p>不能通过 new 来创建 Pattern 对象，只能通过 Pattern 类的静态方法创建。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Pattern pattern = Pattern.compile(<span class="string">"\\w"</span>); <span class="comment">// 正则表达式：单个数字、字母或下划线</span></span><br></pre></td></tr></table></figure>
 
+<p>日常使用 Pattern 类有两个用途：</p>
+<ol>
+<li><p>直接校验字符串，返回 true/false</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 校验是否是qq邮箱</span></span><br><span class="line">String regex = <span class="string">"^\\w*@qq.com$"</span>;</span><br><span class="line"><span class="keyword">boolean</span> matches = Pattern.matches(regex, <span class="string">"hellopz@qq.com"</span>);</span><br></pre></td></tr></table></figure>
 
+<p>这里有一处暗坑，校验成功要求<code>全部匹配</code>，如果是部分匹配，那么返回值将是 false。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">boolean</span> matches1 = Pattern.matches(<span class="string">"[0-9]"</span>, <span class="string">"123"</span>);   <span class="comment">// false</span></span><br><span class="line"><span class="keyword">boolean</span> matches2 = Pattern.matches(<span class="string">"[0-9]*"</span>, <span class="string">"123"</span>);  <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成一个校验过的结果，返回 Matcher 对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 正则表达式：是否是数字</span></span><br><span class="line">String regex = <span class="string">"[0-9]*"</span>;</span><br><span class="line">Pattern pattern = Pattern.compile(regex);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成对"123"校验的结果（结果是一个Matcher对象）</span></span><br><span class="line">Matcher matcher = pattern.matcher(<span class="string">"123"</span>);</span><br></pre></td></tr></table></figure>
 
+<p>Matcher 对象能做更多的事情，比如部分校验、取出校验结果等。</p>
+</li>
+</ol>
+<p>Pattern 类的其他使用，例如指定正则模式 flag、分割字符串的 split() 方法（我好像觉得跟 String 对象的 split() 方法 没有任何区别？），感觉都不实用，不写了。</p>
+<h1 id="Matcher"><a href="#Matcher" class="headerlink" title="Matcher"></a>Matcher</h1><p>Matcher 类可以理解成经过校验的字符串的校验结果，可以通过该对象处理校验结果。</p>
+<p>Matcher 对象由 Pattern 对象的 matcher() 方法获取：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// pattern表示正则表达式，方法内传入待校验的字符串</span></span><br><span class="line">Matcher matcher = pattern.matcher(<span class="string">"wait to check"</span>);</span><br></pre></td></tr></table></figure>
 
+<p>日常使用 Matcher 类也是两个用途：</p>
+<ol>
+<li><p>检查字符串中是否含正则校验内容</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 校验是否包含数字</span></span><br><span class="line">Matcher matcher1 = Pattern.compile(<span class="string">"[0-9]"</span>).matcher(<span class="string">"12345"</span>);</span><br><span class="line"><span class="keyword">boolean</span> contains = matcher.find();  <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
 
+<p>请注意理解 find() 方法的语义，find 的意思是找到了，并不代表完全匹配，换言之只需要字符串中有正则内容就可以。因此使用 matcher.find() 和 Pattern.matches() 是不等价的。</p>
+</li>
+<li><p>取出正则校验结果</p>
+<p>这里有一个需要先指出的暗坑：在取结果之前，必须先执行 Matcher 对象的 find() 方法，如果不执行，将抛出 <code>IllegalStateException</code> 异常：<code>No match found</code> （没找到匹配结果）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 正则表达式：数字(字母)数字(字母)数字(字母)</span></span><br><span class="line">Matcher matcher = Pattern.compile(<span class="string">"\\d+([a-z])\\d+([a-z])\\d+([a-z])"</span>).matcher(<span class="string">"111a111b111c"</span>);</span><br><span class="line"><span class="keyword">boolean</span> find = matcher.find();      <span class="comment">// true</span></span><br><span class="line">String result = matcher.group();    <span class="comment">// 111a111b111c</span></span><br><span class="line">String result0 = matcher.group(<span class="number">0</span>);  <span class="comment">// 111a111b111c</span></span><br><span class="line">String result1 = matcher.group(<span class="number">1</span>);  <span class="comment">// a</span></span><br><span class="line">String result2 = matcher.group(<span class="number">2</span>);  <span class="comment">// b</span></span><br><span class="line">String result3 = matcher.group(<span class="number">3</span>);  <span class="comment">// c</span></span><br></pre></td></tr></table></figure>
 
+<p>使用 group() 方法可以捕获到正则结果，如果正则表达式中有<code>( )</code>括起来的内容，这部分内容可以取出来。</p>
+<p>有两种常用的 group() 方法，一种是传入 int 值的 group(int group) 方法，另一种是无参的 group() 方法。</p>
+<ul>
+<li><p>带 int 参数的 group() 方法，参数为 0 时代表整个表达式，为 1 时代表匹配到的第 1 个<code>( )</code>内容，为 2 时代表匹配到的第 2 个<code>( )</code>内容……以此类推，正如上面的代码示例。</p>
+<p>如果参数是 n，但是实际上并没有 n 个匹配内容，会抛出 <code>IndexOutOfBoundsException</code> 异常。</p>
+</li>
+<li><p>无参的 group() 方法实际上就是 group(0)，代表整个表达式。</p>
+</li>
+</ul>
+<p>此外还可以通过 groupCount() 方法获取匹配到<code>( )</code>的数量。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...延续上面的代码</span></span><br><span class="line"><span class="keyword">int</span> count = matcher.groupCount();  <span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
 
+</li>
+</ol>
+<br>
 
-
-
-
-
+<p>Java 的正则表达式写到这里应该就可以了，足够日常用了。</p>
 
   </div>
 </article>
