@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="四月的第三周，来学习动态规划。 本来上篇博文的题目叫做《回溯与动态规划》，结果我高估了自己的算法能力，根本学不透hhh，这周来学习动态规划，努力把都所有变种都学会并熟练使用。  动态规划（Dynamic programming，简称DP），是一种拆分问题变成相对简单的子问题的算法。我一直觉得这种算法跟高中的数学归纳法有相似之处：在思考问题时，都是思考怎么从第 N 步推出第 N+1 步，在写答案">
+<meta name="keywords" content="Weekly Post">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法：动态规划">
+<meta property="og:url" content="http://hellopz.netlify.com/2020/04/19/算法：动态规划/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="四月的第三周，来学习动态规划。 本来上篇博文的题目叫做《回溯与动态规划》，结果我高估了自己的算法能力，根本学不透hhh，这周来学习动态规划，努力把都所有变种都学会并熟练使用。  动态规划（Dynamic programming，简称DP），是一种拆分问题变成相对简单的子问题的算法。我一直觉得这种算法跟高中的数学归纳法有相似之处：在思考问题时，都是思考怎么从第 N 步推出第 N+1 步，在写答案">
+<meta property="og:locale" content="Chinese">
+<meta property="og:updated_time" content="2020-04-28T05:02:23.844Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="算法：动态规划">
+<meta name="twitter:description" content="四月的第三周，来学习动态规划。 本来上篇博文的题目叫做《回溯与动态规划》，结果我高估了自己的算法能力，根本学不透hhh，这周来学习动态规划，努力把都所有变种都学会并熟练使用。  动态规划（Dynamic programming，简称DP），是一种拆分问题变成相对简单的子问题的算法。我一直觉得这种算法跟高中的数学归纳法有相似之处：在思考问题时，都是思考怎么从第 N 步推出第 N+1 步，在写答案">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>算法：动态规划</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/Weekly-Post/">Weekly Post</a></li>
+         
+          <li><a href="/tags/Random-Post/">Random Post</a></li>
+         
+          <li><a href="/tags/tips/">Tips</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2020/04/15/ConcurrentHashMap/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2020/04/19/算法：动态规划/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2020/04/19/算法：动态规划/&text=算法：动态规划"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2020/04/19/算法：动态规划/&is_video=false&description=算法：动态规划"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#LeetCode53-最大子序和"><span class="toc-number">1.</span> <span class="toc-text">LeetCode53  最大子序和</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LeetCode416-分割等和子集"><span class="toc-number">2.</span> <span class="toc-text">LeetCode416  分割等和子集</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Mi27-石头收藏家"><span class="toc-number">3.</span> <span class="toc-text">Mi27 石头收藏家</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LeetCode188-买卖股票的最佳时机-IV"><span class="toc-number">4.</span> <span class="toc-text">LeetCode188  买卖股票的最佳时机 IV</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LeetCode32-最长有效括号"><span class="toc-number">5.</span> <span class="toc-text">LeetCode32 最长有效括号</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LeetCode44-通配符匹配"><span class="toc-number">6.</span> <span class="toc-text">LeetCode44  通配符匹配</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LeetCode62-不同路径"><span class="toc-number">7.</span> <span class="toc-text">LeetCode62  不同路径</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LeetCode72-编辑距离"><span class="toc-number">8.</span> <span class="toc-text">LeetCode72  编辑距离</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LeetCode85-最大矩形"><span class="toc-number">9.</span> <span class="toc-text">LeetCode85 最大矩形</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LeetCode279-完全平方数"><span class="toc-number">10.</span> <span class="toc-text">LeetCode279  完全平方数</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        算法：动态规划
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2020-04-19T01:06:06.000Z" itemprop="datePublished">2020-04-19</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Weekly-Post/">Weekly Post</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>四月的第三周，来学习动态规划。</p>
+<p>本来上篇博文的题目叫做《回溯与动态规划》，结果我高估了自己的算法能力，根本学不透hhh，这周来学习动态规划，努力把都所有变种都学会并熟练使用。</p>
+<hr>
+<p>动态规划（Dynamic programming，简称DP），是一种拆分问题变成相对简单的子问题的算法。我一直觉得这种算法跟高中的数学归纳法有相似之处：在思考问题时，都是思考怎么从第 N 步推出第 N+1 步，在写答案时，都是先写出第 1 步，然后写第 N 步到第 N +1 步的过程，最终输出结论。这种从第 N 步推到第 N+1 步的过程，在算法中称为“重叠子问题”，就是怎么把问题转换成子问题，通常重叠子问题就是解答的核心问题。</p>
+<p>动态规划的核心在于写出递推公式，也就是怎么从第 n 步推到第 n+1 步（这个公式的术语叫做<code>状态转移方程</code>），只要能写出这个递推公式，一般问题就不大了。而写出这个公式的通常做法在于画格子，自己画一个表格，每一行新增一个物品/一天/一个数字，自行观察总结新增了一个之后，怎么从上一行信息得出本行信息。</p>
+<p>我觉得自己上篇整理算法的方式是错误的，熟练运用算法最重要的不是理解模板，而是大量的练习。本文不再讲解具体内容了，只简单整理 10 道动态规划的题目（题目描述也不抄了，点击题目能跳转过去），画出表格，写出递推公式。</p>
+<hr>
+<h1 id="LeetCode53-最大子序和"><a href="#LeetCode53-最大子序和" class="headerlink" title="LeetCode53  最大子序和"></a>LeetCode53 <a href="https://leetcode-cn.com/problems/maximum-subarray" target="_blank" rel="noopener"> 最大子序和</a></h1><table>
+<thead>
+<tr>
+<th>物品[-2, 1, -3, 4, -1, 2, 1, -5,  4] 背包容量1</th>
+<th>1</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-2</td>
+<td>-2</td>
+</tr>
+<tr>
+<td>-2, 1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>-2, 1, -3</td>
+<td>-2</td>
+</tr>
+<tr>
+<td>-2, 1, -3, 4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>-2, 1, -3, 4, -1</td>
+<td>3</td>
+</tr>
+<tr>
+<td>-2, 1, -3, 4, -1, 2</td>
+<td>5</td>
+</tr>
+<tr>
+<td>-2, 1, -3, 4, -1, 2, 1</td>
+<td>6</td>
+</tr>
+<tr>
+<td>-2, 1, -3, 4, -1, 2, 1, -5</td>
+<td>1</td>
+</tr>
+<tr>
+<td>-2, 1, -3, 4, -1, 2, 1, -5, 4</td>
+<td>5</td>
+</tr>
+</tbody></table>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dp(i,<span class="number">1</span>) = max( dp(i<span class="number">-1</span>,<span class="number">1</span>) + nums[i], nums[i] )</span><br><span class="line">               在原本基础上新增数字    新增数字本身</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxSubArray</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 物品个数：nums.length</span></span><br><span class="line">    <span class="keyword">int</span> len = nums.length;</span><br><span class="line">    <span class="keyword">if</span> (len == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建dp数组</span></span><br><span class="line">    <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[len];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 记录结果</span></span><br><span class="line">    <span class="keyword">int</span> max = nums[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 遍历数组，dp[i] = (dp[i-1] + num) || (num)</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            dp[i] = Math.max(nums[i], nums[i] + dp[i - <span class="number">1</span>]);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            dp[i] = nums[i];</span><br><span class="line">        &#125;</span><br><span class="line">        max = Math.max(max, dp[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> max;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="LeetCode416-分割等和子集"><a href="#LeetCode416-分割等和子集" class="headerlink" title="LeetCode416  分割等和子集"></a>LeetCode416 <a href="https://leetcode-cn.com/problems/partition-equal-subset-sum" target="_blank" rel="noopener"> 分割等和子集</a></h1><table>
+<thead>
+<tr>
+<th>物品[1, 2, 3, 4]  背包容量5</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td></td>
+<td>√</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>1, 2</td>
+<td></td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>1, 2, 3</td>
+<td></td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>1, 2, 3, 4</td>
+<td></td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+</tr>
+</tbody></table>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dp(i,j) = (j == nums[i]) || (dp(i<span class="number">-1</span>,j)) || (dp[i - <span class="number">1</span>][j - nums[i]])</span><br><span class="line">          刚好是新加的数字     原本就可以       新加数字之后可以</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">canPartition</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 校验数据</span></span><br><span class="line">    <span class="keyword">int</span> len = nums.length, sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (len == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> num : nums) &#123;</span><br><span class="line">        sum += num;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (sum % <span class="number">2</span> != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 物品个数：nums.length</span></span><br><span class="line">    <span class="comment">// 背包容量：总和/2</span></span><br><span class="line">    <span class="keyword">int</span> itemCount = len;</span><br><span class="line">    <span class="keyword">int</span> capacity = sum / <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">boolean</span>[][] dp = <span class="keyword">new</span> <span class="keyword">boolean</span>[itemCount][capacity + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 遍历</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; capacity + <span class="number">1</span>; j++) &#123;</span><br><span class="line">            <span class="comment">// 自己本身</span></span><br><span class="line">            <span class="keyword">if</span> (nums[i] == j) &#123;</span><br><span class="line">                dp[i][j] = <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 拷贝上一行</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (i &gt; <span class="number">0</span> &amp;&amp; dp[i - <span class="number">1</span>][j]) &#123;</span><br><span class="line">                dp[i][j] = <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 自己本身组合上一行</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (i &gt; <span class="number">0</span> &amp;&amp; j &gt; nums[i] &amp;&amp; dp[i - <span class="number">1</span>][j - nums[i]]) &#123;</span><br><span class="line">                dp[i][j] = <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> dp[itemCount - <span class="number">1</span>][capacity];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Mi27-石头收藏家"><a href="#Mi27-石头收藏家" class="headerlink" title="Mi27 石头收藏家"></a>Mi27 <a href="https://code.mi.com/problem/list/view?id=27" target="_blank" rel="noopener">石头收藏家</a></h1><table>
+<thead>
+<tr>
+<th>物品[2, 3, 5, 7]  物品价值[1, 5, 2, 4] 背包容量10</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+<th>9</th>
+<th>10</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2</td>
+<td></td>
+<td></td>
+<td>1</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2,3</td>
+<td></td>
+<td></td>
+<td>1</td>
+<td>5</td>
+<td></td>
+<td>6</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2,3,5</td>
+<td></td>
+<td></td>
+<td>1</td>
+<td>5</td>
+<td></td>
+<td>6</td>
+<td></td>
+<td>3</td>
+<td>7</td>
+<td></td>
+<td>8</td>
+</tr>
+<tr>
+<td>2,3,5,7</td>
+<td></td>
+<td></td>
+<td>1</td>
+<td>5</td>
+<td></td>
+<td>6</td>
+<td></td>
+<td>4</td>
+<td>7</td>
+<td>5</td>
+<td>9</td>
+</tr>
+</tbody></table>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dp(i,j) = max( value[i],       dp(i<span class="number">-1</span>,j-nums[j])+value[i], dp(i<span class="number">-1</span>,j))</span><br><span class="line">               新增物品价值本身   新增物品价值加已有价值         继承上一轮的结果</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Scanner scan = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">    String line, line1 = <span class="keyword">null</span>, line2 = <span class="keyword">null</span>, line3;</span><br><span class="line">    <span class="keyword">while</span> (scan.hasNextLine()) &#123;</span><br><span class="line">        line = scan.nextLine().trim();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (line1 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            line1 = line;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (line2 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            line2 = line;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            line3 = line;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 读取数据</span></span><br><span class="line">            String[] s1 = line2.split(<span class="string">" "</span>);</span><br><span class="line">            String[] s2 = line3.split(<span class="string">" "</span>);</span><br><span class="line">            <span class="keyword">int</span> capacity = Integer.parseInt(line1);</span><br><span class="line">            <span class="keyword">int</span>[] weights = <span class="keyword">new</span> <span class="keyword">int</span>[s1.length];</span><br><span class="line">            <span class="keyword">int</span>[] values = <span class="keyword">new</span> <span class="keyword">int</span>[s2.length];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s1.length; i++) &#123;</span><br><span class="line">                weights[i] = Integer.parseInt(s1[i]);</span><br><span class="line">                values[i] = Integer.parseInt(s2[i]);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 动态规划数组 行：物品数量 列：背包容量</span></span><br><span class="line">            <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[weights.length][capacity + <span class="number">1</span>];</span><br><span class="line">            List&lt;Integer&gt; history = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">            <span class="keyword">int</span> max = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 初始化</span></span><br><span class="line">            <span class="keyword">if</span> (weights[<span class="number">0</span>] &lt;= capacity) &#123;</span><br><span class="line">                dp[<span class="number">0</span>][weights[<span class="number">0</span>]] = values[<span class="number">0</span>];</span><br><span class="line">                history.add(weights[<span class="number">0</span>]);</span><br><span class="line">                max = values[<span class="number">0</span>];</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 遍历</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; weights.length; i++) &#123;</span><br><span class="line">                <span class="comment">// 先拷贝上一行数据</span></span><br><span class="line">                System.arraycopy(dp[i - <span class="number">1</span>], <span class="number">0</span>, dp[i], <span class="number">0</span>, dp[<span class="number">0</span>].length);</span><br><span class="line">                <span class="comment">// 结合之前的数据</span></span><br><span class="line">                <span class="keyword">int</span> newWeight = weights[i];</span><br><span class="line">                <span class="keyword">int</span> newValue = values[i];</span><br><span class="line">                <span class="keyword">int</span> historyNum = history.size();</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; historyNum; j++) &#123;</span><br><span class="line">                    <span class="keyword">int</span> hWeight = history.get(j);</span><br><span class="line">                    <span class="keyword">int</span> hValue = dp[i - <span class="number">1</span>][hWeight];</span><br><span class="line">                    <span class="keyword">int</span> nowHeight = hWeight + newWeight;</span><br><span class="line">                    <span class="keyword">if</span> (nowHeight &lt;= capacity) &#123;</span><br><span class="line">                        dp[i][nowHeight] = Math.max(dp[i - <span class="number">1</span>][nowHeight], hValue + newValue);</span><br><span class="line">                        max = Math.max(max, dp[i][nowHeight]);</span><br><span class="line">                        <span class="keyword">if</span> (!history.contains(nowHeight)) &#123;</span><br><span class="line">                            history.add(nowHeight);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 把本身的数据赋值</span></span><br><span class="line">                <span class="keyword">if</span> (newWeight &lt;= capacity) &#123;</span><br><span class="line">                    dp[i][newWeight] = Math.max(dp[i][newWeight], newValue);</span><br><span class="line">                    max = Math.max(max, dp[i][newWeight]);</span><br><span class="line">                    history.add(newWeight);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            printArray(dp);</span><br><span class="line"></span><br><span class="line">            line1 = <span class="keyword">null</span>;</span><br><span class="line">            line2 = <span class="keyword">null</span>;</span><br><span class="line">            line3 = <span class="keyword">null</span>;</span><br><span class="line">            System.out.println(max);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="LeetCode188-买卖股票的最佳时机-IV"><a href="#LeetCode188-买卖股票的最佳时机-IV" class="headerlink" title="LeetCode188  买卖股票的最佳时机 IV"></a>LeetCode188 <a href="https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iv" target="_blank" rel="noopener"> 买卖股票的最佳时机 IV</a></h1><p>（这个解法效率比较差，但是能做出来）</p>
+<table>
+<thead>
+<tr>
+<th>物品[3, 2, 6, 5, 0, 3] 背包容量6</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>3</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>3, 2</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>3, 2, 6</td>
+<td></td>
+<td>4</td>
+<td>4</td>
+<td>4</td>
+<td>4</td>
+<td>4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>3, 2, 6, 5</td>
+<td></td>
+<td>4</td>
+<td>4</td>
+<td>4</td>
+<td>4</td>
+<td>4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>3, 2, 6, 5, 0</td>
+<td></td>
+<td>4</td>
+<td>4</td>
+<td>4</td>
+<td>4</td>
+<td>4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>3, 2, 6, 5, 0, 3</td>
+<td></td>
+<td>4</td>
+<td>7</td>
+<td>7</td>
+<td>7</td>
+<td>7</td>
+<td>7</td>
+</tr>
+</tbody></table>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dp(i,j) = max( (遍历取最大)&#123;dp(i-1,j-1)+nums[i]-nums[k]&#125;,       dp(i<span class="number">-1</span>,j) )</span><br><span class="line">               第k<span class="number">-1</span>天进行j<span class="number">-1</span>次交易 + （第i天的股票 - 第k天的股票）  不交易，沿用上一天</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxProfit</span><span class="params">(<span class="keyword">int</span> k, <span class="keyword">int</span>[] prices)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (prices == <span class="keyword">null</span> || prices.length &lt; <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> days = prices.length;</span><br><span class="line">    <span class="keyword">int</span> saleTimes = Math.min(prices.length, k);</span><br><span class="line">    <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[days + <span class="number">1</span>][saleTimes + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 第i天进行j次交易 = （遍历取最大）&#123;第k-1天进行j-1次交易 + （第i天的股票 - 第k天的股票）&#125;</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= days; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= saleTimes; j++) &#123;</span><br><span class="line">            <span class="comment">// 第1天交易，肯定赚不到钱</span></span><br><span class="line">            <span class="keyword">if</span> (i &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">                dp[i][j] = <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 交易次数是0，肯定赚不到钱</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (j == <span class="number">0</span>) &#123;</span><br><span class="line">                dp[i][j] = <span class="number">0</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">int</span> max = dp[i - <span class="number">1</span>][j];</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> m = <span class="number">1</span>; m &lt; i; m++) &#123;</span><br><span class="line">                    max = Math.max(max, dp[m - <span class="number">1</span>][j - <span class="number">1</span>] + (Math.max(prices[i - <span class="number">1</span>] - prices[m - <span class="number">1</span>], <span class="number">0</span>)));</span><br><span class="line">                &#125;</span><br><span class="line">                dp[i][j] = max;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> dp[days][saleTimes];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="LeetCode32-最长有效括号"><a href="#LeetCode32-最长有效括号" class="headerlink" title="LeetCode32 最长有效括号"></a>LeetCode32 <a href="https://leetcode-cn.com/problems/longest-valid-parentheses" target="_blank" rel="noopener">最长有效括号</a></h1><table>
+<thead>
+<tr>
+<th>物品[(, (, ), (, ),  ), (, )] 背包容量1</th>
+<th>1</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>(</td>
+<td>0</td>
+</tr>
+<tr>
+<td>((</td>
+<td>0</td>
+</tr>
+<tr>
+<td>(()</td>
+<td>1</td>
+</tr>
+<tr>
+<td>(()(</td>
+<td>1</td>
+</tr>
+<tr>
+<td>(()()</td>
+<td>2</td>
+</tr>
+<tr>
+<td>(()())</td>
+<td>3</td>
+</tr>
+<tr>
+<td>(()())(</td>
+<td>3</td>
+</tr>
+<tr>
+<td>(()())()</td>
+<td>4</td>
+</tr>
+</tbody></table>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dp(i)  =  dp(i<span class="number">-2</span>) + <span class="number">2</span>   ||   dp(i<span class="number">-1</span>) + <span class="number">2</span> + dp(i-dp(i<span class="number">-1</span>)<span class="number">-2</span>)</span><br><span class="line">          <span class="string">"()"</span>结尾            <span class="string">"))"</span>结尾 （dp(i-dp(i<span class="number">-1</span>)<span class="number">-2</span>)代表对应的<span class="string">"("</span>之前有多少个有效括号</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">longestValidParentheses</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 校验</span></span><br><span class="line">    <span class="keyword">if</span> (s == <span class="keyword">null</span> || s.length() &lt; <span class="number">2</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">char</span>[] brackets = s.toCharArray();</span><br><span class="line">    <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[brackets.length];</span><br><span class="line">    <span class="keyword">int</span> max = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 遍历符号</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; brackets.length; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (brackets[i] == <span class="string">')'</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> already = <span class="number">0</span>;</span><br><span class="line">            <span class="comment">// ()结尾，则是dp[i-2]+2</span></span><br><span class="line">            <span class="keyword">if</span> (brackets[i - <span class="number">1</span>] == <span class="string">'('</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (i &gt;= <span class="number">2</span>) &#123;</span><br><span class="line">                    already = dp[i - <span class="number">2</span>];</span><br><span class="line">                &#125;</span><br><span class="line">                dp[i] = already + <span class="number">2</span>;</span><br><span class="line">            <span class="comment">// ))结尾，则先判断是否成立，如果成立，在上个成立点的基础上+2</span></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (i - dp[i - <span class="number">1</span>] - <span class="number">1</span> &gt;= <span class="number">0</span> &amp;&amp; brackets[i - dp[i - <span class="number">1</span>] - <span class="number">1</span>] == <span class="string">'('</span>) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (i - dp[i - <span class="number">1</span>] - <span class="number">2</span> &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">                        already = dp[i - dp[i - <span class="number">1</span>] - <span class="number">2</span>];</span><br><span class="line">                    &#125;</span><br><span class="line">                    dp[i] = dp[i - <span class="number">1</span>] + <span class="number">2</span> + already;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            max = Math.max(max, dp[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> max;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="LeetCode44-通配符匹配"><a href="#LeetCode44-通配符匹配" class="headerlink" title="LeetCode44  通配符匹配"></a>LeetCode44 <a href="https://leetcode-cn.com/problems/wildcard-matching" target="_blank" rel="noopener"> 通配符匹配</a></h1><table>
+<thead>
+<tr>
+<th>物品[*, a, *,  b] 背包容量 5</th>
+<th>a</th>
+<th>d</th>
+<th>c</th>
+<th>e</th>
+<th>b</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>*</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>*, a</td>
+<td>√</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+</tr>
+<tr>
+<td>*, a, *</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>*, a, *, b</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>√</td>
+</tr>
+</tbody></table>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dp(i,j) = dp(i<span class="number">-1</span>,j<span class="number">-1</span>) || dp(i<span class="number">-1</span>,j<span class="number">-1</span>) || &#123; dp(i-1,j) || dp(i,j-1) &#125;</span><br><span class="line">          字母相同        通配符是“?”      通配符是“*”</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isMatch</span><span class="params">(String s, String p)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (s == <span class="keyword">null</span> || p == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 预先过滤一遍"*"，多个连续的*缩减成一个</span></span><br><span class="line">    String t = <span class="string">""</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">char</span> pChar : p.toCharArray()) &#123;</span><br><span class="line">        <span class="keyword">if</span> (pChar != <span class="string">'*'</span>) &#123;</span><br><span class="line">            t += pChar;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (t.equals(<span class="string">""</span>)) &#123;</span><br><span class="line">            t += pChar;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (t.charAt(t.length() - <span class="number">1</span>) != <span class="string">'*'</span>) &#123;</span><br><span class="line">            t += pChar;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> m = s.length();</span><br><span class="line">    <span class="keyword">int</span> n = t.length();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 状态 dp[i][j] : 表示 s 的前 i 个字符和 p 的前 j 个字符是否匹配</span></span><br><span class="line">    <span class="keyword">boolean</span>[][] dp = <span class="keyword">new</span> <span class="keyword">boolean</span>[m + <span class="number">1</span>][n + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化</span></span><br><span class="line">    dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        dp[<span class="number">0</span>][i] = dp[<span class="number">0</span>][i - <span class="number">1</span>] &amp;&amp; t.charAt(i - <span class="number">1</span>) == <span class="string">'*'</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 状态转移</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= m; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= n; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (s.charAt(i - <span class="number">1</span>) == t.charAt(j - <span class="number">1</span>) || t.charAt(j - <span class="number">1</span>) == <span class="string">'?'</span>) &#123;</span><br><span class="line">                dp[i][j] = dp[i - <span class="number">1</span>][j - <span class="number">1</span>];</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (t.charAt(j - <span class="number">1</span>) == <span class="string">'*'</span>) &#123;</span><br><span class="line">                dp[i][j] = dp[i][j - <span class="number">1</span>] || dp[i - <span class="number">1</span>][j];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回结果</span></span><br><span class="line">    <span class="keyword">return</span> dp[m][n];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="LeetCode62-不同路径"><a href="#LeetCode62-不同路径" class="headerlink" title="LeetCode62  不同路径"></a>LeetCode62 <a href="https://leetcode-cn.com/problems/unique-paths" target="_blank" rel="noopener"> 不同路径</a></h1><table>
+<thead>
+<tr>
+<th></th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+</tr>
+<tr>
+<td>3</td>
+<td>1</td>
+<td>3</td>
+<td>6</td>
+<td>10</td>
+<td>15</td>
+<td>21</td>
+<td>28</td>
+</tr>
+</tbody></table>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dp(i,j) = dp(i<span class="number">-1</span>,j) + dp(i,j<span class="number">-1</span>)</span><br><span class="line">             上           左</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">uniquePaths</span><span class="params">(<span class="keyword">int</span> m, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (m == <span class="number">0</span> || n == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n][m];</span><br><span class="line">    dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; j++) &#123;</span><br><span class="line">            <span class="comment">// 主要是处理0的特殊情况</span></span><br><span class="line">            <span class="keyword">if</span> (i == <span class="number">0</span> &amp;&amp; j == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">int</span> up = <span class="number">0</span>, left = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">if</span> (i &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                up = dp[i - <span class="number">1</span>][j];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (j &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                left = dp[i][j - <span class="number">1</span>];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 核心逻辑就一行代码，上+左</span></span><br><span class="line">            dp[i][j] = up + left;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> dp[n - <span class="number">1</span>][m - <span class="number">1</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="LeetCode72-编辑距离"><a href="#LeetCode72-编辑距离" class="headerlink" title="LeetCode72  编辑距离"></a>LeetCode72 <a href="https://leetcode-cn.com/problems/edit-distance" target="_blank" rel="noopener"> 编辑距离</a></h1><table>
+<thead>
+<tr>
+<th></th>
+<th>null</th>
+<th>r</th>
+<th>r, o</th>
+<th>r, o, s</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>null</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr>
+<td>h</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr>
+<td>h, o</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>h, o, r</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td>h, o, r, s</td>
+<td>4</td>
+<td>3</td>
+<td>3</td>
+<td>2</td>
+</tr>
+<tr>
+<td>h, o, r, s, e</td>
+<td>5</td>
+<td>4</td>
+<td>4</td>
+<td>3</td>
+</tr>
+</tbody></table>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dp(i,j) = n 其中一方是null，采用另一方单词的长度</span><br><span class="line">          || dp(i<span class="number">-1</span>,j<span class="number">-1</span>) 尾字母相同，采用去掉尾字母的dp</span><br><span class="line">          || <span class="number">1</span> + min&#123; dp(i,j-1), dp(i-1,j), dp(i-1,j-1) &#125; 从三种临界状态过来，再+<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">minDistance</span><span class="params">(String word1, String word2)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n1 = word1.length();</span><br><span class="line">    <span class="keyword">int</span> n2 = word2.length();</span><br><span class="line">    <span class="keyword">if</span> (n1 == <span class="number">0</span> || n2 == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> n1 + n2;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n1 + <span class="number">1</span>][n2 + <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= n1; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= n2; j++) &#123;</span><br><span class="line">            <span class="comment">// 当其中一个单词为null时，dp为另一个单词的长度</span></span><br><span class="line">            <span class="keyword">if</span> (i == <span class="number">0</span> || j == <span class="number">0</span>) &#123;</span><br><span class="line">                dp[i][j] = i + j;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 当两个单词尾字母相同时，dp(i,j)=dp(i-1,j-1)</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (word1.charAt(i - <span class="number">1</span>) == word2.charAt(j - <span class="number">1</span>)) &#123;</span><br><span class="line">                dp[i][j] = dp[i - <span class="number">1</span>][j - <span class="number">1</span>];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// dp(i,j) = 1 + min&#123; dp(i,j-1), dp(i-1,j), dp(i-1,j-1) &#125; 代表从任意临近状态过来</span></span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                dp[i][j] = <span class="number">1</span> + Math.min(dp[i - <span class="number">1</span>][j - <span class="number">1</span>], Math.min(dp[i][j - <span class="number">1</span>], dp[i - <span class="number">1</span>][j]));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> dp[n1][n2];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="LeetCode85-最大矩形"><a href="#LeetCode85-最大矩形" class="headerlink" title="LeetCode85 最大矩形"></a>LeetCode85 <a href="https://leetcode-cn.com/problems/maximal-rectangle" target="_blank" rel="noopener">最大矩形</a></h1><p>（不好画表格，经过了两次dp，第一次是行，第二次是列）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maximalRectangle</span><span class="params">(<span class="keyword">char</span>[][] matrix)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (matrix == <span class="keyword">null</span> || matrix.length == <span class="number">0</span> || matrix[<span class="number">0</span>].length == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> rows = matrix.length, columns = matrix[<span class="number">0</span>].length;</span><br><span class="line">    <span class="keyword">int</span> result = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 行dp一次</span></span><br><span class="line">    <span class="keyword">int</span>[][] lineDp = <span class="keyword">new</span> <span class="keyword">int</span>[rows][columns];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; rows; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; columns; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (matrix[i][j] == <span class="string">'0'</span>) &#123;</span><br><span class="line">                lineDp[i][j] = <span class="number">0</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (j == <span class="number">0</span>) &#123;</span><br><span class="line">                lineDp[i][j] = <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                lineDp[i][j] = lineDp[i][j - <span class="number">1</span>] + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[rows][columns];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; rows; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; columns; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (i == <span class="number">0</span>) &#123;</span><br><span class="line">                dp[i][j] = lineDp[i][j];</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">int</span> columnMin = lineDp[i][j];</span><br><span class="line">                <span class="keyword">int</span> max = lineDp[i][j];</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> k = i - <span class="number">1</span>; k &gt;= <span class="number">0</span>; k--) &#123;</span><br><span class="line">                    columnMin = Math.min(columnMin, lineDp[k][j]);</span><br><span class="line">                    <span class="keyword">if</span> (columnMin == <span class="number">0</span>) &#123;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="comment">// 宽：遍历之后的最小值  高：i和k之间的距离</span></span><br><span class="line">                    <span class="keyword">int</span> width = columnMin;</span><br><span class="line">                    <span class="keyword">int</span> high = i - k + <span class="number">1</span>;</span><br><span class="line">                    max = Math.max(max, high * width);</span><br><span class="line">                &#125;</span><br><span class="line">                dp[i][j] = max;</span><br><span class="line">            &#125;</span><br><span class="line">            result = Math.max(result, dp[i][j]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="LeetCode279-完全平方数"><a href="#LeetCode279-完全平方数" class="headerlink" title="LeetCode279  完全平方数"></a>LeetCode279 <a href="https://leetcode-cn.com/problems/perfect-squares" target="_blank" rel="noopener"> 完全平方数</a></h1><table>
+<thead>
+<tr>
+<th></th>
+<th>0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>1</td>
+</tr>
+<tr>
+<td>5</td>
+<td>2</td>
+</tr>
+<tr>
+<td>6</td>
+<td>3</td>
+</tr>
+<tr>
+<td>7</td>
+<td>4</td>
+</tr>
+<tr>
+<td>8</td>
+<td>2</td>
+</tr>
+<tr>
+<td>9</td>
+<td>1</td>
+</tr>
+<tr>
+<td>10</td>
+<td>2</td>
+</tr>
+<tr>
+<td>11</td>
+<td>3</td>
+</tr>
+<tr>
+<td>12</td>
+<td>3</td>
+</tr>
+</tbody></table>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dp(i) = i   ||  dp(i)     ||    dp(i<span class="number">-1</span>)+<span class="number">1</span>  ||   平方数   || dp(i-平方数)+<span class="number">1</span> </span><br><span class="line">        i个<span class="number">1</span>    遍历的上个结果     上个dp+<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">numSquares</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 平方数</span></span><br><span class="line">    <span class="keyword">int</span>[] squares = <span class="keyword">new</span> <span class="keyword">int</span>[(<span class="keyword">int</span>) Math.sqrt(n) + <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; squares.length; i++) &#123;</span><br><span class="line">        squares[i] = i * i;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n + <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; dp.length; i++) &#123;</span><br><span class="line">        <span class="comment">// 遍历平方数</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; squares.length &amp;&amp; squares[j] &lt;= i; j++) &#123;</span><br><span class="line">            <span class="comment">// 如果是平方数，那么dp(i)=1</span></span><br><span class="line">            <span class="keyword">if</span> (i == squares[j]) &#123;</span><br><span class="line">                dp[i] = <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 如果不是平方数，那么dp(i)= &#123; i || 前一个+1 || dp(i-平方数)+1 &#125;</span></span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (dp[i] == <span class="number">0</span>) &#123;</span><br><span class="line">                    dp[i] = min(i, dp[i - <span class="number">1</span>] + <span class="number">1</span>, dp[i - squares[j]] + <span class="number">1</span>);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    dp[i] = min(dp[i], dp[i - <span class="number">1</span>] + <span class="number">1</span>, dp[i - squares[j]] + <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> dp[n];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">min</span><span class="params">(<span class="keyword">int</span>... nums)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> min = nums[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> num : nums) &#123;</span><br><span class="line">        min = Math.min(min, num);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> min;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 pz
+  </div>
+  <div class="footer-right">
+    <nav>
+      pz阁下的blog
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+
