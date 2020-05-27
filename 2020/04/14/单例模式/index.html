@@ -16,7 +16,7 @@
 <meta property="og:locale" content="Chinese">
 <meta property="og:image" content="http://hellopz.netlify.com/assets/%E7%B1%BB%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg">
 <meta property="og:image" content="http://hellopz.netlify.com/assets/%E5%B5%8C%E5%A5%97%E7%B1%BB%E7%9A%84%E7%A7%B0%E5%91%BC.jpg">
-<meta property="og:updated_time" content="2020-04-14T09:35:10.957Z">
+<meta property="og:updated_time" content="2020-05-26T04:46:08.050Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="单例模式">
 <meta name="twitter:description" content="从本周开始，新增一个博文模块 Random Post，用于不定期的学习与整理，原本的每周博文 Weekly Post 仍是主要更新计划（名为每周实则随缘hhh），当每周时间有余，或者不屑于将学习内容作为周计划时，在此更新。 本篇是该模块的第一篇文章，学习单例模式。我在随缘学习单例模式时，发现这种设计模式的水很深，不是 Java 初学人员能够完全理解的，涉及到并发基础、类加载过程、枚举设计等内容">
@@ -279,7 +279,7 @@
 <p>值得一提的是，静态嵌套类是可以用 private、protected、public 修饰的，指的是访问它的权限，比如如果是 public 的话，那么所有地方都可以访问该静态嵌套类，但是如果是 private 修饰的话，只有外部类可以访问静态嵌套类。</p>
 </li>
 <li><p>内部类</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这里 A 类（外部类）和 C 类（内部类）之间是有关系的，这种关系大概像是“A 有一个成员变量 C”，具体体现在：</p>
 <ul>
