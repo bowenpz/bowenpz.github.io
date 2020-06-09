@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="六月份到了，六月的第一周来写 MongoDB。 MongoDB 是一种面向文档的非关系型数据库，面向文档的意思是，把半结构化的数据存储为文档（XML、YAML、JSON 等），MongoDB 把数据存储为 BSON（Binary JSON, is a bin­ary-en­coded seri­al­iz­a­tion of JSON-like doc­u­ments）格式。 有关面向文档，看">
+<meta name="keywords" content="Weekly Post">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MongoDB 入门">
+<meta property="og:url" content="http://hellopz.netlify.com/2020/06/07/MongoDB/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="六月份到了，六月的第一周来写 MongoDB。 MongoDB 是一种面向文档的非关系型数据库，面向文档的意思是，把半结构化的数据存储为文档（XML、YAML、JSON 等），MongoDB 把数据存储为 BSON（Binary JSON, is a bin­ary-en­coded seri­al­iz­a­tion of JSON-like doc­u­ments）格式。 有关面向文档，看">
+<meta property="og:locale" content="Chinese">
+<meta property="og:updated_time" content="2020-06-09T08:14:19.101Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MongoDB 入门">
+<meta name="twitter:description" content="六月份到了，六月的第一周来写 MongoDB。 MongoDB 是一种面向文档的非关系型数据库，面向文档的意思是，把半结构化的数据存储为文档（XML、YAML、JSON 等），MongoDB 把数据存储为 BSON（Binary JSON, is a bin­ary-en­coded seri­al­iz­a­tion of JSON-like doc­u­ments）格式。 有关面向文档，看">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>MongoDB 入门</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/Weekly-Post/">Weekly Post</a></li>
+         
+          <li><a href="/tags/Random-Post/">Random Post</a></li>
+         
+          <li><a href="/tags/tips/">Tips</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2020/05/27/IOC/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2020/06/07/MongoDB/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2020/06/07/MongoDB/&text=MongoDB 入门"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2020/06/07/MongoDB/&is_video=false&description=MongoDB 入门"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#术语和概念"><span class="toc-number">1.</span> <span class="toc-text">术语和概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-术语和-MongoDB-术语之间的映射关系："><span class="toc-number">1.1.</span> <span class="toc-text">SQL 术语和 MongoDB 术语之间的映射关系：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一个样例文档（Document）："><span class="toc-number">1.2.</span> <span class="toc-text">一个样例文档（Document）：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#语法"><span class="toc-number">2.</span> <span class="toc-text">语法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CRUD"><span class="toc-number">2.1.</span> <span class="toc-text">CRUD</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聚合（aggregate）"><span class="toc-number">2.2.</span> <span class="toc-text">聚合（aggregate）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-聚合管道"><span class="toc-number">2.2.1.</span> <span class="toc-text">1. 聚合管道</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Map-Reduce"><span class="toc-number">2.2.2.</span> <span class="toc-text">2. Map-Reduce</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-单用途聚合操作"><span class="toc-number">2.2.3.</span> <span class="toc-text">3. 单用途聚合操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#操作符"><span class="toc-number">2.3.</span> <span class="toc-text">操作符</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-Data-MongoDB"><span class="toc-number">3.</span> <span class="toc-text">Spring Data MongoDB</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#普通操作"><span class="toc-number">3.1.</span> <span class="toc-text">普通操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聚合操作"><span class="toc-number">3.2.</span> <span class="toc-text">聚合操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-ProjectionOperation"><span class="toc-number">3.2.1.</span> <span class="toc-text">1. ProjectionOperation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-MatchOperation"><span class="toc-number">3.2.2.</span> <span class="toc-text">2. MatchOperation</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-LookupOperation"><span class="toc-number">3.3.</span> <span class="toc-text">3. LookupOperation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-SortOperation"><span class="toc-number">3.4.</span> <span class="toc-text">4. SortOperation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-LimitOperation"><span class="toc-number">3.4.1.</span> <span class="toc-text">5. LimitOperation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-CountOperation"><span class="toc-number">3.4.2.</span> <span class="toc-text">6. CountOperation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-UnwindOperation"><span class="toc-number">3.4.3.</span> <span class="toc-text">7. UnwindOperation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-SkipOperation"><span class="toc-number">3.4.4.</span> <span class="toc-text">8. SkipOperation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-SampleOperation"><span class="toc-number">3.4.5.</span> <span class="toc-text">9. SampleOperation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-GroupOperation"><span class="toc-number">3.4.6.</span> <span class="toc-text">10. GroupOperation</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        MongoDB 入门
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2020-06-07T00:59:17.000Z" itemprop="datePublished">2020-06-07</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Weekly-Post/">Weekly Post</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>六月份到了，六月的第一周来写 MongoDB。</p>
+<p>MongoDB 是一种面向文档的非关系型数据库，面向文档的意思是，把半结构化的数据存储为文档（XML、YAML、JSON 等），MongoDB 把数据存储为 BSON（<a href="http://bsonspec.org/" target="_blank" rel="noopener">Binary JSON, is a bin­ary-en­coded seri­al­iz­a­tion of JSON-like doc­u­ments</a>）格式。</p>
+<p>有关面向文档，看到这么一篇知乎文章：《<a href="https://www.zhihu.com/question/28003788/answer/632972138" target="_blank" rel="noopener">常见 NoSQL 数据库的应用场景是怎么样的？</a>》</p>
+<blockquote>
+<p>在文档数据库中的“文档”和传统意义的“文档”没什么关系，它不是书、信或者文章，这里说的“文档”其实是一个数据记录，这个记录能够对包含的数据类型和内容进行“自我描述”。XML 文档、HTML 文档和 JSON 文档就属于这一类。文档数据库可以包含非常复杂的数据结构，比如嵌套对象并且不需要使用特定的数据模式，每个文档可以具有完全不同的结构。</p>
+</blockquote>
+<p>如果做一个简单映射，那么关系型数据库的<code>表</code>，就是 MongoDB 的<code>集合（Collection）</code>；关系型数据库的<code>行</code>，就是 MongoDB 的<code>文档（Document）</code>，关系型数据库的这两行数据：</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>NAME</th>
+<th>AGE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>张三</td>
+<td>20</td>
+</tr>
+<tr>
+<td>2</td>
+<td>李四</td>
+<td>22</td>
+</tr>
+</tbody></table>
+<p>就是 MongoDB 中的这两个文档：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"ID"</span>:<span class="number">1</span>,</span><br><span class="line">    <span class="attr">"NAME"</span>:<span class="string">"张三"</span>,</span><br><span class="line">    <span class="attr">"AGE"</span>:<span class="number">20</span></span><br><span class="line">&#125;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"ID"</span>:<span class="number">2</span>,</span><br><span class="line">    <span class="attr">"NAME"</span>:<span class="string">"李四"</span>,</span><br><span class="line">    <span class="attr">"AGE"</span>:<span class="number">22</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="术语和概念"><a href="#术语和概念" class="headerlink" title="术语和概念"></a>术语和概念</h1><h2 id="SQL-术语和-MongoDB-术语之间的映射关系："><a href="#SQL-术语和-MongoDB-术语之间的映射关系：" class="headerlink" title="SQL 术语和 MongoDB 术语之间的映射关系："></a>SQL 术语和 MongoDB 术语之间的<a href="https://docs.mongodb.com/manual/reference/sql-comparison/" target="_blank" rel="noopener">映射关系</a>：</h2><table>
+<thead>
+<tr>
+<th align="left">SQL Terms/Concepts</th>
+<th align="left">MongoDB Terms/Concepts</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">database</td>
+<td align="left">database</td>
+</tr>
+<tr>
+<td align="left">table</td>
+<td align="left">collection</td>
+</tr>
+<tr>
+<td align="left">row</td>
+<td align="left">document or BSON document</td>
+</tr>
+<tr>
+<td align="left">column</td>
+<td align="left">field</td>
+</tr>
+<tr>
+<td align="left">index</td>
+<td align="left">index</td>
+</tr>
+<tr>
+<td align="left">table joins</td>
+<td align="left">$lookup, embedded documents</td>
+</tr>
+<tr>
+<td align="left">primary key</td>
+<td align="left">primary key（在 MongoDB 中，primary key 是自动生成并设置为设置为 <code>_id</code> 字段的</td>
+</tr>
+<tr>
+<td align="left">aggregation (e.g. group by)</td>
+<td align="left">aggregation pipeline（聚合管道）</td>
+</tr>
+</tbody></table>
+<br>
+
+<h2 id="一个样例文档（Document）："><a href="#一个样例文档（Document）：" class="headerlink" title="一个样例文档（Document）："></a>一个样例文档（Document）：</h2><p>（对应着 SQL 中的一条数据）</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  _id: ObjectId("509a8fb2f3f4948bd2f983a0"),</span><br><span class="line">  user_id: "abc123",</span><br><span class="line">  age: 55,</span><br><span class="line">  status: 'A',</span><br><span class="line">  tags: ['test', '2020']</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h1><h2 id="CRUD"><a href="#CRUD" class="headerlink" title="CRUD"></a>CRUD</h2><p>实际上有很多函数可用，例如删除相关的函数有 <code>delete</code>、<code>deleteOne</code>、<code>deleteMany</code>、<code>remove</code>、<code>findOneAndRemove</code>、<code>findAndModify()</code> 等，下面列出我自认为常用的，此外还可以参考<a href="https://docs.mongodb.com/manual/reference/sql-comparison/" target="_blank" rel="noopener">官方文档</a>（当页往下翻）。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>MySQL</th>
+<th>MongoDB</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>查找</td>
+<td>select * from user</td>
+<td>db.user.find()</td>
+</tr>
+<tr>
+<td></td>
+<td>select name, age from user</td>
+<td>db.user.find({},{name:1,age:1})</td>
+</tr>
+<tr>
+<td></td>
+<td>select * from user where name = ‘ZhangSan’</td>
+<td>db.user.find({name:”ZhangSan”})</td>
+</tr>
+<tr>
+<td></td>
+<td>select * from user where name is not null</td>
+<td>db.user.find({name:{$ne:null}})</td>
+</tr>
+<tr>
+<td></td>
+<td>select * from user where name like ‘%name%’</td>
+<td>db.user.find({name:{$regex:”name”}})<br>db.user.find({name:/name/})</td>
+</tr>
+<tr>
+<td></td>
+<td>select * from user order by age desc</td>
+<td>db.user.find().sort({age:-1})</td>
+</tr>
+<tr>
+<td></td>
+<td>select * from user group by age</td>
+<td>参见聚合</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>增加</td>
+<td>INSERT INTO user (name, age) VALUES (‘pz’, 23)</td>
+<td>db.user.insert({name:”pz”, age:23})</td>
+</tr>
+<tr>
+<td></td>
+<td>插入多条</td>
+<td>db.user.insertMany([<br>{name:”boy1”, age:20},<br>{name:”boy2”, age:18, tags:[“funny”]}<br>])</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>更改</td>
+<td>UPDATE user SET age=21 WHERE age=20</td>
+<td>db.user.updateMany({age:20},{$set:{age:21}})</td>
+</tr>
+<tr>
+<td></td>
+<td>UPDATE user SET age=21 WHERE age=20 limit 1</td>
+<td>db.user.update({age:20},{$set:{age:21}})</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>删除</td>
+<td>delete from user where age = 20</td>
+<td>db.user.deleteMany({age:20})</td>
+</tr>
+<tr>
+<td></td>
+<td>delete from user where age = 20 limit 1</td>
+<td>db.user.delete({age:100})</td>
+</tr>
+</tbody></table>
+<br>
+
+<h2 id="聚合（aggregate）"><a href="#聚合（aggregate）" class="headerlink" title="聚合（aggregate）"></a>聚合（aggregate）</h2><p>聚合可以简单理解成高级操作，官方的解释有点绕：聚合处理数据并返回结果（Aggregation operations process data records and return computed results）。</p>
+<p>聚合有三种类型，分别是聚合管道（Aggregate Pipeline）、Map-Reduce（一般不翻译）、单用途聚合操作（Single Purpose Aggregation Operations）。一般提到聚合，指的是第一种：聚合管道。</p>
+<p>下面逐个学习这三种聚合。</p>
+<br>
+
+<h3 id="1-聚合管道"><a href="#1-聚合管道" class="headerlink" title="1. 聚合管道"></a>1. 聚合管道</h3><p>MongoDB 指的 pipeline 像是 Java 中的流运算，或者是 linux 系统中的管道，意思是文档（数据）经历一系列的节点（当然也可以是一个节点），一个节点接一个地处理文档，上个节点运算完的结果，作为下个节点的输入，最终输出一堆聚合文档，比如下面这个例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">db.user.aggregate(</span><br><span class="line">    [</span><br><span class="line">        <span class="comment">// name和age不能为null</span></span><br><span class="line">        &#123;</span><br><span class="line">            $match:&#123;name:&#123;$ne:<span class="keyword">null</span>&#125;, age:&#123;$ne:<span class="keyword">null</span>&#125;&#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="comment">// 只输出name、age、tags字段</span></span><br><span class="line">        &#123;</span><br><span class="line">            $project:&#123;name:<span class="number">1</span>, age:<span class="number">1</span>, tags:<span class="number">1</span>&#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="comment">// 按照age倒序排序</span></span><br><span class="line">        &#123;</span><br><span class="line">            $sort:&#123;age:-<span class="number">1</span>&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>aggregate</th>
+<th>描述</th>
+<th>样例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-aggregation-project.html#pipe._S_out" target="_blank" rel="noopener">$project</a></td>
+<td>指定字段</td>
+<td>db.user.aggregate([     {         $project:{name:1, age:1}     } ])</td>
+<td><code>_id</code> 默认指定，如果不想要，则需 <code>_id:0</code></td>
+</tr>
+<tr>
+<td></td>
+<td>指定字段（起别名）</td>
+<td>db.user.aggregate([     {         $project:{alias:”$name”}     } ])</td>
+<td>别名在冒号前，字段名在冒号后</td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-aggregation-match.html#pipe._S_lookup" target="_blank" rel="noopener">$match</a></td>
+<td>匹配字段</td>
+<td>db.user.aggregate([     {         $match:{age:{$gt:10}}     } ])<br>（年龄大于10岁）</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-aggregation-count.html#pipe._S_collStats" target="_blank" rel="noopener">$count</a></td>
+<td>计数</td>
+<td>db.user.aggregate([     {         $count:”countNum”     } ])</td>
+<td>冒号后代表展示字段名</td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-aggregation-group.html#pipe._S_graphLookup" target="_blank" rel="noopener">$group</a></td>
+<td>分组</td>
+<td>db.user.aggregate([     {         $group:{_id:”$age”,nameList:{$addToSet:”$name”}}     } ])（按年龄统计，获取名字列表）</td>
+<td><code>_id</code> 必填，指定要分组的字段，字段均需要带<code>$</code>符号，更多操作可参考 <a href="https://www.cnblogs.com/shaosks/p/5760819.html" target="_blank" rel="noopener">这篇博文</a></td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-aggregation-sort.html#pipe._S_skip" target="_blank" rel="noopener">$sort</a></td>
+<td>排序</td>
+<td>db.user.aggregate([     {         $sort:{age:1}     } ])</td>
+<td>1：升序、-1：降序<br>如果在 <code>$sort</code> 操作之前发生 <code>$project</code>、<code>$unwind</code>或 <code>$group</code>，则 <code>$sort</code> 不能使用任何索引。</td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-aggregation-lookup.html#pipe._S_listSessions" target="_blank" rel="noopener">$lookup</a></td>
+<td>左连接</td>
+<td>db.user.aggregate([     {         $lookup:{             from:”organization”,             localField:”organization_name”,             foreignField:”name”,             as:”orgInfo”         }     } ])</td>
+<td><code>from</code>：要关联的集合（表）、<code>localField</code>：本集合字段、<code>foreignField</code>：要关联的字段、<code>as</code>：新字段名</td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-aggregation-limit.html#pipe._S_indexStats" target="_blank" rel="noopener">$limit</a></td>
+<td>只取前几条</td>
+<td>db.user.aggregate([     {         $limit:10     } ])</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-aggregation-skip.html#pipe._S_sample" target="_blank" rel="noopener">$skip</a></td>
+<td>跳过前N个文档</td>
+<td>db.user.aggregate([     {         $skip:5     } ])</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-aggregation-unwind.html#pipe._S_sortByCount" target="_blank" rel="noopener">$unwind</a></td>
+<td>一个文档（数据）拆成多个文档</td>
+<td>db.user.aggregate([     {         $unwind:”$tags”     } ])</td>
+<td>注意 <code>$</code> 符号</td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-aggregation-sample.html#pipe._S_replaceRoot" target="_blank" rel="noopener">$sample</a></td>
+<td>随机选N个文档</td>
+<td>db.user.aggregate([     {         $sample:{size:10}     } ])</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-aggregation-out.html#pipe._S_match" target="_blank" rel="noopener">$out</a></td>
+<td>将结果保存成新表</td>
+<td>db.user.aggregate([     {         $limit:10     },     {         $out:”test”     } ])<br>（将 user 表的前 10 条数据存入 test 表中</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-aggregation-bucket.html#pipe._S_addFields" target="_blank" rel="noopener">$bucket</a></td>
+<td>分组</td>
+<td>db.user.aggregate([     {         $bucket:{             groupBy:”$sort”,             boundaries:[5,8,10,12],             default:”other”,             output:{                 count:{$sum:1},                 titles:{$push:”$sort”}             }         }     } ])</td>
+<td>难以描述，用得不多，现用现查</td>
+</tr>
+</tbody></table>
+<p>还有一些别的，用到了再回来补。</p>
+<br>
+
+<h3 id="2-Map-Reduce"><a href="#2-Map-Reduce" class="headerlink" title="2. Map-Reduce"></a>2. Map-Reduce</h3><p>我目前用到的还不多，所以不想写了（hh），可以参考这篇文章<a href="https://www.jianshu.com/p/bb1c809dcf37" target="_blank" rel="noopener">《MongoDB Map-Reduce详细操作总结》</a>，写得很容易理解概念。</p>
+<p>以后需要用到了再回来补。</p>
+<br>
+
+<h3 id="3-单用途聚合操作"><a href="#3-单用途聚合操作" class="headerlink" title="3. 单用途聚合操作"></a>3. 单用途聚合操作</h3><p>就是简化版的聚合管道，官方目前（Version 4.2）在文档中提到了三种，简单整理成下表：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>MySQL</th>
+<th>MongoDB</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>计数</td>
+<td>select count(*) from user</td>
+<td>db.collection.estimatedDocumentCount()</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>db.user.count()（废弃）</td>
+</tr>
+<tr>
+<td>返回字段的所有值</td>
+<td>（有点像）select name from user group by name</td>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-method-db.collection.distinct.html#db.collection.distinct" target="_blank" rel="noopener">db.user.distinct(“name”)</a>（不理解的话点击看官方文档）</td>
+</tr>
+</tbody></table>
+<p>除了这三种应该还有的是方法，但是我分辨不出来是不是属于这一类，因此先不整理了。</p>
+<br>
+
+<h2 id="操作符"><a href="#操作符" class="headerlink" title="操作符"></a>操作符</h2><table>
+<thead>
+<tr>
+<th>操作符</th>
+<th>描述</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-query-eq.html#op._S_eq" target="_blank" rel="noopener">$eq</a></td>
+<td>等于</td>
+<td>db.user.find({name:{$eq:”pz”}})</td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-query-ne.html#op._S_ne" target="_blank" rel="noopener">$ne</a></td>
+<td>不等于</td>
+<td>db.user.find({name:{$ne:null}})</td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-query-gt.html#op._S_gt" target="_blank" rel="noopener">$gt</a></td>
+<td>大于</td>
+<td>db.user.find({age:{$gt:10}})</td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-query-gte.html#op._S_gte" target="_blank" rel="noopener">$gte</a></td>
+<td>大于等于</td>
+<td>db.user.find({age:{$gte:10}})</td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-query-lt.html#op._S_lt" target="_blank" rel="noopener">$lt</a></td>
+<td>小于</td>
+<td>db.user.find({age:{$lt:10}})</td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-query-lte.html#op._S_lte" target="_blank" rel="noopener">$lte</a></td>
+<td>小于等于</td>
+<td>db.user.find({age:{$lte:10}})</td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-query-in.html#op._S_in" target="_blank" rel="noopener">$in</a></td>
+<td>匹配 array 中指定的任何值</td>
+<td>db.user.find({age:{$in:[10,20]}})</td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-query-nin.html#op._S_nin" target="_blank" rel="noopener">$nin</a></td>
+<td>匹配 array 中指定的任何值之外</td>
+<td>db.user.find({age:{$nin:[10,20]}})</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-query-and.html#op._S_and" target="_blank" rel="noopener">$and</a></td>
+<td>并且</td>
+<td>db.user.find({$and:[{age:23},{name:”pz”}]})</td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-query-not.html#op._S_not" target="_blank" rel="noopener">$not</a></td>
+<td>非</td>
+<td>db.user.find({name:{$not:/name/}})</td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-query-nor.html#op._S_nor" target="_blank" rel="noopener">$nor</a></td>
+<td>都非</td>
+<td>db.user.find({$nor:[{name:”pz”},{age:10}]})</td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-query-or.html#op._S_or" target="_blank" rel="noopener">$or</a></td>
+<td>或</td>
+<td>db.user.find({$or:[{name:”pz”},{age:10}]})</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-query-exists.html#op._S_exists" target="_blank" rel="noopener">$exists</a></td>
+<td>具有指定字段（包括null）</td>
+<td>db.user.find({age:{$exists:true}})</td>
+</tr>
+<tr>
+<td><a href="https://docs.mongodb.com/manual/reference/operator/query/type/#op._S_type" target="_blank" rel="noopener">$type</a></td>
+<td>字段是指定类型</td>
+<td>db.user.find({name:{$type:”string”}})</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-query-regex.html#op._S_regex" target="_blank" rel="noopener">$regex</a></td>
+<td>匹配正则表达式</td>
+<td>db.user.find({name:{$regex:”^name.*$”}})</td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-query-expr.html#op._S_expr" target="_blank" rel="noopener">$expr</a></td>
+<td>允许在查询语言中使用聚合表达式</td>
+<td>db.user.find({$expr:{$gt:[“$age”,10]}})</td>
+</tr>
+<tr>
+<td><a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-query-mod.html#op._S_mod" target="_blank" rel="noopener">$mod</a></td>
+<td>指定字段是取模成功的</td>
+<td>db.user.find({age:{$mod:[10,0]}})</td>
+</tr>
+</tbody></table>
+<p>剩下的用到再补，英文文档参考<a href="https://docs.mongodb.com/manual/reference/operator/query/" target="_blank" rel="noopener">《Query and Projection Operators》</a>，汉化文档（机翻，版本 v3.6）参考<a href="https://www.docs4dev.com/docs/zh/mongodb/v3.6/reference/reference-operator-query.html#%E6%9F%A5%E8%AF%A2%E5%92%8C%E6%8A%95%E5%BD%B1%E6%93%8D%E4%BD%9C%E5%91%98" target="_blank" rel="noopener">《查询和投影操作员》</a>。</p>
+<hr>
+<h1 id="Spring-Data-MongoDB"><a href="#Spring-Data-MongoDB" class="headerlink" title="Spring Data MongoDB"></a>Spring Data MongoDB</h1><p>数据库连接、事务之类的操作就先不学习了，本篇主要学习 CRUD。</p>
+<br>
+
+<p>Spring 操作 MongoDB 的类有两种（在我的工作中），分别是 <code>MongoTemplate</code> 和 <code>ReactiveMongoTemplate</code>，前者是普通操作数据库，后者是响应式操作数据库（响应式以后应该会写博文），操作这两个类的 API 几乎是完全相同的，区别只在返回值上：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 插入一条数据，返回这个数据</span></span><br><span class="line">Object insert1 = mongoTemplate.insert(object);</span><br><span class="line"><span class="comment">// 插入一条数据，返回一个Mono</span></span><br><span class="line">Mono&lt;Object&gt; insert2 = reactiveMongoTemplate.insert(object);</span><br></pre></td></tr></table></figure>
+
+<p>下文以 <code>MongoTemplate</code> 为例，学习 Spring Data MongoDB（其实是一样的，区别只在响应式上）。</p>
+<br>
+
+<h2 id="普通操作"><a href="#普通操作" class="headerlink" title="普通操作"></a>普通操作</h2><p>作为 Spring Data 中的一族，Spring Data Mongo 的普通操作（CRUD）跟其他 ORM 框架操作很相近，用过几次就很熟悉了，这里不详细用语言描述了，只整理表格如下（表格下有备注）：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>方法</th>
+<th>样例（方法返回值不写了，写了不直观）</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>查</td>
+<td>find</td>
+<td>mongoTemplate.find(query, User.class);</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.find(query, User.class, “user”);</td>
+<td>指定表名，用于表和输出结果不匹配的情况</td>
+</tr>
+<tr>
+<td></td>
+<td>findById</td>
+<td>mongoTemplate.findById(id, User.class);</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.findById(id, User.class, “user”);</td>
+<td>指定表名，同find</td>
+</tr>
+<tr>
+<td></td>
+<td>findOne</td>
+<td>mongoTemplate.findOne(query, User.class);</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.findOne(query, User.class, “user”);</td>
+<td>指定表名，同find</td>
+</tr>
+<tr>
+<td></td>
+<td>findAll</td>
+<td>mongoTemplate.findAll(User.class);</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.findAll(User.class, “user”);</td>
+<td>指定表名，同find</td>
+</tr>
+<tr>
+<td></td>
+<td>findDistinct</td>
+<td>mongoTemplate.findDistinct(“name”, User.class, String.class)</td>
+<td>查指定字段（一共有四种，就写了两种）</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.findDistinct(query, “name”, User.class, String.class)</td>
+<td></td>
+</tr>
+<tr>
+<td>计数</td>
+<td>count</td>
+<td>mongoTemplate.count(query, User.class);</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.count(query, “user”);</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.count(query, UserDto.class, “user”);</td>
+<td>指定输出类、表名</td>
+</tr>
+<tr>
+<td>插入</td>
+<td>insert</td>
+<td>mongoTemplate.insert(user);</td>
+<td>单条插入</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.insert(user, “user”);</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.insert(userList, “user”);</td>
+<td>批量插入</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.insert(userList, User.class);</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>insertAll</td>
+<td>mongoTemplate.insertAll(userList);</td>
+<td></td>
+</tr>
+<tr>
+<td>保存</td>
+<td>save</td>
+<td>mongoTemplate.save(user);</td>
+<td>只能保存单条数据，有则更新，无则插入</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.save(user, “user”);</td>
+<td></td>
+</tr>
+<tr>
+<td>更新</td>
+<td>updateFirst</td>
+<td>mongoTemplate.updateFirst(query, update, User.class);</td>
+<td>修改第一条</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.updateFirst(query, update, “user”);</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.updateFirst(query, update, UserDto.class, “user”);</td>
+<td>指定输出类、表名</td>
+</tr>
+<tr>
+<td></td>
+<td>updateMulti</td>
+<td>mongoTemplate.updateMulti(query, update, User.class);</td>
+<td>修改所有</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.updateMulti(query, update, “user”);</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.updateMulti(query, update, UserDto.class, “user”);</td>
+<td>指定输出类、表名</td>
+</tr>
+<tr>
+<td>更新或插入</td>
+<td>upsert</td>
+<td>mongoTemplate.upsert(query, update, User.class);</td>
+<td>有则更新，无则插入</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.upsert(query, update, “user”);</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.upsert(query, update, User.class, “user”);</td>
+<td></td>
+</tr>
+<tr>
+<td>存在</td>
+<td>exists</td>
+<td>mongoTemplate.exists(query, User.class);</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.exists(query, “user”);</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.exists(query, User.class, “user”);</td>
+<td>第二个参数没有意义，可以为null，<br>查询时以第三个参数为依据</td>
+</tr>
+<tr>
+<td>删除</td>
+<td>remove</td>
+<td>mongoTemplate.remove(user);</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.remove(user, “user”);</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.remove(query, User.class);</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.remove(query, “user”);</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>mongoTemplate.remove(query, User.class, “user”);</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>备注：</p>
+<ol>
+<li><p>查询时常用到 <code>Query</code> 和 <code>Criteria</code> 类，这两个类我懒得写了，贴一点代码吧，看一看就懂了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 写法1</span></span><br><span class="line">Query query = Query.query(Criteria.where(<span class="string">"name"</span>).is(<span class="string">"pz"</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 写法2</span></span><br><span class="line">Criteria criteria = Criteria.where(<span class="string">"name"</span>).is(<span class="string">"pz"</span>)</span><br><span class="line">                .and(<span class="string">"age"</span>).is(<span class="number">23</span>)</span><br><span class="line">                .and(<span class="string">"height"</span>).gt(<span class="number">170</span>);</span><br><span class="line">Query query = <span class="keyword">new</span> Query(criteria);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 写法3</span></span><br><span class="line">Criteria criteria = Criteria.where(<span class="string">"name"</span>).is(<span class="string">"pz"</span>);</span><br><span class="line">Query query = <span class="keyword">new</span> Query();</span><br><span class="line">query.addCriteria(criteria);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>Update</code> 类是跟 <code>Query</code> 同等地位的类，用于 MongoDB 的更新操作，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 相当于&#123;$set: &#123;name: "pz"&#125;&#125;，内部Java实现是return new Update().set(key, value);</span></span><br><span class="line">Update update = Update.update(<span class="string">"name"</span>, <span class="string">"pz"</span>);</span><br><span class="line"></span><br><span class="line">Update update = <span class="keyword">new</span> Update();</span><br><span class="line"><span class="comment">// 相当于&#123;$set: &#123;name: "pz"&#125;&#125;</span></span><br><span class="line">update.set(<span class="string">"name"</span>, <span class="string">"pz"</span>);</span><br><span class="line"><span class="comment">// 相当于&#123;$push: &#123;tags: "IT"&#125;&#125;，即tags字段（列表）增加一个元素"pz"</span></span><br><span class="line">update.push(<span class="string">"tags"</span>, <span class="string">"IT"</span>);</span><br><span class="line"><span class="comment">// 相当于&#123;$inc: &#123;age: 2&#125;&#125;，即age字段增加2</span></span><br><span class="line">update.inc(<span class="string">"age"</span>,<span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>find 还有几种方法：<code>findAndModify</code>、<code>findAndRemove</code>、<code>findAndReplace</code>、<code>findAllAndRemove</code>，我觉得没什么用，没整理。</p>
+</li>
+</ol>
+<br>
+
+<h2 id="聚合操作"><a href="#聚合操作" class="headerlink" title="聚合操作"></a>聚合操作</h2><p>Spring Data MongoDB 涉及到聚合相关的类有四个，分别是：</p>
+<ul>
+<li><p><code>Aggregation</code>：代表着 MongoDB 的 aggregate（聚合），例如下面这个例子</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 相当于db.user.aggregate([...])</span></span><br><span class="line">mongoTemplate.aggregate(aggregation, User.class);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>TypedAggregation</code>：是 Aggregation 的子类，在 Aggregation 的基础上增加了类型，来指定是对哪张表进行聚合操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 指定操作user表的aggregate</span></span><br><span class="line">TypedAggregation&lt;User&gt; typedAggregation = Aggregation.newAggregation(User.class, operations);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>AggregationOperation</code>：聚合的具体操作，有很多子类，对应着一个个的 <code>MongoDB aggregation pipeline operation</code>，举例而言</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 相当于&#123;$project: &#123;a: 1, b: 1, thing2: $thing1&#125;&#125;</span></span><br><span class="line">Aggregation.project(<span class="string">"a"</span>, <span class="string">"b"</span>).and(<span class="string">"thing1"</span>).as(<span class="string">"thing2"</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>AggregationResults</code>：聚合查询结果（非响应式）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AggregationResults&lt;User&gt; result = mongoTemplate.aggregate(typedAggregation, User.class);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>举一个例子，把 <code>Aggregation</code>、<code>AggregationOperation</code>、<code>AggregationResults</code> 串起来：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// db.user.aggregate([</span></span><br><span class="line"><span class="comment">//   &#123;$match: &#123;name: "pz"&#125;&#125;,</span></span><br><span class="line"><span class="comment">//   &#123;$project: &#123;name: 1, age: 1, tags: 1&#125;&#125;,</span></span><br><span class="line"><span class="comment">//   &#123;$limit: 1&#125;</span></span><br><span class="line"><span class="comment">// ])</span></span><br><span class="line">AggregationResults&lt;User&gt; result = mongoTemplate.aggregate(</span><br><span class="line">        Aggregation.newAggregation(</span><br><span class="line">                Aggregation.match(Criteria.where(<span class="string">"name"</span>).is(<span class="string">"pz"</span>)),</span><br><span class="line">                Aggregation.project(<span class="string">"name"</span>, <span class="string">"age"</span>, <span class="string">"tags"</span>),</span><br><span class="line">                Aggregation.limit(<span class="number">1</span>)</span><br><span class="line">        ),</span><br><span class="line">        <span class="string">"user"</span>,     <span class="comment">// 数据库表</span></span><br><span class="line">        User.class  <span class="comment">// 输出类型</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>学习 Spring Data MongoDB 聚合，主要是学习 <code>AggregationOperation</code> 的所有子类，把各种聚合操作都熟悉之后，用 <code>Aggregation.newAggregation()</code> 组合在一起执行就可以了。</p>
+<p>有关聚合的所有操作，基本都有两种创建方式：静态工厂方法和构造方法，官方推荐使用静态工厂方法创建，而非构造方法（尽管背后实现是完全相同的）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 官方推荐，这样更易于阅读</span></span><br><span class="line">ProjectionOperation projectionOperation1 = Aggregation.project();</span><br><span class="line"><span class="comment">// 不推荐</span></span><br><span class="line">ProjectionOperation projectionOperation2 = <span class="keyword">new</span> ProjectionOperation();</span><br></pre></td></tr></table></figure>
+
+<p>接下来一个个 <code>AggregationOperation</code> 说，把常用的聚合操作学习完。</p>
+<br>
+
+<h3 id="1-ProjectionOperation"><a href="#1-ProjectionOperation" class="headerlink" title="1. ProjectionOperation"></a>1. ProjectionOperation</h3><p>指定字段</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">//    $project:&#123;</span></span><br><span class="line"><span class="comment">//       name:1,</span></span><br><span class="line"><span class="comment">//       age:1,</span></span><br><span class="line"><span class="comment">//       idDelete:"$is_deleted",</span></span><br><span class="line"><span class="comment">//       _id:0,</span></span><br><span class="line"><span class="comment">//       nickName:1</span></span><br><span class="line"><span class="comment">//    &#125;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line">ProjectionOperation projectionOperation = Aggregation.project(<span class="string">"name"</span>, <span class="string">"age"</span>)</span><br><span class="line">        .and(<span class="string">"is_deleted"</span>).as(<span class="string">"idDelete"</span>)</span><br><span class="line">        .andExclude(<span class="string">"_id"</span>)</span><br><span class="line">    	.andInclude(<span class="string">"nickName"</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>and()</code> 需要配合 <code>as()</code> 一起用，表示别名，不能单独使用（因为返回类型不一样）</li>
+<li><code>andInclude()</code> 和 <code>and()</code> 的区别是，前者单独使用，后者配合 <code>as()</code> 使用 </li>
+</ul>
+<br>
+
+<h3 id="2-MatchOperation"><a href="#2-MatchOperation" class="headerlink" title="2. MatchOperation"></a>2. MatchOperation</h3><p>查询（相当于 Query）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">//     $match:&#123;</span></span><br><span class="line"><span class="comment">//         name:"pz",</span></span><br><span class="line"><span class="comment">//         age:&#123;$gt: 20&#125;</span></span><br><span class="line"><span class="comment">//     &#125;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line">Criteria criteria = Criteria.where(<span class="string">"name"</span>).is(<span class="string">"pz"</span>).and(<span class="string">"age"</span>).gt(<span class="number">20</span>);</span><br><span class="line">MatchOperation matchOperation = Aggregation.match(criteria);</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h2 id="3-LookupOperation"><a href="#3-LookupOperation" class="headerlink" title="3. LookupOperation"></a>3. LookupOperation</h2><p>联表</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">//     $lookup:&#123;</span></span><br><span class="line"><span class="comment">//         from:"user",</span></span><br><span class="line"><span class="comment">//         localField:"name",</span></span><br><span class="line"><span class="comment">//         foreignField:"username",</span></span><br><span class="line"><span class="comment">//         as:"userInfo"</span></span><br><span class="line"><span class="comment">//     &#125;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line">LookupOperation lookupOperation1 = Aggregation.lookup(<span class="string">"user"</span>, <span class="string">"name"</span>, <span class="string">"username"</span>, <span class="string">"userInfo"</span>);</span><br><span class="line"><span class="comment">// 还有一种方式，更直观</span></span><br><span class="line">LookupOperation lookupOperation2 = LookupOperation.newLookup()</span><br><span class="line">        .from(<span class="string">"user"</span>)</span><br><span class="line">        .localField(<span class="string">"name"</span>)</span><br><span class="line">        .foreignField(<span class="string">"username"</span>)</span><br><span class="line">        .as(<span class="string">"userInfo"</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-SortOperation"><a href="#4-SortOperation" class="headerlink" title="4. SortOperation"></a>4. SortOperation</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">//    $sort:&#123;age: 1, grade: -1&#125;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line">Sort sort = Sort.by(<span class="string">"age"</span>).and(Sort.by(<span class="string">"grade"</span>).descending());</span><br><span class="line">SortOperation sortOperation = Aggregation.sort(sort);</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="5-LimitOperation"><a href="#5-LimitOperation" class="headerlink" title="5. LimitOperation"></a>5. LimitOperation</h3><p>取前 N 条</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">//    $limit:10</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line">LimitOperation limitOperation = Aggregation.limit(<span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="6-CountOperation"><a href="#6-CountOperation" class="headerlink" title="6. CountOperation"></a>6. CountOperation</h3><p>计数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">//    $count:"countNum"</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line">CountOperation countNum = Aggregation.count().as(<span class="string">"countNum"</span>);</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="7-UnwindOperation"><a href="#7-UnwindOperation" class="headerlink" title="7. UnwindOperation"></a>7. UnwindOperation</h3><p>拆分字段，常见于联表查询之后</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">//     $lookup:&#123;</span></span><br><span class="line"><span class="comment">//         from:"user",</span></span><br><span class="line"><span class="comment">//         localField:"name",</span></span><br><span class="line"><span class="comment">//         foreignField:"username",</span></span><br><span class="line"><span class="comment">//         as:"userInfo"</span></span><br><span class="line"><span class="comment">//     &#125;</span></span><br><span class="line"><span class="comment">// &#125;,</span></span><br><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">//     $unwind:"$userInfo"</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line">LookupOperation lookupOperation = Aggregation.lookup(<span class="string">"user"</span>, <span class="string">"name"</span>, <span class="string">"username"</span>, <span class="string">"userInfo"</span>);</span><br><span class="line">UnwindOperation unwindOperation = Aggregation.unwind(<span class="string">"userInfo"</span>);</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="8-SkipOperation"><a href="#8-SkipOperation" class="headerlink" title="8. SkipOperation"></a>8. SkipOperation</h3><p>跳过前 N 条数据</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">//    $skip: 100</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line">SkipOperation skipOperation = Aggregation.skip(<span class="number">100L</span>);</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="9-SampleOperation"><a href="#9-SampleOperation" class="headerlink" title="9. SampleOperation"></a>9. SampleOperation</h3><p>随机取样 N 条数据</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">//    $sample: 10</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line">SampleOperation sampleOperation = Aggregation.sample(<span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="10-GroupOperation"><a href="#10-GroupOperation" class="headerlink" title="10. GroupOperation"></a>10. GroupOperation</h3><p>合并</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">//     $group:&#123;</span></span><br><span class="line"><span class="comment">//         _id: "$appid",</span></span><br><span class="line"><span class="comment">//         list: &#123;$addToSet: "$account"&#125;</span></span><br><span class="line"><span class="comment">//     &#125;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line">GroupOperation groupOperation = Aggregation.group(<span class="string">"appid"</span>)</span><br><span class="line">        .addToSet(<span class="string">"account"</span>).as(<span class="string">"list"</span>);</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<p>这篇就先写到这里了。</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 pz
+  </div>
+  <div class="footer-right">
+    <nav>
+      pz阁下的blog
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+
