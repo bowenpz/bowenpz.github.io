@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="这里是pz阁下">
 <meta property="og:description" content="真是混沌的一个月呀，不管第几周啦，就当做六月的最后一个周吧。 这个周入门 Spring Webflux，归纳学习响应式编程，但只从两个最常用的两个类：Mono 和 Flux 入手，关注一下基本使用。  响应式编程（Reactive programming）是一种不好形容的编程模式，常见的描述语或定义语中会出现：异步、非阻塞、传递变化、支持背压。我觉得自己的理解还不到位，决定本篇不定义或是阐述响">
 <meta property="og:locale" content="Chinese">
-<meta property="og:updated_time" content="2020-06-30T08:09:52.050Z">
+<meta property="og:updated_time" content="2020-06-30T08:29:22.847Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Webflux 入门">
 <meta name="twitter:description" content="真是混沌的一个月呀，不管第几周啦，就当做六月的最后一个周吧。 这个周入门 Spring Webflux，归纳学习响应式编程，但只从两个最常用的两个类：Mono 和 Flux 入手，关注一下基本使用。  响应式编程（Reactive programming）是一种不好形容的编程模式，常见的描述语或定义语中会出现：异步、非阻塞、传递变化、支持背压。我觉得自己的理解还不到位，决定本篇不定义或是阐述响">
@@ -70,6 +70,8 @@
     <br/>
     <span id="actions">
       <ul>
+        
+        <li><a class="icon" href="/2020/07/04/ThreadLocal/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
         <li><a class="icon" href="/2020/06/07/MongoDB/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
@@ -438,10 +440,10 @@
 <td>例如从<code>Flux&lt;String&gt;</code>转变成<code>Mono&lt;List&lt;String&gt;&gt;</code>，还有很多类似的collect()方法</td>
 </tr>
 <tr>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td>window</td>
+<td>Flux.just(1,2,3,4,5,6,7,8,9).window(3)…</td>
+<td>把一个Flux拆成多个Flux，拆后的Flux的元素个数是window内的个数</td>
+<td>例如左边示例代码，会把[1,2,3,4,5,6,7,8,9]转换成[1,2,3]、[4,5,6]、[7,8,9]</td>
 </tr>
 <tr>
 <td></td>

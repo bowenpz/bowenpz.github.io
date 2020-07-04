@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="七月的第一周，来学习 ThreadLocal。 半年前我完全看不懂这个类，现在已经能看懂了。这几天刚开始看源码时，觉得这是个很精巧的小设计，后来又找资料，发现里面的知识很深，没我想的那么简单。 我在学习 ThreadLocal 时，看到两个很好视频，安利一下。一个是《【java】什么是ThreadLocal？》（短小紧凑，科普向，但是结尾有关弱引用的结论是错的，瑕不掩瑜，记得看评论区），另一个">
+<meta name="keywords" content="Weekly Post">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ThreadLocal">
+<meta property="og:url" content="http://hellopz.netlify.com/2020/07/04/ThreadLocal/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="七月的第一周，来学习 ThreadLocal。 半年前我完全看不懂这个类，现在已经能看懂了。这几天刚开始看源码时，觉得这是个很精巧的小设计，后来又找资料，发现里面的知识很深，没我想的那么简单。 我在学习 ThreadLocal 时，看到两个很好视频，安利一下。一个是《【java】什么是ThreadLocal？》（短小紧凑，科普向，但是结尾有关弱引用的结论是错的，瑕不掩瑜，记得看评论区），另一个">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/ThreadLocal.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/image-20200704140058476.png">
+<meta property="og:updated_time" content="2020-07-04T07:08:30.333Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ThreadLocal">
+<meta name="twitter:description" content="七月的第一周，来学习 ThreadLocal。 半年前我完全看不懂这个类，现在已经能看懂了。这几天刚开始看源码时，觉得这是个很精巧的小设计，后来又找资料，发现里面的知识很深，没我想的那么简单。 我在学习 ThreadLocal 时，看到两个很好视频，安利一下。一个是《【java】什么是ThreadLocal？》（短小紧凑，科普向，但是结尾有关弱引用的结论是错的，瑕不掩瑜，记得看评论区），另一个">
+<meta name="twitter:image" content="http://hellopz.netlify.com/assets/ThreadLocal.jpg">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>ThreadLocal</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/Weekly-Post/">Weekly Post</a></li>
+         
+          <li><a href="/tags/Random-Post/">Random Post</a></li>
+         
+          <li><a href="/tags/tips/">Tips</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2020/06/30/Spring-Webflux/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2020/07/04/ThreadLocal/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2020/07/04/ThreadLocal/&text=ThreadLocal"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2020/07/04/ThreadLocal/&is_video=false&description=ThreadLocal"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#基本原理"><span class="toc-number">1.</span> <span class="toc-text">基本原理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#特殊的-hash-算法"><span class="toc-number">2.</span> <span class="toc-text">特殊的 hash 算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Entry-与弱引用"><span class="toc-number">3.</span> <span class="toc-text">Entry 与弱引用</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        ThreadLocal
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2020-07-04T07:09:51.000Z" itemprop="datePublished">2020-07-04</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Weekly-Post/">Weekly Post</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>七月的第一周，来学习 ThreadLocal。</p>
+<p>半年前我完全看不懂这个类，现在已经能看懂了。这几天刚开始看源码时，觉得这是个很精巧的小设计，后来又找资料，发现里面的知识很深，没我想的那么简单。</p>
+<p>我在学习 ThreadLocal 时，看到两个很好视频，安利一下。一个是《<a href="https://www.bilibili.com/video/av82079309" target="_blank" rel="noopener">【java】什么是<em>ThreadLocal</em>？</a>》（短小紧凑，科普向，但是结尾有关弱引用的结论是错的，瑕不掩瑜，记得看评论区），另一个是《<a href="https://www.bilibili.com/video/av327891068" target="_blank" rel="noopener">只有马士兵老师能把ThreadLocal底层原理、内存泄漏分析的这么测透</a>》（马士兵老师讲的，比较长，但是非常出色，看得我很 high）。</p>
+<hr>
+<p>ThreadLocal 类与<code>线程局部存储</code>（Thread Local Storage, TLS）的概念有关，意思是说对象是线程独有的：</p>
+<blockquote>
+<p>维基：对象的存储是在线程开始时分配，线程结束时回收，每个线程有该对象自己的实例。</p>
+</blockquote>
+<p>可以把 ThreadLocal 视为一个普通变量，他与普通的变量之间的区别在于，ThreadLocal 变量只属于某个线程。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String word1;</span><br><span class="line">ThreadLocal&lt;String&gt; word2 = <span class="keyword">new</span> ThreadLocal&lt;&gt;();</span><br><span class="line"></span><br><span class="line">word1 = <span class="string">"pz"</span>;</span><br><span class="line">word2.set(<span class="string">"pz"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>例如上面的代码，声明了两个变量 word1 和 word2。这两个变量在使用时都是字符串，也都声明成是”pz”，但是前者 word1 在任何情况下都能获得，后者只有为它赋值的线程能获得，其他的线程都不能获得：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 对于刚才赋值的线程而言，s是"pz"，对于其他线程，s是null</span></span><br><span class="line">String s = word2.get();</span><br></pre></td></tr></table></figure>
+
+<p>线程局部存储，可以让某些信息在同一个线程中，实现上下文数据共享，比如一个线程先后执行多个方法，每个方法都需要 User 信息，那么可以定义一个 <code>ThreadLocal&lt;User&gt;</code>，每个线程都能获取到各自的 User。</p>
+<p>再举一个应对面试的 Spring 应用实例，在事务管理时（@Transactional），Spring 会把数据库连接或者 hibernate session 存储在 ThreadLocal 中，这样就可以在各个方法查询各张表时实现事务控制。</p>
+<h1 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h1><p>ThreadLocal 的实现原理，是让每个线程自己维护一张 map，key 是 threadLocal 对象，value 是实际想存储的内容。</p>
+<p>每个线程拿着 ThreadLocal 对象，把它作为 key，去自己独有的 map 里找到 key 对应的 value，由此实现了线程局部存储。</p>
+<p><img src="/assets/ThreadLocal.jpg" alt="ThreadLocal"></p>
+<p>直接来看 get() 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> T <span class="title">get</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 获取当前线程</span></span><br><span class="line">    Thread t = Thread.currentThread();</span><br><span class="line">    <span class="comment">// 根据当前线程，获取map</span></span><br><span class="line">    ThreadLocalMap map = getMap(t);</span><br><span class="line">    <span class="comment">// 如果map不为空，去map里面找</span></span><br><span class="line">    <span class="keyword">if</span> (map != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 根据this（也就是本ThreadLocal对象），去map里面找到对应的entry</span></span><br><span class="line">        ThreadLocalMap.Entry e = map.getEntry(<span class="keyword">this</span>);</span><br><span class="line">        <span class="keyword">if</span> (e != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">            T result = (T)e.value;</span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果map为空，初始化map，并返回null</span></span><br><span class="line">    <span class="keyword">return</span> setInitialValue();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>基本逻辑很简单，获取当前线程，根据当前线程获取 map，在 map 里根据 ThreadLocal 对象找 entry，返回 entry 的 value。</p>
+<p>在这个主要流程里，我们还需要去扒：</p>
+<ol>
+<li>怎么根据当前线程获取 map</li>
+<li>怎么在 map 里根据 ThreadLocal 找到 entry</li>
+</ol>
+<p>第一个问题特别简单，map 就是 Thread 的一个成员变量，直接返回：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ThreadLocalMap <span class="title">getMap</span><span class="params">(Thread t)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> t.threadLocals;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 再去看Thread类的源码，可以看到有一条成员变量：</span></span><br><span class="line">ThreadLocal.ThreadLocalMap threadLocals = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+
+<p>第二个问题有点难，涉及到 map 的数据结构。</p>
+<p>先提一下 map 具体是什么，这里的 map 实际上就是一个数组（没有链表），这个数组里的每一个元素都是一个 Entry：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadLocalMap</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 这个table就是map背后的数组：存放entry的数组</span></span><br><span class="line">    <span class="keyword">private</span> Entry[] table;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 这就是数组中一个个的元素</span></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">ThreadLocal</span>&lt;?&gt;&gt; </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Entry 涉及到弱引用，这个后面再提，先看怎么从 map 中找到 entry：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> Entry <span class="title">getEntry</span><span class="params">(ThreadLocal&lt;?&gt; key)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 根据ThreadLocal对象（即key）计算出数组下标</span></span><br><span class="line">    <span class="keyword">int</span> i = key.threadLocalHashCode &amp; (table.length - <span class="number">1</span>);</span><br><span class="line">    Entry e = table[i];</span><br><span class="line">    <span class="comment">// 如果数组下标内存的key能对上，那么就是</span></span><br><span class="line">    <span class="keyword">if</span> (e != <span class="keyword">null</span> &amp;&amp; e.get() == key)</span><br><span class="line">        <span class="keyword">return</span> e;</span><br><span class="line">    <span class="comment">// 如果key对不上，线性探测往后找</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> getEntryAfterMiss(key, i, e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从整体上讲，这个 map 采用开放定址法，而不是拉链法，来解决哈希碰撞问题。</p>
+<p>这种算法的大致原理是，计算出哈希值，然后存入数组里相应的位置，如果这个位置已经存在元素了（哈希碰撞），那么查看下一个数组格子是否是空的，一直找，直到找到一个空的位置，然后存进去。取的时候也是一样，先计算出哈希值，然后找相应数组下标内的元素，如果 key 对上了就是，如果对不上，找下一个。</p>
+<p>关于使用开放定址法，存在两个疑问：为什么要使用它，而不是使用像 HashMap 一样的拉链法？使用这种需要优化什么？</p>
+<p>第一个问题涉及到弱引用，这个后面再提。</p>
+<p>第二个问题其实是在思考开放定址法的问题：如果每次计算出来的数组下标，距离靠得很近，那如果发生哈希碰撞，这个不对，找下一个，还不对，再找下一个，岂不是要找死？所以要让计算出来的数组下标，要分布尽可能地均匀。</p>
+<h1 id="特殊的-hash-算法"><a href="#特殊的-hash-算法" class="headerlink" title="特殊的 hash 算法"></a>特殊的 hash 算法</h1><p>ThreadLocal 计算数组，是通过内部的一个数字计算的，这个数字很奇特，每个 ThreadLocal 的数字都不一样，但是它们都是一个公共数字 <code>HASH_INCREMENT</code> 的整数倍（会溢出，但是无所谓）。在程序启动之后，出现的第一个 ThreadLocal 对象内部的数字是 <code>HASH_INCREMENT</code>  的一倍，第二个 ThreadLocal 对象内部的数字是 <code>HASH_INCREMENT</code>  的两倍，以此类推，第 n 个 ThreadLocal 对象内部的数字是 <code>HASH_INCREMENT</code>  的 n 倍。</p>
+<p>每个 ThreadLocal 对象内部的那个数字是 <code>threadLocalHashCode</code>（见名知意，就是 hash 值），而以 <code>HASH_INCREMENT</code> 为基的这个数字，大小初看很奇怪：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> HASH_INCREMENT = <span class="number">0x61c88647</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这个数字用十进制表示是 1640531527，它是 2^32 的黄金分割数，也就是 (2^32)/0.618。使用这个数字的整数倍，能计算得出很均匀的 map 下标（前提 map 的长度是 2 的幂）。具体的计算步骤是，获取 ThreadLocal 内部的那个数字（<code>threadLocalHashCode</code>），然后对 map 的长度 -1 取模，计算出一个不超过 map 长度的数字，这个数字就是数组的下标。</p>
+<p>举个例子，0 - 31 这 32 个数字分别与 <code>0x61c88647</code> 相乘，然后再对 31 （0b11111）取模，依旧能获得 32 个不同的数字：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> HASH_INCREMENT = <span class="number">0x61c88647</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">32</span>; i++) &#123;</span><br><span class="line">    System.out.print((i * HASH_INCREMENT &amp; <span class="number">0b11111</span>) + <span class="string">" "</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 控制台打印结果：0 7 14 21 28 3 10 17 24 31 6 13 20 27 2 9 16 23 30 5 12 19 26 1 8 15 22 29 4 11 18 25</span></span><br></pre></td></tr></table></figure>
+
+<p>当数组长度是 2 的幂时，都可以做到如此均匀，虽然我不知道为什么（试着找了一些文章，但是看不懂hhh），但是觉得好牛x啊。</p>
+<p>下图来源自文章<a href="https://web.archive.org/web/20161121124236/http://brpreiss.com/books/opus4/html/page214.html" target="_blank" rel="noopener">《Fibonacci Hashing》</a>，感受一下分布均匀度。</p>
+<p><img src="/assets/image-20200704140058476.png" alt="连续分布"></p>
+<p>有关 ThreadLocal 的 hash 算法就写到这里，然后我们来看 map 中的每一个元素：Entry。</p>
+<h1 id="Entry-与弱引用"><a href="#Entry-与弱引用" class="headerlink" title="Entry 与弱引用"></a>Entry 与弱引用</h1><p>这是 Entry 的源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">ThreadLocal</span>&lt;?&gt;&gt; </span>&#123;</span><br><span class="line">    Object value;</span><br><span class="line"></span><br><span class="line">    Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">        <span class="keyword">super</span>(k);</span><br><span class="line">        value = v;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它实际上就是 key-value 键值对，跟其他任何 map 里的设计都是一样的，有 key，也有 value。</p>
+<p>它的 key，是 ThreadLocal 对象（尽管看源码有点懵），它的 value，就是线程局部存储的值，例如下面这两行代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ThreadLocal&lt;String&gt; threadLocal = <span class="keyword">new</span> ThreadLocal&lt;&gt;();</span><br><span class="line">threadLocal.set(<span class="string">"pz"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>执行 set 方法的那个线程，它内部的 map 里的某一个格子，就是一个 Entry，这个 Entry 的 key 就是 threadlocal 对象，它的 value 是 “pz”。</p>
+<p>Entry 源码里面看到了 value，但是没有看到 key，key 是通过 WeakReference（弱引用）来实现的。</p>
+<p>弱引用是 JDK 1.2 出现的，这个概念跟 Java 虚拟机有关。弱引用是引用的一种，引用总共有四种，，我简单列一下：</p>
+<ul>
+<li>强引用（Strong Reference）：正常引用，根据垃圾回收算法，当这个引用存在时，就无法对引用对象进行 GC（如果根可达的话）</li>
+<li>软引用（Soft Reference）：能够获取到引用对象，当发生 FGC 时，会回收引用对象，应用在缓存等。</li>
+<li>弱引用（Weak Reference）：能够获取到引用对象，当发生 GC 时，会回收引用对象，应用在 ThreadLocal 等。</li>
+<li>虚引用（Phantom Reference）：不能获取到引用对象，作用是当引用对象被 GC 时，虚引用会获得一个系统通知，应用场景跟一般的代码无关。</li>
+</ul>
+<p>上面写的引用，我只是简单一写，想理解的话去看《深入理解 Java 虚拟机》讲垃圾回收的部分，或是最开始提到的马士兵老师的视频，都讲得很好。</p>
+<p>话说回来，继续看弱引用，看下面这两行代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">WeakReference&lt;String&gt; r = <span class="keyword">new</span> WeakReference&lt;&gt;(<span class="string">"pz"</span>);</span><br><span class="line">r.get();</span><br></pre></td></tr></table></figure>
+
+<p>上面创建了一个弱引用 WeakReference 对象 r，它引用到了一个字符串 “pz”，如果没有发生垃圾回收，那么可以通过 <code>r.get()</code> 方法获取到 “pz”，但如果发生了垃圾回收，这个虚引用并不会影响到字符串 “pz” 的回收，如果它真被回收了，那么执行 <code>r.get()</code> 方法将会获得 null。</p>
+<p>因此再回去看 Entry 源码，发现 Entry 继承自 WeakReference，它可以通过虚引用获取到 ThreadLocal 对象，比如创建一个 Entry 对象（当然由于 private，下面的代码是实现不了的hh）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Entry entry = <span class="keyword">new</span> Entry(threadLocal, <span class="string">"pz"</span>);</span><br><span class="line">entry.get(); <span class="comment">// ---&gt; 能拿到threadLocal，即key</span></span><br><span class="line">entry.value; <span class="comment">// ---&gt; 能拿到"pz"，即value</span></span><br></pre></td></tr></table></figure>
+
+<p>如此可以看出，Entry 实际上就是 key-value 键值对，从 hash 开放定址法上来说，应该是没问题了，逻辑闭环了，但是有另一个问题：为什么要使用弱引用？</p>
+<p>这主要与垃圾回收有关：如果 Entry 通过正常的引用关联 ThreadLocal 对象，那么如果线程不死，map 不清，由于强引用关系，ThreadLocal 对象就永远也不能被垃圾回收，这样即使某些 ThreadLocal 用不上了，它仍然不会被清理掉，造成内存泄漏。</p>
+<p>（这里我还是有点疑惑，真的有这种内存泄漏的场景吗）</p>
+<br>
+
+<p>本来还想学点数据库事务的 ThreadLocal 原理的，但是写了这么多字懒了，告辞。</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 pz
+  </div>
+  <div class="footer-right">
+    <nav>
+      pz阁下的blog
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+
