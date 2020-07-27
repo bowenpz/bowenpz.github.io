@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="因为工作需要，重新调研了 Swagger。WebFlux 使用 Swagger 和之前有一些不同，而且我发现网络上基本没有这方面的中文资料，因此写篇文章记录一下。  Swagger 是非常常用的 API 文档工具，就我观察，好像所有需要写接口文档的 Java 项目都在使用它。从某种程度上讲，Swagger 可以代表接口文档，因为它实在是太主流了，而且它提出的规范也变成了行规，更何况它还在积极向">
+<meta name="keywords" content="Random Post">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebFlux 中使用 Swagger">
+<meta property="og:url" content="http://hellopz.netlify.com/2020/07/27/webflux-中使用-swagger/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="因为工作需要，重新调研了 Swagger。WebFlux 使用 Swagger 和之前有一些不同，而且我发现网络上基本没有这方面的中文资料，因此写篇文章记录一下。  Swagger 是非常常用的 API 文档工具，就我观察，好像所有需要写接口文档的 Java 项目都在使用它。从某种程度上讲，Swagger 可以代表接口文档，因为它实在是太主流了，而且它提出的规范也变成了行规，更何况它还在积极向">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/Swagger.png">
+<meta property="og:updated_time" content="2020-07-27T15:41:31.233Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WebFlux 中使用 Swagger">
+<meta name="twitter:description" content="因为工作需要，重新调研了 Swagger。WebFlux 使用 Swagger 和之前有一些不同，而且我发现网络上基本没有这方面的中文资料，因此写篇文章记录一下。  Swagger 是非常常用的 API 文档工具，就我观察，好像所有需要写接口文档的 Java 项目都在使用它。从某种程度上讲，Swagger 可以代表接口文档，因为它实在是太主流了，而且它提出的规范也变成了行规，更何况它还在积极向">
+<meta name="twitter:image" content="http://hellopz.netlify.com/assets/Swagger.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>WebFlux 中使用 Swagger</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/Weekly-Post/">Weekly Post</a></li>
+         
+          <li><a href="/tags/Random-Post/">Random Post</a></li>
+         
+          <li><a href="/tags/tips/">Tips</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2020/07/15/Condition、CountDownLatch、CyclicBarrier-和-Semaphore/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2020/07/27/webflux-中使用-swagger/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2020/07/27/webflux-中使用-swagger/&text=WebFlux 中使用 Swagger"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2020/07/27/webflux-中使用-swagger/&is_video=false&description=WebFlux 中使用 Swagger"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Tag"><span class="toc-number">1.</span> <span class="toc-text">@Tag</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Operation"><span class="toc-number">2.</span> <span class="toc-text">@Operation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Schema"><span class="toc-number">3.</span> <span class="toc-text">@Schema</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        WebFlux 中使用 Swagger
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2020-07-27T11:45:44.000Z" itemprop="datePublished">2020-07-27</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Random-Post/">Random Post</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>因为工作需要，重新调研了 Swagger。WebFlux 使用 Swagger 和之前有一些不同，而且我发现网络上基本没有这方面的中文资料，因此写篇文章记录一下。</p>
+<hr>
+<p>Swagger 是非常常用的 API 文档工具，就我观察，好像所有需要写接口文档的 Java 项目都在使用它。从某种程度上讲，Swagger 可以代表接口文档，因为它实在是太主流了，而且它提出的规范也变成了行规，更何况它还在积极向前迭代。</p>
+<p>网上对于 Swagger 和行业规范 OpenAPI 的描述有点混乱，我试着整理了一下：</p>
+<ul>
+<li>Swagger 在 2011 年出现，目前（2020.7）的版本是 2.X</li>
+<li>Swagger 将自己的规范捐献给 Linux 基金会，改名为 OpenAPI Specification（OAS），目前的版本是 3</li>
+<li>网络上普遍将 Swagger 1.X 称为 2.0，而将 2.X 称为 3.0，具体原因不明，因此搜索最新的 Swagger 时，你需要搜索 Swagger 3.0（或者放弃用中文搜索）</li>
+<li>Swagger 1.X 和 2.X 在逻辑上是一致的，在使用上注解名都换了，在规范上做了更新（但是用户感受不到）</li>
+</ul>
+<br>
+
+<p>大家使用 Swagger 基本都是在 Spring 项目中使用的，但是 Spring 官方并没有集成 Swagger，因此目前大家使用的都是开源世界的第三方轮子。有两个比较常见的依赖库：</p>
+<ul>
+<li>SpringFox，最常见，但是至今它还没有支持 Spring 5，因此如果想在 WebFlux 中使用 Swagger，你还不能选择这个。</li>
+<li>SpringDoc，支持 WebFlux，本篇文章就是在说怎么使用 SpringDoc。</li>
+</ul>
+<hr>
+<p>SpringDoc 有一大堆的 Swagger 实现，适配了诸如 Spring MVC、Spring WebFlux、Swagger-UI 等等一堆的内容，官方给的 demo 里面就有接近十个不同的项目，我也没太看明白，在反复尝试之后，得出一组在 WebFlux 上能够使用的 Maven 依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springdoc<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springdoc-openapi-webflux-ui<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springdoc<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springdoc-openapi-webflux-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>（具体的官方文档可以点击 <a href="https://springdoc.org/" target="_blank" rel="noopener">SpringDoc</a>）</p>
+<p>理论上引入 Maven 依赖之后就可以直接使用了，启动地址是 …/swagger-ui.html（在我们的项目里是 …/webjars/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/，不太明白原因）。</p>
+<p>SpringDoc 的各项参数基本都可以在 <code>application.properties</code> 中进行配置，就比如上面的地址，默认配置就是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">springdoc.swagger-ui.path=/swagger-ui.html</span><br></pre></td></tr></table></figure>
+
+<p>更多的配置信息可以参考官方文档<a href="https://springdoc.org/springdoc-properties.html" target="_blank" rel="noopener">《Configuration of springdoc-openapi》</a>。</p>
+<hr>
+<p>Swagger 2.X 使用的注解全都变了，尽管使用逻辑没变，但是名字都不一样了。</p>
+<p>如果你对原来的 Swagger 很熟悉，那么可以参考<a href="https://springdoc.org/migrating-from-springfox.html" target="_blank" rel="noopener">《Migrating from SpringFox》</a>，这是 SpringDoc 官方整理的一份文档，描述了怎么从 SpringFox 迁移过来（因为 SpringFox 使用旧的 Swagger 1.X，这文档整理得可以说是杀人诛心了233）</p>
+<p>如果你对原来的 Swagger 不是很熟悉，或者印象不深了，可以参考 Swagger 2.X 在 github 上的官方使用文档<a href="https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Annotations" target="_blank" rel="noopener">《Swagger 2.X Annotations》</a>。</p>
+<p>国内使用 Swagger 2.X 的导读文章还比较少，唯一一篇我觉得有价值的是<a href="https://www.jianshu.com/p/b6f31966c5e1" target="_blank" rel="noopener">《springboot 集成 springdoc-openapi-ui》</a>。</p>
+<br>
+
+<p>下面我简单整理几个常用的注解：</p>
+<h2 id="Tag"><a href="#Tag" class="headerlink" title="@Tag"></a>@Tag</h2><p>可用在类或方法前（一般是类前），用于给多个接口归类（某些接口在同一组内），相当于 Swagger2 的 <code>@Api</code>。</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>作用</th>
+<th>数据类型</th>
+<th>备注</th>
+<th>是否必填</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>name</td>
+<td>名称</td>
+<td>String</td>
+<td>如果多个 <code>@Tag</code> 使用相同的 <code>name</code>，那么将归到同一个组中</td>
+<td>√</td>
+<td></td>
+</tr>
+<tr>
+<td>description</td>
+<td>描述</td>
+<td>String</td>
+<td>如果多个 <code>@Tag</code> 的 <code>name</code> 相同归到同一个组，仅能使用一个 <code>description</code>，否则会发生覆盖</td>
+<td>×</td>
+<td>“”</td>
+</tr>
+<tr>
+<td>externalDocs</td>
+<td>额外说明文档</td>
+<td>ExternalDocumentation（注解）</td>
+<td>一般用不到，可以附文字、网址进行补充说明，内容详见下文 <code>@ExternalDocumentation</code> 注解</td>
+<td>×</td>
+<td><code>@ExternalDocumentation()</code></td>
+</tr>
+<tr>
+<td>Extension</td>
+<td></td>
+<td></td>
+<td>没用</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>使用示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Tag</span>(name = <span class="string">"本Controller的名字"</span>, description = <span class="string">"这里是一些描述"</span>,</span><br><span class="line">        externalDocs = <span class="meta">@ExternalDocumentation</span>(description = <span class="string">"外部文档"</span>, url = <span class="string">"https://www.baidu.com"</span>))</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyController</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Operation"><a href="#Operation" class="headerlink" title="@Operation"></a>@Operation</h2><p>可用在方法前，主要用于描述接口，相当于 Swagger 的 <code>@ApiOperation</code>。</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>作用</th>
+<th>数据类型</th>
+<th>备注</th>
+<th>是否必填</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>summary</td>
+<td>摘要（实际代表着名字的作用）</td>
+<td>String</td>
+<td>在 Swagger 中，展示在接口 URL 旁边，建议必写</td>
+<td>×</td>
+<td>“”</td>
+</tr>
+<tr>
+<td>description</td>
+<td>描述</td>
+<td>String</td>
+<td>在 Swagger 中，点击接口详情可看到</td>
+<td>×</td>
+<td>“”</td>
+</tr>
+<tr>
+<td>requestBody</td>
+<td>请求体</td>
+<td>RequestBody（注解）</td>
+<td>使用比较繁冗，建议不使用</td>
+<td>×</td>
+<td>@RequestBody()</td>
+</tr>
+<tr>
+<td>responses</td>
+<td>返回体</td>
+<td>ApiResponse[]（注解数组）</td>
+<td>使用比较繁冗，建议不使用</td>
+<td>×</td>
+<td>{}</td>
+</tr>
+<tr>
+<td>externalDocs</td>
+<td></td>
+<td></td>
+<td>一般用不上，用法同 <code>@Tag</code> 内的使用方法</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>tags</td>
+<td></td>
+<td></td>
+<td>建议不用，当类没有 <code>@Tag</code> 注解时，将使用此处的 tags 属性分成指定的多组，使用上容易出错</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>method</td>
+<td></td>
+<td></td>
+<td>用不上</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>operationId</td>
+<td></td>
+<td></td>
+<td>用不上</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>deprecated</td>
+<td></td>
+<td></td>
+<td>用不上，完全可以用 Java 自己的 <code>@Deprecated</code> 注解代替</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>ignoreJsonView</td>
+<td></td>
+<td></td>
+<td>用不上</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>extensions</td>
+<td></td>
+<td></td>
+<td>用不上</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>parameters</td>
+<td></td>
+<td></td>
+<td>用不上</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>security</td>
+<td></td>
+<td></td>
+<td>用不上</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>servers</td>
+<td></td>
+<td></td>
+<td>用不上</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>hidden</td>
+<td></td>
+<td></td>
+<td>用不上</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>使用示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果采用自定义的VO类，来接收和返回值，那么代码将很紧凑</span></span><br><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"example/&#123;id&#125;"</span>)</span><br><span class="line"><span class="meta">@Operation</span>(summary = <span class="string">"本方法的摘要/简介"</span>, description = <span class="string">"本方法的具体描述"</span>)</span><br><span class="line">Mono&lt;ResponseBean&lt;ResponseVo&gt;&gt; get(<span class="meta">@PathVariable</span> Long id) &#123;</span><br><span class="line">    <span class="keyword">return</span> Mono.just(<span class="keyword">new</span> ResponseBean&lt;&gt;(HttpStatus.SC_OK, Boolean.TRUE, <span class="string">"success"</span>, <span class="keyword">new</span> ResponseVo()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Schema"><a href="#Schema" class="headerlink" title="@Schema"></a>@Schema</h2><p>主要用于描述实体类和变量（也可应用在其他注解之中，但代码冗余，不建议）</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>作用</th>
+<th>数据类型</th>
+<th>备注</th>
+<th>是否必填</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>name</td>
+<td>替换原名</td>
+<td>String</td>
+<td><strong>不要使用</strong>，它会替换掉原字段名称，例如变量名 <code>userId</code> 注 <code>name = &quot;用户ID&quot;</code>，变量名在前端的展示将不再是 <code>userId</code>，而是<code>用户ID</code></td>
+<td>×</td>
+<td>“”</td>
+</tr>
+<tr>
+<td>description</td>
+<td>描述</td>
+<td>String</td>
+<td>最常使用，请在每处都使用它</td>
+<td>×</td>
+<td>“”</td>
+</tr>
+<tr>
+<td>example</td>
+<td>样例</td>
+<td>String</td>
+<td>示例，建议使用</td>
+<td>×</td>
+<td>“”</td>
+</tr>
+<tr>
+<td>required</td>
+<td>是否必填</td>
+<td>boolean</td>
+<td></td>
+<td>×</td>
+<td>false</td>
+</tr>
+<tr>
+<td>其他（好多）</td>
+<td></td>
+<td></td>
+<td>建议不使用，可自行斟酌</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>使用示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Schema</span>(description = <span class="string">"用户类"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Schema</span>(description = <span class="string">"用户ID"</span>, required = <span class="keyword">true</span>)</span><br><span class="line">    <span class="keyword">private</span> String userId;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Schema</span>(description = <span class="string">"用户名"</span>, required = <span class="keyword">true</span>, example = <span class="string">"张三"</span>)</span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>写一个简单的小 demo：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* —————————————————————— 定义两个类，用于接收和返回 —————————————————————— */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Schema</span>(name = <span class="string">"请求对象"</span>, description = <span class="string">"用于接收请求的内容"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RequestDto</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Schema</span>(description = <span class="string">"ID"</span>, example = <span class="string">"20200711001"</span>, required = <span class="keyword">true</span>)</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Schema</span>(description = <span class="string">"名字"</span>, example = <span class="string">"张三"</span>)</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Schema</span>(name = <span class="string">"返回对象"</span>, description = <span class="string">"用于封装返回的内容"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ResponseDto</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Schema</span>(description = <span class="string">"ID"</span>, example = <span class="string">"20200711002"</span>, required = <span class="keyword">true</span>)</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Schema</span>(description = <span class="string">"名字"</span>, example = <span class="string">"李四"</span>)</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* —————————————————————— 下面是Controller层的使用 —————————————————————— */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"swagger"</span>)</span><br><span class="line"><span class="meta">@Tag</span>(name = <span class="string">"swagger api"</span>, description = <span class="string">"swagger样例代码"</span>, externalDocs = <span class="meta">@ExternalDocumentation</span>(</span><br><span class="line">        description = <span class="string">"swagger-core 参考网站"</span>,</span><br><span class="line">        url = <span class="string">"https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Annotations"</span></span><br><span class="line">))</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">controller</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/* ———————————————————————— 以下是推荐用法 ———————————————————————— */</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"example1/&#123;id&#125;"</span>)</span><br><span class="line">    <span class="meta">@Operation</span>(summary = <span class="string">"GET 请求示例1"</span>, description = <span class="string">"推荐用法（RESTful风格）"</span>)</span><br><span class="line">    <span class="function">Mono&lt;ResponseDto&gt; <span class="title">get1</span><span class="params">(@PathVariable Long id)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Mono.just(<span class="keyword">new</span> ResponseDto());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"example2"</span>)</span><br><span class="line">    <span class="meta">@Operation</span>(summary = <span class="string">"GET 请求示例2"</span>, description = <span class="string">"推荐用法（用params接收参数）"</span>)</span><br><span class="line">    <span class="function">Mono&lt;ResponseDto&gt; <span class="title">get2</span><span class="params">(@RequestParam Long userId, @RequestParam String userName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Mono.just(<span class="keyword">new</span> ResponseDto());</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/* —————————————————— 以下是不推荐用法（勉强实现效果） —————————————————— */</span></span><br><span class="line">    </span><br><span class="line">    <span class="meta">@PostMapping</span>(<span class="string">"example3"</span>)</span><br><span class="line">    <span class="meta">@Operation</span>(</span><br><span class="line">            summary = <span class="string">"POST 请求示例1"</span>, description = <span class="string">"不推荐用法（手动指定类型）"</span>,</span><br><span class="line">            requestBody = <span class="meta">@io</span>.swagger.v3.oas.annotations.parameters.RequestBody(</span><br><span class="line">                    content = <span class="meta">@Content</span>(schema = <span class="meta">@Schema</span>(implementation = RequestDto.class))</span><br><span class="line">            ),</span><br><span class="line">            responses = &#123;<span class="meta">@ApiResponse</span>(</span><br><span class="line">                    content = <span class="meta">@Content</span>(schema = <span class="meta">@Schema</span>(implementation = ResponseDto.class))</span><br><span class="line">            )&#125;</span><br><span class="line">    )</span><br><span class="line">    <span class="function">Mono&lt;JSONObject&gt; <span class="title">save2</span><span class="params">(@RequestBody JSONObject request)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Mono.just(<span class="keyword">new</span> JSONObject());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>Swagger 的配置文件（Config.java）是可有可无的，因为大多数的配置，都可以使用上文提到的 <code>application.properties</code> 中配置，这跟在 Spring Boot 中使用其他依赖工具的方式是一样的。</p>
+<p>如果你还是想用一个 Java 文件单独配置的话，可以参考下面这段代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@OpenAPIDefinition</span>(info = <span class="meta">@Info</span>(</span><br><span class="line">        title = <span class="string">"pz的Swagger网站"</span>, version = <span class="string">"1.0"</span>, description = <span class="string">"后端管理系统接口文档"</span>),</span><br><span class="line">        externalDocs = <span class="meta">@ExternalDocumentation</span>(description = <span class="string">"官方使用文档"</span>, url = <span class="string">"https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Annotations"</span>))</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SwaggerConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 以下是在配置鉴权 authorization</span></span><br><span class="line"><span class="comment">     * 在使用时，在想鉴权的类上配置注解 <span class="doctag">@SecurityRequirement</span>(name = "authorization")</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> OpenAPI <span class="title">customOpenAPI</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> OpenAPI()</span><br><span class="line">                .components(<span class="keyword">new</span> Components()</span><br><span class="line">                        .addSecuritySchemes(<span class="string">"authorization"</span>,</span><br><span class="line">                                <span class="keyword">new</span> SecurityScheme()</span><br><span class="line">                                        .name(<span class="string">"Authorization"</span>)</span><br><span class="line">                                        .in(SecurityScheme.In.HEADER)</span><br><span class="line">                                        .type(SecurityScheme.Type.APIKEY)</span><br><span class="line">                                        .scheme(<span class="string">"bearer"</span>)));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它实现了两个配置：</p>
+<ol>
+<li>Swagger 可视化网站的名称等配置。</li>
+<li>配置了鉴权（请求参数中携带 Authorization 作为 token）</li>
+</ol>
+<p>值得一提的是，上面这两个配置，一个使用注解，一个使用方法，其实是可以互换的，也就是说每一种配置都是可以使用注解或方法来配置的，看个人喜好。</p>
+<p>最终的效果如下图所示：</p>
+<p><img src="/assets/Swagger.png" alt="Swagger"></p>
+<br>
+
+<p>研究 Swagger 配置鉴权花了不少时间，主要也是因为自己没有做过鉴权相关的东西。</p>
+<p>总体的思路是，在配置文件中事先配置好，并给这个部分起一个名字（因为可以有多个鉴权）。在想使用的 Controller 层或者方法层上，加上一行注解，指定想要使用的鉴权的名字，就可以使用啦。</p>
+<p>比如针对上面的配置文件（名字叫做 <code>authorization</code>），就可以在 Controller 上面加上这么一行注解，这样在 Swagger 中调用方法时，这个 Controller 里面的所有方法都会在请求参数里带上 <code>Authorization</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SecurityRequirement</span>(name = <span class="string">"authorization"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">controller</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<p>就整理这么多吧。</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 pz
+  </div>
+  <div class="footer-right">
+    <nav>
+      pz阁下的blog
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+
