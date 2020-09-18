@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="最近两个月，在业务上做了很多监控相关的工作，最终选用了以 Prometheus 为中心的监控解决方案。其实真正的工作也没做多少，因为腾讯云最近灰度上线了 Prometheus 监控服务，我们基本是在使用腾讯云的工作成果。而我主要的工作内容，一是广泛调研监控工具，判断是否适合当下业务场景，二是负责实际落地。 本文写得比较零散，总体上说明了三件事情：  市面上可选用的监控方案有什么 以 Prome">
+<meta name="keywords" content="Random Post">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Prometheus 监控方案简述">
+<meta property="og:url" content="http://hellopz.netlify.com/2020/09/18/Prometheus-监控方案简述/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="最近两个月，在业务上做了很多监控相关的工作，最终选用了以 Prometheus 为中心的监控解决方案。其实真正的工作也没做多少，因为腾讯云最近灰度上线了 Prometheus 监控服务，我们基本是在使用腾讯云的工作成果。而我主要的工作内容，一是广泛调研监控工具，判断是否适合当下业务场景，二是负责实际落地。 本文写得比较零散，总体上说明了三件事情：  市面上可选用的监控方案有什么 以 Prome">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/Prometheus%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/Prometheus%E8%87%AA%E5%B8%A6%E7%9A%84%E5%8F%AF%E8%A7%86%E5%8C%96.png">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/Grafana_dashboard.png">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E8%85%BE%E8%AE%AF%E4%BA%91Prometheus%E9%85%8D%E7%BD%AE.png">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E8%85%BE%E8%AE%AF%E4%BA%91Grafana%E9%BB%98%E8%AE%A4.png">
+<meta property="og:updated_time" content="2020-09-18T08:48:15.347Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Prometheus 监控方案简述">
+<meta name="twitter:description" content="最近两个月，在业务上做了很多监控相关的工作，最终选用了以 Prometheus 为中心的监控解决方案。其实真正的工作也没做多少，因为腾讯云最近灰度上线了 Prometheus 监控服务，我们基本是在使用腾讯云的工作成果。而我主要的工作内容，一是广泛调研监控工具，判断是否适合当下业务场景，二是负责实际落地。 本文写得比较零散，总体上说明了三件事情：  市面上可选用的监控方案有什么 以 Prome">
+<meta name="twitter:image" content="http://hellopz.netlify.com/assets/Prometheus%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Prometheus 监控方案简述</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/Weekly-Post/">Weekly Post</a></li>
+         
+          <li><a href="/tags/Random-Post/">Random Post</a></li>
+         
+          <li><a href="/tags/tips/">Tips</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2020/09/05/从-NIO-到-Netty/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2020/09/18/Prometheus-监控方案简述/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2020/09/18/Prometheus-监控方案简述/&text=Prometheus 监控方案简述"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2020/09/18/Prometheus-监控方案简述/&is_video=false&description=Prometheus 监控方案简述"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概念-amp-名词"><span class="toc-number">1.</span> <span class="toc-text">概念 &amp; 名词</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#APM"><span class="toc-number">1.1.</span> <span class="toc-text">APM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Prometheus"><span class="toc-number">1.2.</span> <span class="toc-text">Prometheus</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#数据结构"><span class="toc-number">1.2.1.</span> <span class="toc-text">数据结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据采集"><span class="toc-number">1.2.2.</span> <span class="toc-text">数据采集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据处理"><span class="toc-number">1.2.3.</span> <span class="toc-text">数据处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据可视化"><span class="toc-number">1.2.4.</span> <span class="toc-text">数据可视化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Grafana"><span class="toc-number">1.3.</span> <span class="toc-text">Grafana</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Micrometer"><span class="toc-number">1.4.</span> <span class="toc-text">Micrometer</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#监控解决方案"><span class="toc-number">2.</span> <span class="toc-text">监控解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#基础设施监控"><span class="toc-number">2.1.</span> <span class="toc-text">基础设施监控</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#业务监控"><span class="toc-number">2.2.</span> <span class="toc-text">业务监控</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#监控数据埋点（采集）"><span class="toc-number">2.2.1.</span> <span class="toc-text">监控数据埋点（采集）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#监控数据处理"><span class="toc-number">2.2.2.</span> <span class="toc-text">监控数据处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#监控数据展示"><span class="toc-number">2.2.3.</span> <span class="toc-text">监控数据展示</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Prometheus 监控方案简述
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2020-09-18T08:20:26.000Z" itemprop="datePublished">2020-09-18</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Random-Post/">Random Post</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>最近两个月，在业务上做了很多监控相关的工作，最终选用了以 Prometheus 为中心的监控解决方案。其实真正的工作也没做多少，因为腾讯云最近灰度上线了 Prometheus 监控服务，我们基本是在使用腾讯云的工作成果。而我主要的工作内容，一是广泛调研监控工具，判断是否适合当下业务场景，二是负责实际落地。</p>
+<p>本文写得比较零散，总体上说明了三件事情：</p>
+<ol>
+<li>市面上可选用的监控方案有什么</li>
+<li>以 Prometheus 为主的监控方案是怎样的</li>
+<li>如何使用腾讯云 Prometheus 服务进行监控</li>
+</ol>
+<hr>
+<h1 id="概念-amp-名词"><a href="#概念-amp-名词" class="headerlink" title="概念 &amp; 名词"></a>概念 &amp; 名词</h1><h2 id="APM"><a href="#APM" class="headerlink" title="APM"></a>APM</h2><p>APM （Application Performance Management）应用性能管理，简单理解就是监控。</p>
+<p>APM 是项系统工程，包括监控数据的<code>收集</code>、<code>存储</code>、<code>处理</code>、<code>告警</code>，通常也包含<code>可视化展示</code>。监控的内容同样包含方方面面，从整体来讲包含<code>基础设施监控</code>（比如云容器、机房硬件整体表现）和<code>业务监控</code>（比如接口调用次数、JVM 表现）。</p>
+<p>举一个切实的例子：比如我想知道，最近一周哪个接口调用的次数最多。我们可以拆分成以下问题：</p>
+<ol>
+<li>数据收集：所有的接口每被调用一次，就要各自计数一次</li>
+<li>数据存储：接口调用次数保存在哪里</li>
+<li>数据处理：截取一周的时间，对接口调用次数进行倒序排序</li>
+<li>可视化展示：以图表的形式，展示在前端</li>
+<li>（也许）告警：某个接口在一周内调用了 100 亿次，需要向管理员发送邮件/短信警告</li>
+</ol>
+<br>
+
+<p>市面上的 APM 工具（解决方案）主要有以下几种：</p>
+<ul>
+<li><p>ELK</p>
+<p>Elasticsearch + Logstash + Kibana，这三个开源项目的首字母缩写。这三个项目各自的作用是<code>带搜索功能的数据库</code>、<code>采集数据，转换数据</code>、<code>可视化</code>，加起来是一整套 APM 解决方案。具体可以参考官网《<a href="https://www.elastic.co/cn/what-is/elk-stack" target="_blank" rel="noopener">什么是 ELK Stack？</a>》。</p>
+<p>这一整套功能很全，但是也比较重，它基于日志的方式存储和处理数据，存储量很大，性能消耗也大（但同时功能也是最强的）</p>
+</li>
+<li><p>Skywalking</p>
+<p>这是一个国人做的项目，是 Apache 的顶级毕业项目。</p>
+<p>它的核心功能是分布式服务追踪，可以查出一个请求，从哪里被调用，中转了哪些微服务，使用了哪里的 Redis、MySql、MongoDB，以及最重要的：分别耗费了多长时间。它在分布式架构中表现非常卓越，通过它可以知道到底是哪里性能瓶颈大（比如某条 sql 数据库查询时间很长），但是在单体应用中作用不大。它支持 WebFlux，但是支持得比较一般。</p>
+<p>SkyWalking 不负责数据的存储，因此需要单独找一套数据库，比如 H2、MySql 等，比较推荐的是 Elasticsearch。</p>
+<p>SkyWalking 自己做了可视化，在分布式追踪上的效果展示还可以。</p>
+<p>SkyWalking 可以不用编码，引入一个 jar 包，通过字节码增强的方式实现每个接口的监控，但是会有一定的性能消耗（官方人员描述是 5%，网上描述是 10%，此外在高并发场景下会更多）</p>
+</li>
+<li><p>Pinpoint、CAT、Zipkin</p>
+<p>这三个跟 SkyWalking 的核心功能都差不多，都是做分布式追踪监控。Pinpoint 是韩国团队做的，小团队，开源，仍在更新。CAT 是美团系做的，功能更综合一些，研发挺慢的。Zipkin 是 Twitter 做的，开源，轻量。</p>
+<p>这三个工具我都没有实操过，具体表现不太清楚，应该跟 Skywalking 差距不大。</p>
+</li>
+<li><p>Prometheus + Grafana</p>
+<p>Prometheus 是 CNCF（云原生计算基金会）毕业的第二个项目（第一个是 Kubernetes）。它对云原生的支持度是最好的，是 Kubernetes 的官方推荐工具，两者做了很多适配，并且有大量的文章。</p>
+<p>在云容器监控上，应该是唯一的推荐选择，在业务代码监控上，本来表现一般，但是由于开源社区比较给力，因此适配得还不错。</p>
+<p>我们选用这一套来进行监控，一方面是腾讯云做了集成（因此我们的开发工作量是最小的），另一方面是它的性能表现理论上是最好的。具体内容下面会说。</p>
+<p>有关 APM 选型，还推荐阅读这篇文章《<a href="http://code2life.top/2020/02/25/0051-prometheus-in-action-thinking/" target="_blank" rel="noopener">Prometheus监控告警——总结与思考</a>》，很有启发性。</p>
+</li>
+</ul>
+<h2 id="Prometheus"><a href="#Prometheus" class="headerlink" title="Prometheus"></a>Prometheus</h2><p>Prometheus 是云原生环境中最好的 APM 监控工具，有各种天时地利的因素，使它成为云原生和 Kubernetes 监控的近乎唯一选择。</p>
+<p>Prometheus 包括数据采集、存储、处理、告警、可视化等全部要素，但是具体实现跟其他 APM 工具几乎完全不同，下面简单介绍一下 Prometheus 的工作逻辑。（以下的介绍都是很粗浅的，只是描述工作原理，跟实际架构还差很远）</p>
+<br>
+
+<h3 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h3><p>简单地理解 Prometheus，它是一个时序数据库，按照时间收集了很多 metric（指标）。</p>
+<p>metric 可以理解为带标签的 key-value 键值对，它形如 <code>key{label1=&quot;...&quot;, label2=&quot;...&quot;} =&gt; 100</code>，也就是说 Prometheus 按时间按类型收集了很多值，排列起来最终就是监控数据。具体的格式可参照下图（图片来源：《<a href="https://www.cnblogs.com/vovlie/p/7709312.html" target="_blank" rel="noopener">剖析Prometheus的内部存储机制</a>》）：</p>
+<p><img src="/assets/Prometheus%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png" alt="Prometheus数据结构"></p>
+<p>这种 metric 数据结构，占存储空间很小，性能很高，兼容适配也很简单，相比其他 APM 工具根据日志进行解析要优越很多。</p>
+<br>
+
+<h3 id="数据采集"><a href="#数据采集" class="headerlink" title="数据采集"></a>数据采集</h3><p>Prometheus 收集数据基于 pull 模式，监控数据并不是主动发送到 Prometheus 服务器中，而是给 Prometheus 提供一个接口，Prometheus 会自己去调接口收集数据，由它自己控制数据采样速度（最快应该是 1s 采样一次）。</p>
+<p>这样做有特别多的好处，第一是开发者很容易在自己的程序中适配，只要提供一个符合约定格式的接口，就可以供 Prometheus 去进行监控，跨语言、跨平台、开发还迅速。第二是由于数据结构简单，采样可以很快，其他 APM 可能受限于性能，一分钟收集一次，而 Prometheus 最快可以 1s 收集一次，精度可以很高。</p>
+<br>
+
+<h3 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h3><p>Prometheus 有自己的语言，叫做 <code>PromQL</code>，用于查询监控数据。</p>
+<p>PromQL 最简单的使用，就是形如上述数据结构的样子，输入 key 查找这一类数据，或者输入 key{label1=”…”} 查找某一类数据中的某类标签。下图就是在查找 JVM 内存的使用情况，只输入了 jvm_memory_used_bytes。</p>
+<p><img src="/assets/Prometheus%E8%87%AA%E5%B8%A6%E7%9A%84%E5%8F%AF%E8%A7%86%E5%8C%96.png" alt="Prometheus自带的可视化"></p>
+<p>PromQL 可以非常复杂，因为内部的数据结构实际上就是 key-value 的键值对，而 value 是 64 位的浮点数，本质上只是数字而已，因此可以进行所有数值运算。PromQL 支持所有数值运算（包括微分、积分、矩阵等），同时内置很多函数。</p>
+<br>
+
+<h3 id="数据可视化"><a href="#数据可视化" class="headerlink" title="数据可视化"></a>数据可视化</h3><p>Prometheus 自己做了可视化界面，上图查询 jvm_memory_used_bytes 的图片，就是 Prometheus 的前端界面。</p>
+<p>但是这个界面需要用户自己输入 PromQL，不能保存语句，视图比较单一，而且不符合恶俗的 RGB 审美，大家一般选用另一种可视化工具 Grafana 来配合使用。</p>
+<h2 id="Grafana"><a href="#Grafana" class="headerlink" title="Grafana"></a>Grafana</h2><p>Grafana 是一个可视化工具，它不负责任何数据的来源、存储、收集等等，它只是一个可视化的前端界面。Grafana 支持很多数据源，除了 Prometheus 之外，还支持 Elasticsearch、Zipkin、Loki 等等，甚至是 MySQL。</p>
+<p>Grafana 的前身是 Kibana，这段历史还挺有趣的，推荐阅读《<a href="https://www.zhihu.com/question/54388690/answer/411123602" target="_blank" rel="noopener">Grafana 与 Kibana 有什么区别，Kibana 能做的事情 Grafana 是否也都能做？</a>》。</p>
+<p>大家选用 Prometheus 基本都使用 Grafana 作为前端可视化工具。使用 Grafana 的好处，第一是符合 RGB 赛博朋克审美，第二是它能存储 PromQL 语句，也就是说配置一次之后，以后就不需要再写语句了。Grafana 的另一个优势在于，配置语句是可以拷贝出来的，去网上找一找，就能找到相关的模板，自己一句 PromQL 都不用写。</p>
+<p>Grafana 有两个基本的概念，分别是 dashboard 和 panel，dashboard 是由 panel 组成的。以 Prometheus 为例，一条 PromQL 对应一个 panel，也就是一个图表，一堆图表加在一起就是一个完整的 dashboard。例如下图就是一个 dashboard，里面的每一块就是一个 panel。</p>
+<p><img src="/assets/Grafana_dashboard.png" alt="Grafana_dashboard"></p>
+<h2 id="Micrometer"><a href="#Micrometer" class="headerlink" title="Micrometer"></a>Micrometer</h2><p>上文写 Prometheus 时说到，Prometheus 基于 pull 模式，服务只需要提供一个接口，让 Prometheus 去调用，那么 Prometheus 就可以对这个服务进行监控。Micrometer 就是在 Spring Boot 框架下，给 Prometheus 提供接口的工具。</p>
+<p>Micrometer 是一个专门用来进行 <code>指标收集</code> 的工具，实际上 Spring Boot 2 之后的 actuator 就是使用 Micrometer 来进行统计数据和发布数据到监控系统的。但是默认的 micrometer 并不是 Prometheus 的格式的，我们需要再主动引一个 maven 包：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.micrometer<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>micrometer-registry-prometheus<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>大致的逻辑是这样的：Micrometer 收集指标数据，并通过 actuator 主动暴露一个接口，让 Prometheus 去调用，获取那些收集的指标数据。</p>
+<p>Micrometer 默认会收集 JVM 相关的一些数据，业务数据需要自己写代码，比如我想统计 A 接口被调用了多少次，那么每次进入 A 接口的时候，就使用 Micrometer 计数一次。通常使用 Micrometer 是配合 Spring AOP 来使用的，做一个全局切面，统计所有接口的情况。</p>
+<p>这是调用接口，获取到 Micrometer 收集的部分真实数据：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">jvm_buffer_count_buffers&#123;application=&quot;live-server&quot;,id=&quot;direct&quot;,&#125; 3.0</span><br><span class="line">jvm_buffer_count_buffers&#123;application=&quot;live-server&quot;,id=&quot;mapped&quot;,&#125; 0.0</span><br><span class="line">jvm_memory_committed_bytes&#123;application=&quot;live-server&quot;,area=&quot;nonheap&quot;,id=&quot;Compressed Class Space&quot;,&#125; 1.0616832E7</span><br><span class="line">jvm_memory_committed_bytes&#123;application=&quot;live-server&quot;,area=&quot;nonheap&quot;,id=&quot;Code Cache&quot;,&#125; 1.9857408E7</span><br><span class="line">jvm_memory_committed_bytes&#123;application=&quot;live-server&quot;,area=&quot;nonheap&quot;,id=&quot;Metaspace&quot;,&#125; 7.794688E7</span><br><span class="line">jvm_memory_committed_bytes&#123;application=&quot;live-server&quot;,area=&quot;heap&quot;,id=&quot;PS Eden Space&quot;,&#125; 3.3292288E8</span><br><span class="line">jvm_memory_committed_bytes&#123;application=&quot;live-server&quot;,area=&quot;heap&quot;,id=&quot;PS Old Gen&quot;,&#125; 2.4379392E8</span><br><span class="line">jvm_memory_committed_bytes&#123;application=&quot;live-server&quot;,area=&quot;heap&quot;,id=&quot;PS Survivor Space&quot;,&#125; 2.359296E7</span><br><span class="line">http_server_requests_seconds_count&#123;application=&quot;live-server&quot;,exception=&quot;None&quot;,method=&quot;GET&quot;,outcome=&quot;SUCCESS&quot;,status=&quot;200&quot;,uri=&quot;/v3/api-docs/swagger-config&quot;,&#125; 2.0</span><br><span class="line">http_server_requests_seconds_sum&#123;application=&quot;live-server&quot;,exception=&quot;None&quot;,method=&quot;GET&quot;,outcome=&quot;SUCCESS&quot;,status=&quot;200&quot;,uri=&quot;/v3/api-docs/swagger-config&quot;,&#125; 0.0825684</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<p>使用 Micrometer 是需要理解一些概念的，这里不具体写了，推荐两篇写的很好的文章：《<a href="https://www.wqp0010.top/2018/12/27/SpringBoot2-0%E6%95%B4%E5%90%88Prometheus-Grafana/#SpringBoot%E6%9A%B4%E9%9C%B2%E6%8C%87%E6%A0%87" target="_blank" rel="noopener">SpringBoot2.0整合Prometheus Grafana</a>》《<a href="https://yunlongn.github.io/2019/08/13/%E7%BB%99%E4%BD%A0%E7%9A%84SpringBoot%E5%81%9A%E5%9F%8B%E7%82%B9%E7%9B%91%E6%8E%A7-JVM%E5%BA%94%E7%94%A8%E5%BA%A6%E9%87%8F%E6%A1%86%E6%9E%B6Micrometer/" target="_blank" rel="noopener">给你的 Spring Boot 做埋点监控</a>》，前者是总体使用思路，后者是 Micrometer 的使用细节。</p>
+<hr>
+<h1 id="监控解决方案"><a href="#监控解决方案" class="headerlink" title="监控解决方案"></a>监控解决方案</h1><p>我们目前的监控主要分两个方面，一方面是对<code>云容器</code>的监控，另一方面是对<code>业务代码</code>的监控，下面分别叙述。</p>
+<h2 id="基础设施监控"><a href="#基础设施监控" class="headerlink" title="基础设施监控"></a>基础设施监控</h2><p>我们使用腾讯云作为服务器，腾讯云内部正在开发集成 Prometheus，对 Kubernetes 容器进行监控，目前处于灰度上线阶段。</p>
+<p>我们得知之后，直接使用腾讯云集成的 Prometheus 服务，不需要进行配置就直接使用，还是比较省心的。</p>
+<p>腾讯云集成的 Prometheus 服务基本配置了全部内容，包括但不限于</p>
+<ul>
+<li>Kubernetes 容器的数据埋点和数据收集</li>
+<li>Prometheus 服务的部署、启动、数据采集、存储等</li>
+<li>Grafana 的前端可视化配置（其实就是写 PromQL，很复杂）</li>
+</ul>
+<br>
+
+<p>腾讯云原来也有监控服务，使用新集成的 Prometheus 的优势有以下几点：</p>
+<ul>
+<li>理论上，Prometheus 的收集精度会更高，因为采样数据间隔更短</li>
+<li>Prometheus 收集的数据更全，我们能够获得更多信息</li>
+<li>可以配置我们自己的 Prometheus 访问接口，如果需要做业务监控，不需要额外配置</li>
+</ul>
+<br>
+
+<p>目前该项目还处于灰度上线阶段（2020.09.18），目前仍遇到的问题有：</p>
+<ul>
+<li>Prometheus 和 Grafana 都是有学习成本的，尤其是 Prometheus，此外还要有云原生的基本运维知识，门槛很高。如果我们想自己做一些改变，或者理解监控的内容，需要积累非常多的知识</li>
+<li>目前 Grafana 的前端展示都是英文的（当然，这更加准确），但是参数非常多，有时并不能理解，腾讯云缺少本地化翻译工作，也缺少操作指引教程</li>
+<li>不支持告警</li>
+</ul>
+<h2 id="业务监控"><a href="#业务监控" class="headerlink" title="业务监控"></a>业务监控</h2><p>除了 Kubernetes 的宏观监控之外，我们还需要对业务代码进行监控，对每个服务内部做微观监控。</p>
+<p>比如我想要知道，在进行压力测试时，哪个接口调用地次数最多，调用的时间最长，服务启动之后 JVM 是否表现合理，由此去判断如果想要优化代码，需要优化哪里。在这种场景下，单纯监控 Kubernetes 容器层面是远远不够的，还需要对业务服务进行监控。</p>
+<p>我们总体的 APM 技术栈是：</p>
+<ul>
+<li>actuator 和 Micrometer 做数据埋点</li>
+<li>Prometheus 做数据收集（配置过程由腾讯云完成）</li>
+<li>Grafana 做数据可视化</li>
+</ul>
+<br>
+
+<h3 id="监控数据埋点（采集）"><a href="#监控数据埋点（采集）" class="headerlink" title="监控数据埋点（采集）"></a>监控数据埋点（采集）</h3><p>我们使用 actuator 配合 Micrometer 做数据收集。</p>
+<p>Micrometer 默认会收集 JVM 等整体性的指标，我们除此之外，还收集了两项指标：所有接口的调用次数、所有接口的调用时间。</p>
+<p>这些指标都通过 actuator 暴露接口，供 Prometheus 查询。默认暴露的接口是 <code>/actuator/prometheus</code>，比如 <code>http://localhost:8080/actuator/prometheus</code>。</p>
+<p>下面附一下代码，分为三部分，分别是 <code>pom.xml</code>、<code>application.yml</code>、埋点代码：</p>
+<p><code>pom.xml</code> 也就是 Maven 中需要引入的包：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- actuator --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- micrometer 的 Prometheus 实现 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.micrometer<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>micrometer-registry-prometheus<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- AOP 切面 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-aop<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>application.yml</code> 是 Spring 对 actuator 的配置内容：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">management:</span></span><br><span class="line">  <span class="comment"># actuator 允许访问的地址</span></span><br><span class="line"><span class="attr">  endpoints:</span></span><br><span class="line"><span class="attr">    web:</span></span><br><span class="line"><span class="attr">      exposure:</span></span><br><span class="line"><span class="attr">        include:</span> <span class="string">prometheus</span></span><br><span class="line">  <span class="comment"># 采样时，每个指标都会带的 label，方便可视化查找</span></span><br><span class="line"><span class="attr">  metrics:</span></span><br><span class="line"><span class="attr">    tags:</span></span><br><span class="line"><span class="attr">      application:</span> <span class="string">$&#123;spring.application.name&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>埋点业务代码，通过 AOP 切面，对所有接口做拦截，统计数据。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Aspect</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrometheusAopConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> MeterRegistry meterRegistry;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">PrometheusAopConfig</span><span class="params">(MeterRegistry meterRegistry)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.meterRegistry = meterRegistry;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 拦截所有controller方法</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Pointcut</span>(<span class="string">"execution(* 包.controller.*.*(..))"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">controllerAop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Around</span>(<span class="string">"controllerAop()"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">controllerAround</span><span class="params">(ProceedingJoinPoint joinPoint)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">        <span class="comment">// 获取方法名</span></span><br><span class="line">        String methodName = joinPoint.getSignature().getName();</span><br><span class="line">        <span class="comment">// 获取类名</span></span><br><span class="line">        String className = joinPoint.getTarget().getClass().getName();</span><br><span class="line">        <span class="comment">// 方法计数</span></span><br><span class="line">        meterRegistry.counter(<span class="string">"method.count"</span>, <span class="string">"method"</span>, methodName, <span class="string">"className"</span>, className).increment();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取执行方法前的时间</span></span><br><span class="line">        <span class="keyword">long</span> beforeTime = System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 执行方法</span></span><br><span class="line">        Object proceed = joinPoint.proceed();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 记录方法执行时间</span></span><br><span class="line">        <span class="keyword">long</span> processTime = System.currentTimeMillis() - beforeTime;</span><br><span class="line">        Timer timer = meterRegistry.timer(<span class="string">"method.time"</span>, <span class="string">"method"</span>, methodName, <span class="string">"className"</span>, className);</span><br><span class="line">        timer.record(processTime, TimeUnit.MILLISECONDS);</span><br><span class="line">        <span class="keyword">return</span> proceed;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="监控数据处理"><a href="#监控数据处理" class="headerlink" title="监控数据处理"></a>监控数据处理</h3><p>由腾讯云的 Prometheus 监控进行数据的采集，通过简单的配置，比如设置 Kubernetes 的实例名、服务名、端口号、采集数据接口等，就可以完成 Prometheus 的配置。</p>
+<p><img src="/assets/%E8%85%BE%E8%AE%AF%E4%BA%91Prometheus%E9%85%8D%E7%BD%AE.png" alt="腾讯云Prometheus配置"></p>
+<p>如果个人搭建的话，需要去 Prometheus 官方下载程序，配置 <code>application.yml</code> 文件，启动服务。</p>
+<br>
+
+<h3 id="监控数据展示"><a href="#监控数据展示" class="headerlink" title="监控数据展示"></a>监控数据展示</h3><p>使用 Grafana 进行可视化展示。</p>
+<p>使用 Grafana 时，因为有很多 dashboard，因此要自己选择。</p>
+<p>首先选择右边栏，找到 Manage 选项，会看到 Dashboards 目录。默认会有一个文件夹，是腾讯云配置的 Kubernetes 文件夹，里面是对云容器监控的 dashboard（有很多很多）。</p>
+<p><img src="/assets/%E8%85%BE%E8%AE%AF%E4%BA%91Grafana%E9%BB%98%E8%AE%A4.png" alt="腾讯云Grafana默认"></p>
+<p>个人配置的话，需要先创建一个 dashboard，再在里面创建一个个 panel，每一个 panel 就是一条 PromQL（写起来非常痛苦）。</p>
+<p>还有一条捷径，就是去找网上已经配好的模板，比如 Micrometer 采集的 JVM 数据，网上就有已经配置好的模板《<a href="https://grafana.com/grafana/dashboards/4701" target="_blank" rel="noopener">JVM (Micrometer)</a>》。但是业务逻辑的话，还是乖乖自己写吧。</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 pz
+  </div>
+  <div class="footer-right">
+    <nav>
+      pz阁下的blog
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+
