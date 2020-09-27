@@ -147,53 +147,6 @@
       </tags>
   </entry>
   <entry>
-    <title>IoC的引入</title>
-    <url>/2019/08/04/SpringIoC/</url>
-    <content><![CDATA[<br>
-
-<p>八月的第一周，我们来说IoC</p>
-<p>IoC是Spring框架的核心思想其一，原理不算复杂。</p>
-<hr>
-<p>Spring家族是Java中风光无限的一族，几乎所有Java项目所使用的框架，都跟Spring家族有关。有一些介绍中说，Spring框架是一种全栈式框架（或者是一站式框架），全栈（Full-stack）的意思就是说，编程里能干的所有活，它一家可以全包了，一条龙服务，可以应用于一切场景。</p>
-<p>Spring在2004年发布了1.0版本。创建Spring的那哥们叫Rod Johnson，他自己写了本书，说当时的主流框架EJB可以换个思路写代码，后来觉得不痛快，就又写了一本书，说我们干脆换个框架算了，于是就有了Spring。说起来这哥们也是个神人，他本科计算机专业毕业的，然后读了个音乐博士。</p>
-<p>Spring现在那么盛行，几乎所有公司都在用Spring框架，倒不是因为技术、架构这些，而是跟思想有关。一说思想这个词，一般事情就变得玄妙了起来，简单点说呢，用Spring这套模式写代码，写起来感觉得心应手，少了很多麻烦，写着写着代码冥冥之中感觉很轻便，这就是因为Spring在思想上很先进。Spring的核心思想有两种，一种是IoC，一种是AOP，我们今天说前面那个IoC。</p>
-<hr>
-<p>IoC的全称是Inversion of Control，翻译过来叫控制反转。这并不是一个见名知意的名词，首先要解释一下这个概念。</p>
-<p>好比我现在要制造一辆汽车，从无到有一步一步地建造。</p>
-<p>首先我要先制造出汽车底盘，根据底盘的大小来确定汽车的外壳有多大。如果我建造了一个5米长的底盘，我不可能再建造一个10米长的汽车外壳，装不上去呀。所以你发现了，汽车外壳必须要根据汽车底盘来制造，这也就是汽车外壳依赖于汽车底盘，换句话说，我们造外壳的时候，是被底盘牵着鼻子走的。</p>
-<p>对于有设计欲望的汽车制造师来讲，这很让人不爽，明明我要大显身手地去设计汽车外壳，让自己的车外观上十分拉风，结果却要根据汽车底盘来设计，这不行。因此我们找到了一家汽车零件厂，我就先造外壳，造完之后需要多大的底盘，去找汽车零件厂给我提供。让汽车制造师一番折腾，现在可以直接造汽车外壳，然后再管汽车底盘了。汽车底盘反依赖于汽车外壳，也就是说，底盘被外壳牵着鼻子走了。</p>
-<p>我们要讨论的IoC控制反转，这里的控制，其实说的就是谁牵着谁鼻子走。按照原先的理解，A是B的底层，A要控制B；现在B先行，A跟着B走，B反而控制A了，这就是控制反转。</p>
-<p>你应该感受到了，Ioc并不是什么具体的技术，而是一种思想，或者更确切地说是一种设计模式。</p>
-<hr>
-<p>我们说了半天控制反转，怎么控制的，怎么反转的，都快绕晕了。其实谁控制谁根本就不重要，不管是A控制B还是B控制A，也没什么区别，反转了又能怎么样嘛。</p>
-<p>关键是在于，原来A控制B，那是一点点往上搭积木，A也得搭，B也得搭。控制反转之后，现在B还是要做，但是A怎么来的，我们就不管了。</p>
-<p>就像是刚才举的造汽车的例子，原来汽车是怎么造的，先造底盘，再造外壳，一步一步地很是繁琐，约束还多。后来我们只造外壳，那底盘呢，底盘让汽车零件厂造去了，我们不造了。怎么来的我也不管，反正到时候你给我就行了。</p>
-<p>你说是不是省很多事？</p>
-<p>总结一下，IoC思想有两点好处：</p>
-<ul>
-<li>其一，再也不用写一大堆的初始化代码了，这些扔给别人去做。</li>
-<li>其二（这个更重要），我们把代码松绑了，原本紧密依赖的两部分如今拆开了，用祖师爷的话说就是“降低了耦合度”。</li>
-</ul>
-<hr>
-<p>我们再来聊Spring。</p>
-<p>Spring框架实现IoC主要是这样子的，它在A类和B类之外增设了一个管理区，A类写好之后放进管理区里，B类要用A类的时候就去找管理区，管理区自动为B类分配。</p>
-<p>知乎上有个哥们挺逗的，他这么形容Spring实现IoC的过程：</p>
-<blockquote>
-<p>农业社会中，你需要一个对象，你必须亲手把它 new 出来。 </p>
-<p>工业社会中，你需要一个对象，可以去工厂那里获取。 </p>
-<p>共产主义社会中，你需要一个对象，只需要凭 ID 去对象池里面领。 </p>
-<p>这是何等的共产主义精神！</p>
-</blockquote>
-<p>让Spring这么一处理，对于B类而言，原来是自己主动获取A类，现在是需要的时候管理区自动给我（用术语来说，这一步叫做<code>注入</code>），原来A类相关的代码都是自己管理，现在交给管理区去管理。这就叫做“降低了代码之间的耦合性”。</p>
-<p>这个管理区叫做<code>IoC容器</code>，容器（Container）是编程里面装东西的。</p>
-<p>好的，我们说的概念已经够多了，就说到这里吧。关于Spring实现IoC的具体过程，我们之后再说吧。</p>
-]]></content>
-      <tags>
-        <tag>Weekly Post</tag>
-        <tag>java</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>三层架构和MVC模式</title>
     <url>/2019/08/13/Software%20Architecture/</url>
     <content><![CDATA[<br>
@@ -257,6 +210,53 @@
 <p>听到了一声灾厄。</p>
 <p>不想写下去了，这一篇就写到这里吧。</p>
 <br>]]></content>
+      <tags>
+        <tag>Weekly Post</tag>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>IoC的引入</title>
+    <url>/2019/08/04/SpringIoC/</url>
+    <content><![CDATA[<br>
+
+<p>八月的第一周，我们来说IoC</p>
+<p>IoC是Spring框架的核心思想其一，原理不算复杂。</p>
+<hr>
+<p>Spring家族是Java中风光无限的一族，几乎所有Java项目所使用的框架，都跟Spring家族有关。有一些介绍中说，Spring框架是一种全栈式框架（或者是一站式框架），全栈（Full-stack）的意思就是说，编程里能干的所有活，它一家可以全包了，一条龙服务，可以应用于一切场景。</p>
+<p>Spring在2004年发布了1.0版本。创建Spring的那哥们叫Rod Johnson，他自己写了本书，说当时的主流框架EJB可以换个思路写代码，后来觉得不痛快，就又写了一本书，说我们干脆换个框架算了，于是就有了Spring。说起来这哥们也是个神人，他本科计算机专业毕业的，然后读了个音乐博士。</p>
+<p>Spring现在那么盛行，几乎所有公司都在用Spring框架，倒不是因为技术、架构这些，而是跟思想有关。一说思想这个词，一般事情就变得玄妙了起来，简单点说呢，用Spring这套模式写代码，写起来感觉得心应手，少了很多麻烦，写着写着代码冥冥之中感觉很轻便，这就是因为Spring在思想上很先进。Spring的核心思想有两种，一种是IoC，一种是AOP，我们今天说前面那个IoC。</p>
+<hr>
+<p>IoC的全称是Inversion of Control，翻译过来叫控制反转。这并不是一个见名知意的名词，首先要解释一下这个概念。</p>
+<p>好比我现在要制造一辆汽车，从无到有一步一步地建造。</p>
+<p>首先我要先制造出汽车底盘，根据底盘的大小来确定汽车的外壳有多大。如果我建造了一个5米长的底盘，我不可能再建造一个10米长的汽车外壳，装不上去呀。所以你发现了，汽车外壳必须要根据汽车底盘来制造，这也就是汽车外壳依赖于汽车底盘，换句话说，我们造外壳的时候，是被底盘牵着鼻子走的。</p>
+<p>对于有设计欲望的汽车制造师来讲，这很让人不爽，明明我要大显身手地去设计汽车外壳，让自己的车外观上十分拉风，结果却要根据汽车底盘来设计，这不行。因此我们找到了一家汽车零件厂，我就先造外壳，造完之后需要多大的底盘，去找汽车零件厂给我提供。让汽车制造师一番折腾，现在可以直接造汽车外壳，然后再管汽车底盘了。汽车底盘反依赖于汽车外壳，也就是说，底盘被外壳牵着鼻子走了。</p>
+<p>我们要讨论的IoC控制反转，这里的控制，其实说的就是谁牵着谁鼻子走。按照原先的理解，A是B的底层，A要控制B；现在B先行，A跟着B走，B反而控制A了，这就是控制反转。</p>
+<p>你应该感受到了，Ioc并不是什么具体的技术，而是一种思想，或者更确切地说是一种设计模式。</p>
+<hr>
+<p>我们说了半天控制反转，怎么控制的，怎么反转的，都快绕晕了。其实谁控制谁根本就不重要，不管是A控制B还是B控制A，也没什么区别，反转了又能怎么样嘛。</p>
+<p>关键是在于，原来A控制B，那是一点点往上搭积木，A也得搭，B也得搭。控制反转之后，现在B还是要做，但是A怎么来的，我们就不管了。</p>
+<p>就像是刚才举的造汽车的例子，原来汽车是怎么造的，先造底盘，再造外壳，一步一步地很是繁琐，约束还多。后来我们只造外壳，那底盘呢，底盘让汽车零件厂造去了，我们不造了。怎么来的我也不管，反正到时候你给我就行了。</p>
+<p>你说是不是省很多事？</p>
+<p>总结一下，IoC思想有两点好处：</p>
+<ul>
+<li>其一，再也不用写一大堆的初始化代码了，这些扔给别人去做。</li>
+<li>其二（这个更重要），我们把代码松绑了，原本紧密依赖的两部分如今拆开了，用祖师爷的话说就是“降低了耦合度”。</li>
+</ul>
+<hr>
+<p>我们再来聊Spring。</p>
+<p>Spring框架实现IoC主要是这样子的，它在A类和B类之外增设了一个管理区，A类写好之后放进管理区里，B类要用A类的时候就去找管理区，管理区自动为B类分配。</p>
+<p>知乎上有个哥们挺逗的，他这么形容Spring实现IoC的过程：</p>
+<blockquote>
+<p>农业社会中，你需要一个对象，你必须亲手把它 new 出来。 </p>
+<p>工业社会中，你需要一个对象，可以去工厂那里获取。 </p>
+<p>共产主义社会中，你需要一个对象，只需要凭 ID 去对象池里面领。 </p>
+<p>这是何等的共产主义精神！</p>
+</blockquote>
+<p>让Spring这么一处理，对于B类而言，原来是自己主动获取A类，现在是需要的时候管理区自动给我（用术语来说，这一步叫做<code>注入</code>），原来A类相关的代码都是自己管理，现在交给管理区去管理。这就叫做“降低了代码之间的耦合性”。</p>
+<p>这个管理区叫做<code>IoC容器</code>，容器（Container）是编程里面装东西的。</p>
+<p>好的，我们说的概念已经够多了，就说到这里吧。关于Spring实现IoC的具体过程，我们之后再说吧。</p>
+]]></content>
       <tags>
         <tag>Weekly Post</tag>
         <tag>java</tag>
@@ -869,101 +869,6 @@
       </tags>
   </entry>
   <entry>
-    <title>ThreadLocal</title>
-    <url>/2020/07/04/ThreadLocal/</url>
-    <content><![CDATA[<br>
-
-<p>七月的第一周，来学习 ThreadLocal。</p>
-<p>半年前我完全看不懂这个类，现在已经能看懂了。这几天刚开始看源码时，觉得这是个很精巧的小设计，后来又找资料，发现里面的知识很深，没我想的那么简单。</p>
-<p>我在学习 ThreadLocal 时，看到两个很好视频，安利一下。一个是《<a href="https://www.bilibili.com/video/av82079309" target="_blank" rel="noopener">【java】什么是<em>ThreadLocal</em>？</a>》（短小紧凑，科普向，但是结尾有关弱引用的结论是错的，瑕不掩瑜，记得看评论区），另一个是《<a href="https://www.bilibili.com/video/av327891068" target="_blank" rel="noopener">只有马士兵老师能把ThreadLocal底层原理、内存泄漏分析的这么测透</a>》（马士兵老师讲的，比较长，但是非常出色，看得我很 high）。</p>
-<hr>
-<p>ThreadLocal 类与<code>线程局部存储</code>（Thread Local Storage, TLS）的概念有关，意思是说对象是线程独有的：</p>
-<blockquote>
-<p>维基：对象的存储是在线程开始时分配，线程结束时回收，每个线程有该对象自己的实例。</p>
-</blockquote>
-<p>可以把 ThreadLocal 视为一个普通变量，他与普通的变量之间的区别在于，ThreadLocal 变量只属于某个线程。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String word1;</span><br><span class="line">ThreadLocal&lt;String&gt; word2 = <span class="keyword">new</span> ThreadLocal&lt;&gt;();</span><br><span class="line"></span><br><span class="line">word1 = <span class="string">"pz"</span>;</span><br><span class="line">word2.set(<span class="string">"pz"</span>);</span><br></pre></td></tr></table></figure>
-
-<p>例如上面的代码，声明了两个变量 word1 和 word2。这两个变量在使用时都是字符串，也都声明成是”pz”，但是前者 word1 在任何情况下都能获得，后者只有为它赋值的线程能获得，其他的线程都不能获得：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 对于刚才赋值的线程而言，s是"pz"，对于其他线程，s是null</span></span><br><span class="line">String s = word2.get();</span><br></pre></td></tr></table></figure>
-
-<p>线程局部存储，可以让某些信息在同一个线程中，实现上下文数据共享，比如一个线程先后执行多个方法，每个方法都需要 User 信息，那么可以定义一个 <code>ThreadLocal&lt;User&gt;</code>，每个线程都能获取到各自的 User。</p>
-<p>再举一个应对面试的 Spring 应用实例，在事务管理时（@Transactional），Spring 会把数据库连接或者 hibernate session 存储在 ThreadLocal 中，这样就可以在各个方法查询各张表时实现事务控制。</p>
-<h1 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h1><p>ThreadLocal 的实现原理，是让每个线程自己维护一张 map，key 是 threadLocal 对象，value 是实际想存储的内容。</p>
-<p>每个线程拿着 ThreadLocal 对象，把它作为 key，去自己独有的 map 里找到 key 对应的 value，由此实现了线程局部存储。</p>
-<p><img src="/assets/ThreadLocal.jpg" alt="ThreadLocal"></p>
-<p>直接来看 get() 方法：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> T <span class="title">get</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 获取当前线程</span></span><br><span class="line">    Thread t = Thread.currentThread();</span><br><span class="line">    <span class="comment">// 根据当前线程，获取map</span></span><br><span class="line">    ThreadLocalMap map = getMap(t);</span><br><span class="line">    <span class="comment">// 如果map不为空，去map里面找</span></span><br><span class="line">    <span class="keyword">if</span> (map != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 根据this（也就是本ThreadLocal对象），去map里面找到对应的entry</span></span><br><span class="line">        ThreadLocalMap.Entry e = map.getEntry(<span class="keyword">this</span>);</span><br><span class="line">        <span class="keyword">if</span> (e != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">            T result = (T)e.value;</span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果map为空，初始化map，并返回null</span></span><br><span class="line">    <span class="keyword">return</span> setInitialValue();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>基本逻辑很简单，获取当前线程，根据当前线程获取 map，在 map 里根据 ThreadLocal 对象找 entry，返回 entry 的 value。</p>
-<p>在这个主要流程里，我们还需要去扒：</p>
-<ol>
-<li>怎么根据当前线程获取 map</li>
-<li>怎么在 map 里根据 ThreadLocal 找到 entry</li>
-</ol>
-<p>第一个问题特别简单，map 就是 Thread 的一个成员变量，直接返回：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">ThreadLocalMap <span class="title">getMap</span><span class="params">(Thread t)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> t.threadLocals;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 再去看Thread类的源码，可以看到有一条成员变量：</span></span><br><span class="line">ThreadLocal.ThreadLocalMap threadLocals = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
-
-<p>第二个问题有点难，涉及到 map 的数据结构。</p>
-<p>先提一下 map 具体是什么，这里的 map 实际上就是一个数组（没有链表），这个数组里的每一个元素都是一个 Entry：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadLocalMap</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 这个table就是map背后的数组：存放entry的数组</span></span><br><span class="line">    <span class="keyword">private</span> Entry[] table;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 这就是数组中一个个的元素</span></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">ThreadLocal</span>&lt;?&gt;&gt; </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Entry 涉及到弱引用，这个后面再提，先看怎么从 map 中找到 entry：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> Entry <span class="title">getEntry</span><span class="params">(ThreadLocal&lt;?&gt; key)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 根据ThreadLocal对象（即key）计算出数组下标</span></span><br><span class="line">    <span class="keyword">int</span> i = key.threadLocalHashCode &amp; (table.length - <span class="number">1</span>);</span><br><span class="line">    Entry e = table[i];</span><br><span class="line">    <span class="comment">// 如果数组下标内存的key能对上，那么就是</span></span><br><span class="line">    <span class="keyword">if</span> (e != <span class="keyword">null</span> &amp;&amp; e.get() == key)</span><br><span class="line">        <span class="keyword">return</span> e;</span><br><span class="line">    <span class="comment">// 如果key对不上，线性探测往后找</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> getEntryAfterMiss(key, i, e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>从整体上讲，这个 map 采用开放定址法，而不是拉链法，来解决哈希碰撞问题。</p>
-<p>这种算法的大致原理是，计算出哈希值，然后存入数组里相应的位置，如果这个位置已经存在元素了（哈希碰撞），那么查看下一个数组格子是否是空的，一直找，直到找到一个空的位置，然后存进去。取的时候也是一样，先计算出哈希值，然后找相应数组下标内的元素，如果 key 对上了就是，如果对不上，找下一个。</p>
-<p>关于使用开放定址法，存在两个疑问：为什么要使用它，而不是使用像 HashMap 一样的拉链法？使用这种需要优化什么？</p>
-<p>第一个问题涉及到弱引用，这个后面再提。</p>
-<p>第二个问题其实是在思考开放定址法的问题：如果每次计算出来的数组下标，距离靠得很近，那如果发生哈希碰撞，这个不对，找下一个，还不对，再找下一个，岂不是要找死？所以要让计算出来的数组下标，要分布尽可能地均匀。</p>
-<h1 id="特殊的-hash-算法"><a href="#特殊的-hash-算法" class="headerlink" title="特殊的 hash 算法"></a>特殊的 hash 算法</h1><p>ThreadLocal 计算数组，是通过内部的一个数字计算的，这个数字很奇特，每个 ThreadLocal 的数字都不一样，但是它们都是一个公共数字 <code>HASH_INCREMENT</code> 的整数倍（会溢出，但是无所谓）。在程序启动之后，出现的第一个 ThreadLocal 对象内部的数字是 <code>HASH_INCREMENT</code>  的一倍，第二个 ThreadLocal 对象内部的数字是 <code>HASH_INCREMENT</code>  的两倍，以此类推，第 n 个 ThreadLocal 对象内部的数字是 <code>HASH_INCREMENT</code>  的 n 倍。</p>
-<p>每个 ThreadLocal 对象内部的那个数字是 <code>threadLocalHashCode</code>（见名知意，就是 hash 值），而以 <code>HASH_INCREMENT</code> 为基的这个数字，大小初看很奇怪：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> HASH_INCREMENT = <span class="number">0x61c88647</span>;</span><br></pre></td></tr></table></figure>
-
-<p>这个数字用十进制表示是 1640531527，它是 2^32 的黄金分割数，也就是 (2^32)/0.618。使用这个数字的整数倍，能计算得出很均匀的 map 下标（前提 map 的长度是 2 的幂）。具体的计算步骤是，获取 ThreadLocal 内部的那个数字（<code>threadLocalHashCode</code>），然后对 map 的长度 -1 取模，计算出一个不超过 map 长度的数字，这个数字就是数组的下标。</p>
-<p>举个例子，0 - 31 这 32 个数字分别与 <code>0x61c88647</code> 相乘，然后再对 31 （0b11111）取模，依旧能获得 32 个不同的数字：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> HASH_INCREMENT = <span class="number">0x61c88647</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">32</span>; i++) &#123;</span><br><span class="line">    System.out.print((i * HASH_INCREMENT &amp; <span class="number">0b11111</span>) + <span class="string">" "</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 控制台打印结果：0 7 14 21 28 3 10 17 24 31 6 13 20 27 2 9 16 23 30 5 12 19 26 1 8 15 22 29 4 11 18 25</span></span><br></pre></td></tr></table></figure>
-
-<p>当数组长度是 2 的幂时，都可以做到如此均匀，虽然我不知道为什么（试着找了一些文章，但是看不懂hhh），但是觉得好牛x啊。</p>
-<p>下图来源自文章<a href="https://web.archive.org/web/20161121124236/http://brpreiss.com/books/opus4/html/page214.html" target="_blank" rel="noopener">《Fibonacci Hashing》</a>，感受一下分布均匀度。</p>
-<p><img src="/assets/image-20200704140058476.png" alt="连续分布"></p>
-<p>有关 ThreadLocal 的 hash 算法就写到这里，然后我们来看 map 中的每一个元素：Entry。</p>
-<h1 id="Entry-与弱引用"><a href="#Entry-与弱引用" class="headerlink" title="Entry 与弱引用"></a>Entry 与弱引用</h1><p>这是 Entry 的源码：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">ThreadLocal</span>&lt;?&gt;&gt; </span>&#123;</span><br><span class="line">    Object value;</span><br><span class="line"></span><br><span class="line">    Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">        <span class="keyword">super</span>(k);</span><br><span class="line">        value = v;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>它实际上就是 key-value 键值对，跟其他任何 map 里的设计都是一样的，有 key，也有 value。</p>
-<p>它的 key，是 ThreadLocal 对象（尽管看源码有点懵），它的 value，就是线程局部存储的值，例如下面这两行代码：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ThreadLocal&lt;String&gt; threadLocal = <span class="keyword">new</span> ThreadLocal&lt;&gt;();</span><br><span class="line">threadLocal.set(<span class="string">"pz"</span>);</span><br></pre></td></tr></table></figure>
-
-<p>执行 set 方法的那个线程，它内部的 map 里的某一个格子，就是一个 Entry，这个 Entry 的 key 就是 threadlocal 对象，它的 value 是 “pz”。</p>
-<p>Entry 源码里面看到了 value，但是没有看到 key，key 是通过 WeakReference（弱引用）来实现的。</p>
-<p>弱引用是 JDK 1.2 出现的，这个概念跟 Java 虚拟机有关。弱引用是引用的一种，引用总共有四种，，我简单列一下：</p>
-<ul>
-<li>强引用（Strong Reference）：正常引用，根据垃圾回收算法，当这个引用存在时，就无法对引用对象进行 GC（如果根可达的话）</li>
-<li>软引用（Soft Reference）：能够获取到引用对象，当发生 FGC 时，会回收引用对象，应用在缓存等。</li>
-<li>弱引用（Weak Reference）：能够获取到引用对象，当发生 GC 时，会回收引用对象，应用在 ThreadLocal 等。</li>
-<li>虚引用（Phantom Reference）：不能获取到引用对象，作用是当引用对象被 GC 时，虚引用会获得一个系统通知，应用场景跟一般的代码无关。</li>
-</ul>
-<p>上面写的引用，我只是简单一写，想理解的话去看《深入理解 Java 虚拟机》讲垃圾回收的部分，或是最开始提到的马士兵老师的视频，都讲得很好。</p>
-<p>话说回来，继续看弱引用，看下面这两行代码：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">WeakReference&lt;String&gt; r = <span class="keyword">new</span> WeakReference&lt;&gt;(<span class="string">"pz"</span>);</span><br><span class="line">r.get();</span><br></pre></td></tr></table></figure>
-
-<p>上面创建了一个弱引用 WeakReference 对象 r，它引用到了一个字符串 “pz”，如果没有发生垃圾回收，那么可以通过 <code>r.get()</code> 方法获取到 “pz”，但如果发生了垃圾回收，这个虚引用并不会影响到字符串 “pz” 的回收，如果它真被回收了，那么执行 <code>r.get()</code> 方法将会获得 null。</p>
-<p>因此再回去看 Entry 源码，发现 Entry 继承自 WeakReference，它可以通过虚引用获取到 ThreadLocal 对象，比如创建一个 Entry 对象（当然由于 private，下面的代码是实现不了的hh）：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Entry entry = <span class="keyword">new</span> Entry(threadLocal, <span class="string">"pz"</span>);</span><br><span class="line">entry.get(); <span class="comment">// ---&gt; 能拿到threadLocal，即key</span></span><br><span class="line">entry.value; <span class="comment">// ---&gt; 能拿到"pz"，即value</span></span><br></pre></td></tr></table></figure>
-
-<p>如此可以看出，Entry 实际上就是 key-value 键值对，从 hash 开放定址法上来说，应该是没问题了，逻辑闭环了，但是有另一个问题：为什么要使用弱引用？</p>
-<p>这主要与垃圾回收有关：如果 Entry 通过正常的引用关联 ThreadLocal 对象，那么如果线程不死，map 不清，由于强引用关系，ThreadLocal 对象就永远也不能被垃圾回收，这样即使某些 ThreadLocal 用不上了，它仍然不会被清理掉，造成内存泄漏。</p>
-<p>（这里我还是有点疑惑，真的有这种内存泄漏的场景吗）</p>
-<br>
-
-<p>本来还想学点数据库事务的 ThreadLocal 原理的，但是写了这么多字懒了，告辞。</p>
-]]></content>
-      <tags>
-        <tag>Weekly Post</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Spring Webflux 入门</title>
     <url>/2020/06/30/Spring-Webflux/</url>
     <content><![CDATA[<br>
@@ -1306,6 +1211,243 @@
       </tags>
   </entry>
   <entry>
+    <title>ThreadLocal</title>
+    <url>/2020/07/04/ThreadLocal/</url>
+    <content><![CDATA[<br>
+
+<p>七月的第一周，来学习 ThreadLocal。</p>
+<p>半年前我完全看不懂这个类，现在已经能看懂了。这几天刚开始看源码时，觉得这是个很精巧的小设计，后来又找资料，发现里面的知识很深，没我想的那么简单。</p>
+<p>我在学习 ThreadLocal 时，看到两个很好视频，安利一下。一个是《<a href="https://www.bilibili.com/video/av82079309" target="_blank" rel="noopener">【java】什么是<em>ThreadLocal</em>？</a>》（短小紧凑，科普向，但是结尾有关弱引用的结论是错的，瑕不掩瑜，记得看评论区），另一个是《<a href="https://www.bilibili.com/video/av327891068" target="_blank" rel="noopener">只有马士兵老师能把ThreadLocal底层原理、内存泄漏分析的这么测透</a>》（马士兵老师讲的，比较长，但是非常出色，看得我很 high）。</p>
+<hr>
+<p>ThreadLocal 类与<code>线程局部存储</code>（Thread Local Storage, TLS）的概念有关，意思是说对象是线程独有的：</p>
+<blockquote>
+<p>维基：对象的存储是在线程开始时分配，线程结束时回收，每个线程有该对象自己的实例。</p>
+</blockquote>
+<p>可以把 ThreadLocal 视为一个普通变量，他与普通的变量之间的区别在于，ThreadLocal 变量只属于某个线程。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String word1;</span><br><span class="line">ThreadLocal&lt;String&gt; word2 = <span class="keyword">new</span> ThreadLocal&lt;&gt;();</span><br><span class="line"></span><br><span class="line">word1 = <span class="string">"pz"</span>;</span><br><span class="line">word2.set(<span class="string">"pz"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>例如上面的代码，声明了两个变量 word1 和 word2。这两个变量在使用时都是字符串，也都声明成是”pz”，但是前者 word1 在任何情况下都能获得，后者只有为它赋值的线程能获得，其他的线程都不能获得：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 对于刚才赋值的线程而言，s是"pz"，对于其他线程，s是null</span></span><br><span class="line">String s = word2.get();</span><br></pre></td></tr></table></figure>
+
+<p>线程局部存储，可以让某些信息在同一个线程中，实现上下文数据共享，比如一个线程先后执行多个方法，每个方法都需要 User 信息，那么可以定义一个 <code>ThreadLocal&lt;User&gt;</code>，每个线程都能获取到各自的 User。</p>
+<p>再举一个应对面试的 Spring 应用实例，在事务管理时（@Transactional），Spring 会把数据库连接或者 hibernate session 存储在 ThreadLocal 中，这样就可以在各个方法查询各张表时实现事务控制。</p>
+<h1 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h1><p>ThreadLocal 的实现原理，是让每个线程自己维护一张 map，key 是 threadLocal 对象，value 是实际想存储的内容。</p>
+<p>每个线程拿着 ThreadLocal 对象，把它作为 key，去自己独有的 map 里找到 key 对应的 value，由此实现了线程局部存储。</p>
+<p><img src="/assets/ThreadLocal.jpg" alt="ThreadLocal"></p>
+<p>直接来看 get() 方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> T <span class="title">get</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 获取当前线程</span></span><br><span class="line">    Thread t = Thread.currentThread();</span><br><span class="line">    <span class="comment">// 根据当前线程，获取map</span></span><br><span class="line">    ThreadLocalMap map = getMap(t);</span><br><span class="line">    <span class="comment">// 如果map不为空，去map里面找</span></span><br><span class="line">    <span class="keyword">if</span> (map != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 根据this（也就是本ThreadLocal对象），去map里面找到对应的entry</span></span><br><span class="line">        ThreadLocalMap.Entry e = map.getEntry(<span class="keyword">this</span>);</span><br><span class="line">        <span class="keyword">if</span> (e != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">            T result = (T)e.value;</span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果map为空，初始化map，并返回null</span></span><br><span class="line">    <span class="keyword">return</span> setInitialValue();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>基本逻辑很简单，获取当前线程，根据当前线程获取 map，在 map 里根据 ThreadLocal 对象找 entry，返回 entry 的 value。</p>
+<p>在这个主要流程里，我们还需要去扒：</p>
+<ol>
+<li>怎么根据当前线程获取 map</li>
+<li>怎么在 map 里根据 ThreadLocal 找到 entry</li>
+</ol>
+<p>第一个问题特别简单，map 就是 Thread 的一个成员变量，直接返回：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">ThreadLocalMap <span class="title">getMap</span><span class="params">(Thread t)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> t.threadLocals;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 再去看Thread类的源码，可以看到有一条成员变量：</span></span><br><span class="line">ThreadLocal.ThreadLocalMap threadLocals = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+
+<p>第二个问题有点难，涉及到 map 的数据结构。</p>
+<p>先提一下 map 具体是什么，这里的 map 实际上就是一个数组（没有链表），这个数组里的每一个元素都是一个 Entry：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadLocalMap</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 这个table就是map背后的数组：存放entry的数组</span></span><br><span class="line">    <span class="keyword">private</span> Entry[] table;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 这就是数组中一个个的元素</span></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">ThreadLocal</span>&lt;?&gt;&gt; </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Entry 涉及到弱引用，这个后面再提，先看怎么从 map 中找到 entry：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> Entry <span class="title">getEntry</span><span class="params">(ThreadLocal&lt;?&gt; key)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 根据ThreadLocal对象（即key）计算出数组下标</span></span><br><span class="line">    <span class="keyword">int</span> i = key.threadLocalHashCode &amp; (table.length - <span class="number">1</span>);</span><br><span class="line">    Entry e = table[i];</span><br><span class="line">    <span class="comment">// 如果数组下标内存的key能对上，那么就是</span></span><br><span class="line">    <span class="keyword">if</span> (e != <span class="keyword">null</span> &amp;&amp; e.get() == key)</span><br><span class="line">        <span class="keyword">return</span> e;</span><br><span class="line">    <span class="comment">// 如果key对不上，线性探测往后找</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> getEntryAfterMiss(key, i, e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从整体上讲，这个 map 采用开放定址法，而不是拉链法，来解决哈希碰撞问题。</p>
+<p>这种算法的大致原理是，计算出哈希值，然后存入数组里相应的位置，如果这个位置已经存在元素了（哈希碰撞），那么查看下一个数组格子是否是空的，一直找，直到找到一个空的位置，然后存进去。取的时候也是一样，先计算出哈希值，然后找相应数组下标内的元素，如果 key 对上了就是，如果对不上，找下一个。</p>
+<p>关于使用开放定址法，存在两个疑问：为什么要使用它，而不是使用像 HashMap 一样的拉链法？使用这种需要优化什么？</p>
+<p>第一个问题涉及到弱引用，这个后面再提。</p>
+<p>第二个问题其实是在思考开放定址法的问题：如果每次计算出来的数组下标，距离靠得很近，那如果发生哈希碰撞，这个不对，找下一个，还不对，再找下一个，岂不是要找死？所以要让计算出来的数组下标，要分布尽可能地均匀。</p>
+<h1 id="特殊的-hash-算法"><a href="#特殊的-hash-算法" class="headerlink" title="特殊的 hash 算法"></a>特殊的 hash 算法</h1><p>ThreadLocal 计算数组，是通过内部的一个数字计算的，这个数字很奇特，每个 ThreadLocal 的数字都不一样，但是它们都是一个公共数字 <code>HASH_INCREMENT</code> 的整数倍（会溢出，但是无所谓）。在程序启动之后，出现的第一个 ThreadLocal 对象内部的数字是 <code>HASH_INCREMENT</code>  的一倍，第二个 ThreadLocal 对象内部的数字是 <code>HASH_INCREMENT</code>  的两倍，以此类推，第 n 个 ThreadLocal 对象内部的数字是 <code>HASH_INCREMENT</code>  的 n 倍。</p>
+<p>每个 ThreadLocal 对象内部的那个数字是 <code>threadLocalHashCode</code>（见名知意，就是 hash 值），而以 <code>HASH_INCREMENT</code> 为基的这个数字，大小初看很奇怪：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> HASH_INCREMENT = <span class="number">0x61c88647</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这个数字用十进制表示是 1640531527，它是 2^32 的黄金分割数，也就是 (2^32)/0.618。使用这个数字的整数倍，能计算得出很均匀的 map 下标（前提 map 的长度是 2 的幂）。具体的计算步骤是，获取 ThreadLocal 内部的那个数字（<code>threadLocalHashCode</code>），然后对 map 的长度 -1 取模，计算出一个不超过 map 长度的数字，这个数字就是数组的下标。</p>
+<p>举个例子，0 - 31 这 32 个数字分别与 <code>0x61c88647</code> 相乘，然后再对 31 （0b11111）取模，依旧能获得 32 个不同的数字：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> HASH_INCREMENT = <span class="number">0x61c88647</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">32</span>; i++) &#123;</span><br><span class="line">    System.out.print((i * HASH_INCREMENT &amp; <span class="number">0b11111</span>) + <span class="string">" "</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 控制台打印结果：0 7 14 21 28 3 10 17 24 31 6 13 20 27 2 9 16 23 30 5 12 19 26 1 8 15 22 29 4 11 18 25</span></span><br></pre></td></tr></table></figure>
+
+<p>当数组长度是 2 的幂时，都可以做到如此均匀，虽然我不知道为什么（试着找了一些文章，但是看不懂hhh），但是觉得好牛x啊。</p>
+<p>下图来源自文章<a href="https://web.archive.org/web/20161121124236/http://brpreiss.com/books/opus4/html/page214.html" target="_blank" rel="noopener">《Fibonacci Hashing》</a>，感受一下分布均匀度。</p>
+<p><img src="/assets/image-20200704140058476.png" alt="连续分布"></p>
+<p>有关 ThreadLocal 的 hash 算法就写到这里，然后我们来看 map 中的每一个元素：Entry。</p>
+<h1 id="Entry-与弱引用"><a href="#Entry-与弱引用" class="headerlink" title="Entry 与弱引用"></a>Entry 与弱引用</h1><p>这是 Entry 的源码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">ThreadLocal</span>&lt;?&gt;&gt; </span>&#123;</span><br><span class="line">    Object value;</span><br><span class="line"></span><br><span class="line">    Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">        <span class="keyword">super</span>(k);</span><br><span class="line">        value = v;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它实际上就是 key-value 键值对，跟其他任何 map 里的设计都是一样的，有 key，也有 value。</p>
+<p>它的 key，是 ThreadLocal 对象（尽管看源码有点懵），它的 value，就是线程局部存储的值，例如下面这两行代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ThreadLocal&lt;String&gt; threadLocal = <span class="keyword">new</span> ThreadLocal&lt;&gt;();</span><br><span class="line">threadLocal.set(<span class="string">"pz"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>执行 set 方法的那个线程，它内部的 map 里的某一个格子，就是一个 Entry，这个 Entry 的 key 就是 threadlocal 对象，它的 value 是 “pz”。</p>
+<p>Entry 源码里面看到了 value，但是没有看到 key，key 是通过 WeakReference（弱引用）来实现的。</p>
+<p>弱引用是 JDK 1.2 出现的，这个概念跟 Java 虚拟机有关。弱引用是引用的一种，引用总共有四种，，我简单列一下：</p>
+<ul>
+<li>强引用（Strong Reference）：正常引用，根据垃圾回收算法，当这个引用存在时，就无法对引用对象进行 GC（如果根可达的话）</li>
+<li>软引用（Soft Reference）：能够获取到引用对象，当发生 FGC 时，会回收引用对象，应用在缓存等。</li>
+<li>弱引用（Weak Reference）：能够获取到引用对象，当发生 GC 时，会回收引用对象，应用在 ThreadLocal 等。</li>
+<li>虚引用（Phantom Reference）：不能获取到引用对象，作用是当引用对象被 GC 时，虚引用会获得一个系统通知，应用场景跟一般的代码无关。</li>
+</ul>
+<p>上面写的引用，我只是简单一写，想理解的话去看《深入理解 Java 虚拟机》讲垃圾回收的部分，或是最开始提到的马士兵老师的视频，都讲得很好。</p>
+<p>话说回来，继续看弱引用，看下面这两行代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">WeakReference&lt;String&gt; r = <span class="keyword">new</span> WeakReference&lt;&gt;(<span class="string">"pz"</span>);</span><br><span class="line">r.get();</span><br></pre></td></tr></table></figure>
+
+<p>上面创建了一个弱引用 WeakReference 对象 r，它引用到了一个字符串 “pz”，如果没有发生垃圾回收，那么可以通过 <code>r.get()</code> 方法获取到 “pz”，但如果发生了垃圾回收，这个虚引用并不会影响到字符串 “pz” 的回收，如果它真被回收了，那么执行 <code>r.get()</code> 方法将会获得 null。</p>
+<p>因此再回去看 Entry 源码，发现 Entry 继承自 WeakReference，它可以通过虚引用获取到 ThreadLocal 对象，比如创建一个 Entry 对象（当然由于 private，下面的代码是实现不了的hh）：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Entry entry = <span class="keyword">new</span> Entry(threadLocal, <span class="string">"pz"</span>);</span><br><span class="line">entry.get(); <span class="comment">// ---&gt; 能拿到threadLocal，即key</span></span><br><span class="line">entry.value; <span class="comment">// ---&gt; 能拿到"pz"，即value</span></span><br></pre></td></tr></table></figure>
+
+<p>如此可以看出，Entry 实际上就是 key-value 键值对，从 hash 开放定址法上来说，应该是没问题了，逻辑闭环了，但是有另一个问题：为什么要使用弱引用？</p>
+<p>这主要与垃圾回收有关：如果 Entry 通过正常的引用关联 ThreadLocal 对象，那么如果线程不死，map 不清，由于强引用关系，ThreadLocal 对象就永远也不能被垃圾回收，这样即使某些 ThreadLocal 用不上了，它仍然不会被清理掉，造成内存泄漏。</p>
+<p>（这里我还是有点疑惑，真的有这种内存泄漏的场景吗）</p>
+<br>
+
+<p>本来还想学点数据库事务的 ThreadLocal 原理的，但是写了这么多字懒了，告辞。</p>
+]]></content>
+      <tags>
+        <tag>Weekly Post</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>java 异常</title>
+    <url>/2019/08/22/java-exception/</url>
+    <content><![CDATA[<p>八月的第四周，来学习 Java 的异常处理机制。</p>
+<p>异常就是不正常，程序不能正常执行，中途遇到了的问题就是异常。这次来写异常分哪些情况，以及怎么处理异常。</p>
+<hr>
+<p>首先需要厘清的是，几乎所有介绍异常的总结贴，以及面试时对异常的提问，基本上说的都不光是异常，而是整个异常体系。</p>
+<p><img src="/assets/%E5%BC%82%E5%B8%B8%E4%BD%93%E7%B3%BB%EF%BC%88%E7%AE%80%E7%95%A5%EF%BC%89.png" alt="异常体系（简略）"></p>
+<p>看一下简图就很明白了：父类 Throwable 有两个子类，一个是 Error （错误），另一个才是 Exception （异常）。也就是说，异常体系说的不光是异常，还把他爸和他哥一起介绍了，一家包圆了。</p>
+<p>光从词语的表达上就能感受到，Error 和 Exception 的严重程度是不同的，Error （错误）是非常严重的事情，而 Exception （异常）是可以商量的事情。</p>
+<ul>
+<li>Error ：错误，指的是程序中很严重的问题，严重到 Java 虚拟机都无法处理，只能停止程序改bug。</li>
+<li>Exception ：异常，指的是程序中的轻度问题，程序运行时遇到了之后，处理一下还可以继续执行下去（当然了，一定要处理，不能随便放任不管）。</li>
+</ul>
+<p>上面那张图只是一张表示 Error 和 Exception 之间关系的图，实际上的异常体系还是比较庞大的，我找到了一张稍微全一些的体系图（<a href="https://juejin.im/post/5c863f48e51d45192c4a701f" target="_blank" rel="noopener">图片来源</a>）。</p>
+<p><img src="/assets/%E5%BC%82%E5%B8%B8%E4%BD%93%E7%B3%BB.jpg" alt="异常体系"></p>
+<p>现在你要注意到，上图中的所有东西，比如 <code>Error</code> ，比如 <code>Exception</code> ，比如 <code>Exception</code> 里的 <code>NullPointerException</code> ，不论是错误也好异常也罢，以上的所有东西，统统都是类。Java 作为一门面向对象的语言，已经连错误、异常这些东西，都封装起来看作是一种类了。上图中的所有东西都是类，都有继承关系，都有方法，都是当做一个个的封装起来的对象来处理的。</p>
+<h1 id="Error"><a href="#Error" class="headerlink" title="Error"></a>Error</h1><p>Error （错误）不是这周学习的重点，事实上其内容需要好几年 Java 实战的积累才能逐渐掌握，因为里面涉及到的具体情况都是偏硬件、偏底层的东西，比如 <code>OutOfMemoryError</code> （内存溢出错误类）。</p>
+<p>我们目前只需要知道，Java 虚拟机并不会处理 Error 类，也就是说编译器不会检查 Error 类，我们在做程序设计的时候，也不应该去尝试捕获 Error 类。</p>
+<h1 id="Exception"><a href="#Exception" class="headerlink" title="Exception"></a>Exception</h1><p>Exception （异常）是这周关注的重点。</p>
+<p>Exception 有许许多多的子类，其中一类 <code>RuntimeException</code> 即<code>运行时异常</code>，这个子类和其他子类有所不同，怎么不同的一会再说。总之 Exception 可以分成两类，一类叫做<code>运行时异常</code>，另一类叫做<code>非运行时异常</code>。</p>
+<p>怎么不同的呢？</p>
+<ul>
+<li><code>RuntimeException</code> 运行时异常，就是程序真的运行起来了，才能发现的异常。</li>
+<li>非运行时异常，意思是说，程序即使不运行，编译器都知道将会有异常发生。也就是说，你不处理这个异常，你就别想让程序运行起来。</li>
+</ul>
+<p>这两类异常的主要区别在于，一种程序可以先运行起来（遇到了再报错），一种程序上来就无法运行（不用遇到了，直接报错）。</p>
+<p>再换句话说，一种可以通过编译器的检查，一种无法通过编译器的检查。</p>
+<p>如果从编译器检查的角度来看这两类异常，那么运行时异常（ RuntimeException ），因为可以逃避编译器的检查，因此可以被称为非检查性异常；而其他异常（也就是非运行时异常）逃不过编译器的检查，因此可以被称为检查性异常。</p>
+<p>所以异常可以换一种分类方式：<code>检查性异常</code>、<code>非检查性异常</code>。这一种分类方式是更被普遍提到的，虽然它所指的其实就是运行时和非运行时，只是看待的角度不同。（现在建议你再去看一看上面的图，再理解一下分类）</p>
+<ol>
+<li><p>非检查性异常/运行时异常</p>
+<p>属于这一类的异常中，较为常见的有：</p>
+<ul>
+<li><code>NullPointerException</code> 空指针异常</li>
+<li><code>ArithmeticException</code> 算术异常（比如 5 除以 0 ）</li>
+<li><code>ClassCastException</code>  类型转换异常</li>
+<li><code>IndexOutOfBoundsException</code> 数组越界异常</li>
+<li><code>ArrayStoreException</code> 数据存储异常（数组存储时数据类型不一致）</li>
+</ul>
+</li>
+<li><p>检查性异常/非运行时异常</p>
+<p>属于这一类异常中，较为常见的有：</p>
+<ul>
+<li><code>IOException</code> 输入输出异常</li>
+<li><code>FileNotFoundException</code> 文件不存在异常（继承自 <code>IOException</code> ）</li>
+<li><code>SQLException</code> SQL 语句异常</li>
+<li><code>InterruptedException</code> 中断异常</li>
+</ul>
+</li>
+</ol>
+<hr>
+<p>现在来学习，如果遇到了异常（ Exception ），怎么处理异常。</p>
+<p>准确的说应该是，我怀疑某个地方要出现异常，我怎么提前处理这个地方，让它在程序运行之后真的遇到了异常时，仍然能在处理之后继续运行程序。</p>
+<p>要注意的是，检查性异常是一定要进行处理的，不处理程序都无法运行（因为编译器直接报错），而非检查性异常和没有异常的地方（比如合理怀疑某段代码有问题），也是可以进行异常处理的。异常处理并不是只针对于异常的，而是在一切场景之下，只要我怀疑存在异常，都可以去做异常处理（大不了没碰上呗）。</p>
+<p>Java 有两种异常处理方案，分别是<code>就地解决</code>（ try / catch / finally 语句）和<code>异地正法</code>（ throws ）。</p>
+<h1 id="就地解决"><a href="#就地解决" class="headerlink" title="就地解决"></a>就地解决</h1><p>现在我遇到一段可能存在异常的代码，打算当场解决掉它。</p>
+<p>下面这几行代码就是就地解决异常的处理方式。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 可能存在异常</span></span><br><span class="line">    ...</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    <span class="comment">// 如果遇到了异常，那就执行这段代码</span></span><br><span class="line">    ...</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    <span class="comment">// 不论有没有遇到异常，都执行这段代码</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>有三个关键字：</p>
+<ul>
+<li><code>try</code> 大括号里放【可能存在异常的代码】，表示“这段代码可能有异常，我们来试试看”。</li>
+<li><code>catch</code> 小括号里放【异常的类型】，大括号里放【处理异常的代码】，表示“我发现了XX异常，我要这么去处理它”。</li>
+<li><code>finally</code> 大括号里放【不论如何都会执行的代码】，表示“我管你遇不遇得到异常，全都给我执行这段代码”。</li>
+</ul>
+<p>还是举一个具体的例子吧。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">int</span> number = <span class="number">1</span>/<span class="number">0</span>;</span><br><span class="line">&#125; <span class="keyword">catch</span> (ArithmeticException e) &#123;</span><br><span class="line">    System.out.println(<span class="string">"发现了算术异常"</span>);</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">"不论如何，都给我执行这段代码"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 最终会在控制台上打印两句话：</span></span><br><span class="line"><span class="comment">// 发现了算术异常</span></span><br><span class="line"><span class="comment">// 不论如何，都给我执行这段代码</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>程序进入 <code>try{}</code> 语句块中，执行了 <code>int number = 1/0;</code> 这行代码，因为 0 不能作为被除数，所以出现了异常。</li>
+<li>通过 <code>catch(){}</code> 语句块捕捉到了 <code>ArithmeticException</code> （算术异常），你应该注意到了，小括号里放的就是这一异常的类型，如果放的是别的异常的话，那么会捕捉不到的。大括号里表示，捕捉到这一异常之后，要执行的操作，在这里是在控制台打印了一句话：“发现了算术异常”。</li>
+<li><code>finally{}</code> 语句块是程序无论如何都会执行的部分，即使是没有异常也会执行。在这里发生了算数异常，打印了一句话：“不论如何，都给我执行这段代码”。其实如果没有发生异常的话，也会把这句话打印出来的。</li>
+</ol>
+<h1 id="异地正法"><a href="#异地正法" class="headerlink" title="异地正法"></a>异地正法</h1><p>有时我们并不想在异常出现的地方就去处理它，那么可以把异常<code>抛出去</code>。</p>
+<p>抛出去（throw）又是一个翻译过来的词，在英文环境中这个词很生动，但是在汉语环境中就并不如此。我们经常听到<code>抛异常</code>这三个字，意思就是把异常给“抛”出去，不立即处理，而是在其他地方去处理。</p>
+<p>比如现在有<code>方法 A</code>，<code>方法 A</code> 调用了<code>方法 B</code> ，<code>方法 B</code> 的内部出现了异常，现在就有两种解决方案：</p>
+<ol>
+<li><code>方法 B</code> 自己处理异常，也就是刚才说的“就地正法”。</li>
+<li><code>方法 B</code> 不去解决，而是“抛”给<code>方法 A</code> 去解决。</li>
+</ol>
+<p>为什么不当场解决，而是抛出去让其他地方去解决，原因可能有很多，比如另一个地方拿到异常对象能做更多事情，比如程序员懒想拖到其他地方再说，等等。</p>
+<p><code>抛异常</code>的动作很简单，只需要在方法名的后面（注意，不是在异常发生的原地，而是在异常发生所在的方法，那个方法的名字的位置处），加上 <code>throws XXXException</code> 就可以了。</p>
+<p>举个栗子吧：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">test</span><span class="params">()</span> <span class="keyword">throws</span> ArithmeticException </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> number = <span class="number">1</span> / <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> number;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里定义了一个只有两行代码的方法（方法名叫 <code>test</code>），第一行是让 <code>number = 1/0</code> （很明显出现了算术异常），第二行返回 <code>number</code> 。我并没有在异常出现的原地去处理，而是在方法名的后面，加上了 <code>throws ArithmeticException</code> ，表示抛出去了一个算术异常。之后哪里调用了这个方法，就必须去处理这个异常（或者继续抛出去）。</p>
+<p>你注意，这里说的抛异常，是我们遇到了异常之后，把遇到的这个异常抛出去，而且是在方法名旁边去抛的，意思是说“每当你调用这个方法的时候，都要注意，这个方法里面有个异常要处理”。但是还有一种抛异常的方法，就是可以在随便一个地方，手动地抛出去一个异常。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">throw</span> <span class="keyword">new</span> ArithmeticException();</span><br></pre></td></tr></table></figure>
+
+<p>比如这个样子，我手动地把一个新实例化出来的算术异常抛出去了。</p>
+<p>在方法名旁边写的那个，是 <code>throws</code> ，而手动在随便一个地方抛出去的，是 <code>throw</code> 。</p>
+<hr>
+<p>剩下的部分太过零碎，我就分条写，写到哪里算哪里好了。</p>
+<h1 id="1-finally-语句块"><a href="#1-finally-语句块" class="headerlink" title="1.finally 语句块"></a>1.<code>finally</code> 语句块</h1><p>在捕获异常当场解决的地方，我们使用了 try / catch / finally 语句，其中 <code>finally{}</code> 语句块是“无论如何都会执行的代码”。</p>
+<p>这里的无论如何，真的就是无论如何，它保证了程序一定会执行这部分代码，不管发不发生异常都会执行，而且不管 <code>try{}</code> 语句块中写了什么，也都会执行。</p>
+<p>注意：即使是 <code>try{}</code> 语句块中写了返回语句 <code>return xxx;</code> ，你感觉程序走到这里就停止了，其实并不是，这样也都会去执行 <code>finally{}</code> 语句块。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">int</span> number = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> number;</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">"finally 语句块执行了"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 最终会在控制台上打印两行：</span></span><br><span class="line"><span class="comment">// finally 语句块执行了</span></span><br><span class="line"><span class="comment">// 0</span></span><br></pre></td></tr></table></figure>
+
+<p>通过反编译可以发现，Java 在处理 <code>finally{}</code> 语句块时，是把它复制成两份，分别在 <code>try{}</code> 语句块和 <code>catch{}</code> 语句块后面去执行一次的。</p>
+<p>而且如果 <code>finally{}</code> 语句块中写了返回语句 <code>return xxx;</code> ，将会执行这个返回语句，程序到此结束。</p>
+<h1 id="2-异常链"><a href="#2-异常链" class="headerlink" title="2.异常链"></a>2.异常链</h1><p>维基百科对于异常链的解释真是太令人舒服了，一眼看懂：</p>
+<blockquote>
+<p>异常链是一种面向对象编程技术，指将捕获的异常包装进一个新的异常中并重新抛出的异常处理方式。原异常被保存为新异常的一个属性（比如cause）。这个想法是指一个方法应该抛出定义在相同的抽象层次上的异常，但不会丢弃更低层次的信息。</p>
+</blockquote>
+<p>还是举一个例子吧：</p>
+<p><code>main</code> 方法调用 <code>test1</code> 方法，<code>test1</code> 方法调用 <code>test2</code> 方法。</p>
+<p>其中 <code>test2</code> 方法中抛一个异常， <code>test1</code> 方法会接到 <code>test2</code> 方法抛出的异常，包裹起来再抛一个新的异常。</p>
+<p>这样 <code>main</code> 方法中就会出现一个异常，这个异常里面还有一个异常（也就是接到一个包裹着异常的异常）。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 调用 test1 方法</span></span><br><span class="line">        <span class="keyword">int</span> num = test1();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 调用 test2 方法，抛一个新的异常</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">test1</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> num = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            num = test2();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"这里是test1的异常"</span>,e);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> num;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// test2 方法中抛一个异常</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">test2</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">"这里是test2的异常"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>控制台的打印信息如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">java.lang.Exception: 这里是test2的异常</span><br><span class="line">	at testCode.Test.test2(Test.java:<span class="number">21</span>)</span><br><span class="line">	at testCode.Test.test1(Test.java:<span class="number">12</span>)</span><br><span class="line">	at testCode.Test.main(Test.java:<span class="number">6</span>)</span><br><span class="line">Exception in thread <span class="string">"main"</span> java.lang.RuntimeException: 这里是test1的异常</span><br><span class="line">	at testCode.Test.test1(Test.java:<span class="number">15</span>)</span><br><span class="line">	at testCode.Test.main(Test.java:<span class="number">6</span>)</span><br><span class="line">Caused by: java.lang.Exception: 这里是test2的异常</span><br><span class="line">	at testCode.Test.test2(Test.java:<span class="number">21</span>)</span><br><span class="line">	at testCode.Test.test1(Test.java:<span class="number">12</span>)</span><br><span class="line">	... <span class="number">1</span> more</span><br></pre></td></tr></table></figure>
+
+<p>这里就看到了异常链。</p>
+<h1 id="3-一个catch子句捕获多个异常"><a href="#3-一个catch子句捕获多个异常" class="headerlink" title="3.一个catch子句捕获多个异常"></a>3.一个catch子句捕获多个异常</h1><p><code>JDK1.7</code> 改进了 catch 子句的语法，允许在其中指定多种异常，每个异常类型之间使用“|”来分隔。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExceptionHandler</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handle</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//..............</span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (ExceptionA | ExceptionB ab) &#123; </span><br><span class="line">        &#125; <span class="keyword">catch</span> (ExceptionC c) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-异常抑制"><a href="#4-异常抑制" class="headerlink" title="4.异常抑制"></a>4.异常抑制</h1><p><code>JDK1.7</code> 中为 <code>Throwable类</code> 增加 <code>addSuppressed方法</code>和 <code>getSuppressed方法</code>。</p>
+<p>当一个异常被抛出的时候，可能有其他异常因为该异常而被抑制住，从而无法正常抛出。这时可以通过 <code>addSuppressed方法</code> 把这些被抑制的方法记录下来，被抑制的异常会出现在抛出的异常的堆栈信息中，可以通过 <code>getSuppressed方法</code> 获取到被抑制的异常。</p>
+<p>个人觉得没啥用，懒得写了。</p>
+<h1 id="5-try-with-resources"><a href="#5-try-with-resources" class="headerlink" title="5. try - with - resources"></a>5. try - with - resources</h1><p>同样还是 <code>JDK1.7</code> 增加的新特性。</p>
+<p>以前使用 <code>try / catch / finally</code> 语句块处理资源的时候，如果要关闭资源，需要在 <code>finally{}</code> 语句块中关闭，使用 <code>try - with - resources</code> 方式可以在 <code>try()</code> 的小括号里声明，Java 会自动关闭资源。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">BufferedReader br = <span class="keyword">new</span> BufferedReader(inputString);</span><br><span class="line"><span class="keyword">try</span> (BufferedReader br1 = br) &#123;</span><br><span class="line">    <span class="keyword">return</span> br1.readLine();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>JDK1.9</code> 更进一步， <code>try()</code> 的小括号里不需要声明了，声明过程在外面也可以。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">BufferedReader br = <span class="keyword">new</span> BufferedReader(inputString);</span><br><span class="line"><span class="keyword">try</span> (br) &#123;</span><br><span class="line">    <span class="keyword">return</span> br.readLine();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>try 后面小括号内的东西即为 resources ，resources 必须是实现 <code>java.lang.AutoCloseable</code> 或者 <code>java.io.Closeable</code> 接口的类（需要手动 close() 释放资源的）。</p>
+<h1 id="6-IDEA-的快捷操作"><a href="#6-IDEA-的快捷操作" class="headerlink" title="6.IDEA 的快捷操作"></a>6.IDEA 的快捷操作</h1><p>要是使用的Java开发工具是 IDEA 的话，那么如果想对某一句代码进行异常处理，可以在这句代码写完之后，敲上“ <code>.try</code> “这四个字符，再敲回车，就可以自动为这行代码加上 try / catch 语句了。</p>
+<p>例如这行代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> number = <span class="number">1</span>/<span class="number">0</span>;.<span class="keyword">try</span></span><br></pre></td></tr></table></figure>
+
+<p>写完之后敲击回车，自动变成如下代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">int</span> number = <span class="number">1</span>/<span class="number">0</span>;</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>]]></content>
+      <tags>
+        <tag>Weekly Post</tag>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>java IO</title>
     <url>/2019/08/15/javaIO/</url>
     <content><![CDATA[<br>
@@ -1496,148 +1638,6 @@
 <p>装饰者模式是一种设计模式，它的好处在于，如果我想给某些类实现一个新的功能，可以不通过继承，而是通过一个中间类去装饰一下即可。</p>
 <p>比如现在有一个<code>运动类</code>，运动类下面有很多子类：<code>跑步类</code>、<code>打球类</code>、<code>跳绳类</code>……我现在希望每一个运动类的子类，这么多类，都去实现<code>运动完之后拉伸</code>的方法。按照原来的思路，我要把所有子类全部都继承一遍，每一个新继承的类都多加上这么一个<code>运动完之后拉伸</code>的方法，那不是累死了吗。通过装饰者模式，我可以创建一个<code>运动后拉伸类</code>，这个类读取一个运动类，随便哪个子类都可以，在这一装饰之下，就新增了拉伸的方法。这样做动静很小。</p>
 <p>java IO系统这么青睐装饰者模式，主要是也是因为，特喵的java的IO相关类，实在是太多了……</p>
-<br>]]></content>
-      <tags>
-        <tag>Weekly Post</tag>
-        <tag>java</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>java 异常</title>
-    <url>/2019/08/22/java-exception/</url>
-    <content><![CDATA[<p>八月的第四周，来学习 Java 的异常处理机制。</p>
-<p>异常就是不正常，程序不能正常执行，中途遇到了的问题就是异常。这次来写异常分哪些情况，以及怎么处理异常。</p>
-<hr>
-<p>首先需要厘清的是，几乎所有介绍异常的总结贴，以及面试时对异常的提问，基本上说的都不光是异常，而是整个异常体系。</p>
-<p><img src="/assets/%E5%BC%82%E5%B8%B8%E4%BD%93%E7%B3%BB%EF%BC%88%E7%AE%80%E7%95%A5%EF%BC%89.png" alt="异常体系（简略）"></p>
-<p>看一下简图就很明白了：父类 Throwable 有两个子类，一个是 Error （错误），另一个才是 Exception （异常）。也就是说，异常体系说的不光是异常，还把他爸和他哥一起介绍了，一家包圆了。</p>
-<p>光从词语的表达上就能感受到，Error 和 Exception 的严重程度是不同的，Error （错误）是非常严重的事情，而 Exception （异常）是可以商量的事情。</p>
-<ul>
-<li>Error ：错误，指的是程序中很严重的问题，严重到 Java 虚拟机都无法处理，只能停止程序改bug。</li>
-<li>Exception ：异常，指的是程序中的轻度问题，程序运行时遇到了之后，处理一下还可以继续执行下去（当然了，一定要处理，不能随便放任不管）。</li>
-</ul>
-<p>上面那张图只是一张表示 Error 和 Exception 之间关系的图，实际上的异常体系还是比较庞大的，我找到了一张稍微全一些的体系图（<a href="https://juejin.im/post/5c863f48e51d45192c4a701f" target="_blank" rel="noopener">图片来源</a>）。</p>
-<p><img src="/assets/%E5%BC%82%E5%B8%B8%E4%BD%93%E7%B3%BB.jpg" alt="异常体系"></p>
-<p>现在你要注意到，上图中的所有东西，比如 <code>Error</code> ，比如 <code>Exception</code> ，比如 <code>Exception</code> 里的 <code>NullPointerException</code> ，不论是错误也好异常也罢，以上的所有东西，统统都是类。Java 作为一门面向对象的语言，已经连错误、异常这些东西，都封装起来看作是一种类了。上图中的所有东西都是类，都有继承关系，都有方法，都是当做一个个的封装起来的对象来处理的。</p>
-<h1 id="Error"><a href="#Error" class="headerlink" title="Error"></a>Error</h1><p>Error （错误）不是这周学习的重点，事实上其内容需要好几年 Java 实战的积累才能逐渐掌握，因为里面涉及到的具体情况都是偏硬件、偏底层的东西，比如 <code>OutOfMemoryError</code> （内存溢出错误类）。</p>
-<p>我们目前只需要知道，Java 虚拟机并不会处理 Error 类，也就是说编译器不会检查 Error 类，我们在做程序设计的时候，也不应该去尝试捕获 Error 类。</p>
-<h1 id="Exception"><a href="#Exception" class="headerlink" title="Exception"></a>Exception</h1><p>Exception （异常）是这周关注的重点。</p>
-<p>Exception 有许许多多的子类，其中一类 <code>RuntimeException</code> 即<code>运行时异常</code>，这个子类和其他子类有所不同，怎么不同的一会再说。总之 Exception 可以分成两类，一类叫做<code>运行时异常</code>，另一类叫做<code>非运行时异常</code>。</p>
-<p>怎么不同的呢？</p>
-<ul>
-<li><code>RuntimeException</code> 运行时异常，就是程序真的运行起来了，才能发现的异常。</li>
-<li>非运行时异常，意思是说，程序即使不运行，编译器都知道将会有异常发生。也就是说，你不处理这个异常，你就别想让程序运行起来。</li>
-</ul>
-<p>这两类异常的主要区别在于，一种程序可以先运行起来（遇到了再报错），一种程序上来就无法运行（不用遇到了，直接报错）。</p>
-<p>再换句话说，一种可以通过编译器的检查，一种无法通过编译器的检查。</p>
-<p>如果从编译器检查的角度来看这两类异常，那么运行时异常（ RuntimeException ），因为可以逃避编译器的检查，因此可以被称为非检查性异常；而其他异常（也就是非运行时异常）逃不过编译器的检查，因此可以被称为检查性异常。</p>
-<p>所以异常可以换一种分类方式：<code>检查性异常</code>、<code>非检查性异常</code>。这一种分类方式是更被普遍提到的，虽然它所指的其实就是运行时和非运行时，只是看待的角度不同。（现在建议你再去看一看上面的图，再理解一下分类）</p>
-<ol>
-<li><p>非检查性异常/运行时异常</p>
-<p>属于这一类的异常中，较为常见的有：</p>
-<ul>
-<li><code>NullPointerException</code> 空指针异常</li>
-<li><code>ArithmeticException</code> 算术异常（比如 5 除以 0 ）</li>
-<li><code>ClassCastException</code>  类型转换异常</li>
-<li><code>IndexOutOfBoundsException</code> 数组越界异常</li>
-<li><code>ArrayStoreException</code> 数据存储异常（数组存储时数据类型不一致）</li>
-</ul>
-</li>
-<li><p>检查性异常/非运行时异常</p>
-<p>属于这一类异常中，较为常见的有：</p>
-<ul>
-<li><code>IOException</code> 输入输出异常</li>
-<li><code>FileNotFoundException</code> 文件不存在异常（继承自 <code>IOException</code> ）</li>
-<li><code>SQLException</code> SQL 语句异常</li>
-<li><code>InterruptedException</code> 中断异常</li>
-</ul>
-</li>
-</ol>
-<hr>
-<p>现在来学习，如果遇到了异常（ Exception ），怎么处理异常。</p>
-<p>准确的说应该是，我怀疑某个地方要出现异常，我怎么提前处理这个地方，让它在程序运行之后真的遇到了异常时，仍然能在处理之后继续运行程序。</p>
-<p>要注意的是，检查性异常是一定要进行处理的，不处理程序都无法运行（因为编译器直接报错），而非检查性异常和没有异常的地方（比如合理怀疑某段代码有问题），也是可以进行异常处理的。异常处理并不是只针对于异常的，而是在一切场景之下，只要我怀疑存在异常，都可以去做异常处理（大不了没碰上呗）。</p>
-<p>Java 有两种异常处理方案，分别是<code>就地解决</code>（ try / catch / finally 语句）和<code>异地正法</code>（ throws ）。</p>
-<h1 id="就地解决"><a href="#就地解决" class="headerlink" title="就地解决"></a>就地解决</h1><p>现在我遇到一段可能存在异常的代码，打算当场解决掉它。</p>
-<p>下面这几行代码就是就地解决异常的处理方式。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 可能存在异常</span></span><br><span class="line">    ...</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    <span class="comment">// 如果遇到了异常，那就执行这段代码</span></span><br><span class="line">    ...</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    <span class="comment">// 不论有没有遇到异常，都执行这段代码</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>有三个关键字：</p>
-<ul>
-<li><code>try</code> 大括号里放【可能存在异常的代码】，表示“这段代码可能有异常，我们来试试看”。</li>
-<li><code>catch</code> 小括号里放【异常的类型】，大括号里放【处理异常的代码】，表示“我发现了XX异常，我要这么去处理它”。</li>
-<li><code>finally</code> 大括号里放【不论如何都会执行的代码】，表示“我管你遇不遇得到异常，全都给我执行这段代码”。</li>
-</ul>
-<p>还是举一个具体的例子吧。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">int</span> number = <span class="number">1</span>/<span class="number">0</span>;</span><br><span class="line">&#125; <span class="keyword">catch</span> (ArithmeticException e) &#123;</span><br><span class="line">    System.out.println(<span class="string">"发现了算术异常"</span>);</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">"不论如何，都给我执行这段代码"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 最终会在控制台上打印两句话：</span></span><br><span class="line"><span class="comment">// 发现了算术异常</span></span><br><span class="line"><span class="comment">// 不论如何，都给我执行这段代码</span></span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>程序进入 <code>try{}</code> 语句块中，执行了 <code>int number = 1/0;</code> 这行代码，因为 0 不能作为被除数，所以出现了异常。</li>
-<li>通过 <code>catch(){}</code> 语句块捕捉到了 <code>ArithmeticException</code> （算术异常），你应该注意到了，小括号里放的就是这一异常的类型，如果放的是别的异常的话，那么会捕捉不到的。大括号里表示，捕捉到这一异常之后，要执行的操作，在这里是在控制台打印了一句话：“发现了算术异常”。</li>
-<li><code>finally{}</code> 语句块是程序无论如何都会执行的部分，即使是没有异常也会执行。在这里发生了算数异常，打印了一句话：“不论如何，都给我执行这段代码”。其实如果没有发生异常的话，也会把这句话打印出来的。</li>
-</ol>
-<h1 id="异地正法"><a href="#异地正法" class="headerlink" title="异地正法"></a>异地正法</h1><p>有时我们并不想在异常出现的地方就去处理它，那么可以把异常<code>抛出去</code>。</p>
-<p>抛出去（throw）又是一个翻译过来的词，在英文环境中这个词很生动，但是在汉语环境中就并不如此。我们经常听到<code>抛异常</code>这三个字，意思就是把异常给“抛”出去，不立即处理，而是在其他地方去处理。</p>
-<p>比如现在有<code>方法 A</code>，<code>方法 A</code> 调用了<code>方法 B</code> ，<code>方法 B</code> 的内部出现了异常，现在就有两种解决方案：</p>
-<ol>
-<li><code>方法 B</code> 自己处理异常，也就是刚才说的“就地正法”。</li>
-<li><code>方法 B</code> 不去解决，而是“抛”给<code>方法 A</code> 去解决。</li>
-</ol>
-<p>为什么不当场解决，而是抛出去让其他地方去解决，原因可能有很多，比如另一个地方拿到异常对象能做更多事情，比如程序员懒想拖到其他地方再说，等等。</p>
-<p><code>抛异常</code>的动作很简单，只需要在方法名的后面（注意，不是在异常发生的原地，而是在异常发生所在的方法，那个方法的名字的位置处），加上 <code>throws XXXException</code> 就可以了。</p>
-<p>举个栗子吧：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">test</span><span class="params">()</span> <span class="keyword">throws</span> ArithmeticException </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> number = <span class="number">1</span> / <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> number;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里定义了一个只有两行代码的方法（方法名叫 <code>test</code>），第一行是让 <code>number = 1/0</code> （很明显出现了算术异常），第二行返回 <code>number</code> 。我并没有在异常出现的原地去处理，而是在方法名的后面，加上了 <code>throws ArithmeticException</code> ，表示抛出去了一个算术异常。之后哪里调用了这个方法，就必须去处理这个异常（或者继续抛出去）。</p>
-<p>你注意，这里说的抛异常，是我们遇到了异常之后，把遇到的这个异常抛出去，而且是在方法名旁边去抛的，意思是说“每当你调用这个方法的时候，都要注意，这个方法里面有个异常要处理”。但是还有一种抛异常的方法，就是可以在随便一个地方，手动地抛出去一个异常。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">throw</span> <span class="keyword">new</span> ArithmeticException();</span><br></pre></td></tr></table></figure>
-
-<p>比如这个样子，我手动地把一个新实例化出来的算术异常抛出去了。</p>
-<p>在方法名旁边写的那个，是 <code>throws</code> ，而手动在随便一个地方抛出去的，是 <code>throw</code> 。</p>
-<hr>
-<p>剩下的部分太过零碎，我就分条写，写到哪里算哪里好了。</p>
-<h1 id="1-finally-语句块"><a href="#1-finally-语句块" class="headerlink" title="1.finally 语句块"></a>1.<code>finally</code> 语句块</h1><p>在捕获异常当场解决的地方，我们使用了 try / catch / finally 语句，其中 <code>finally{}</code> 语句块是“无论如何都会执行的代码”。</p>
-<p>这里的无论如何，真的就是无论如何，它保证了程序一定会执行这部分代码，不管发不发生异常都会执行，而且不管 <code>try{}</code> 语句块中写了什么，也都会执行。</p>
-<p>注意：即使是 <code>try{}</code> 语句块中写了返回语句 <code>return xxx;</code> ，你感觉程序走到这里就停止了，其实并不是，这样也都会去执行 <code>finally{}</code> 语句块。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">int</span> number = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> number;</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">"finally 语句块执行了"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 最终会在控制台上打印两行：</span></span><br><span class="line"><span class="comment">// finally 语句块执行了</span></span><br><span class="line"><span class="comment">// 0</span></span><br></pre></td></tr></table></figure>
-
-<p>通过反编译可以发现，Java 在处理 <code>finally{}</code> 语句块时，是把它复制成两份，分别在 <code>try{}</code> 语句块和 <code>catch{}</code> 语句块后面去执行一次的。</p>
-<p>而且如果 <code>finally{}</code> 语句块中写了返回语句 <code>return xxx;</code> ，将会执行这个返回语句，程序到此结束。</p>
-<h1 id="2-异常链"><a href="#2-异常链" class="headerlink" title="2.异常链"></a>2.异常链</h1><p>维基百科对于异常链的解释真是太令人舒服了，一眼看懂：</p>
-<blockquote>
-<p>异常链是一种面向对象编程技术，指将捕获的异常包装进一个新的异常中并重新抛出的异常处理方式。原异常被保存为新异常的一个属性（比如cause）。这个想法是指一个方法应该抛出定义在相同的抽象层次上的异常，但不会丢弃更低层次的信息。</p>
-</blockquote>
-<p>还是举一个例子吧：</p>
-<p><code>main</code> 方法调用 <code>test1</code> 方法，<code>test1</code> 方法调用 <code>test2</code> 方法。</p>
-<p>其中 <code>test2</code> 方法中抛一个异常， <code>test1</code> 方法会接到 <code>test2</code> 方法抛出的异常，包裹起来再抛一个新的异常。</p>
-<p>这样 <code>main</code> 方法中就会出现一个异常，这个异常里面还有一个异常（也就是接到一个包裹着异常的异常）。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 调用 test1 方法</span></span><br><span class="line">        <span class="keyword">int</span> num = test1();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 调用 test2 方法，抛一个新的异常</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">test1</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> num = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            num = test2();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"这里是test1的异常"</span>,e);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> num;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// test2 方法中抛一个异常</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">test2</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">"这里是test2的异常"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>控制台的打印信息如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">java.lang.Exception: 这里是test2的异常</span><br><span class="line">	at testCode.Test.test2(Test.java:<span class="number">21</span>)</span><br><span class="line">	at testCode.Test.test1(Test.java:<span class="number">12</span>)</span><br><span class="line">	at testCode.Test.main(Test.java:<span class="number">6</span>)</span><br><span class="line">Exception in thread <span class="string">"main"</span> java.lang.RuntimeException: 这里是test1的异常</span><br><span class="line">	at testCode.Test.test1(Test.java:<span class="number">15</span>)</span><br><span class="line">	at testCode.Test.main(Test.java:<span class="number">6</span>)</span><br><span class="line">Caused by: java.lang.Exception: 这里是test2的异常</span><br><span class="line">	at testCode.Test.test2(Test.java:<span class="number">21</span>)</span><br><span class="line">	at testCode.Test.test1(Test.java:<span class="number">12</span>)</span><br><span class="line">	... <span class="number">1</span> more</span><br></pre></td></tr></table></figure>
-
-<p>这里就看到了异常链。</p>
-<h1 id="3-一个catch子句捕获多个异常"><a href="#3-一个catch子句捕获多个异常" class="headerlink" title="3.一个catch子句捕获多个异常"></a>3.一个catch子句捕获多个异常</h1><p><code>JDK1.7</code> 改进了 catch 子句的语法，允许在其中指定多种异常，每个异常类型之间使用“|”来分隔。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExceptionHandler</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handle</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//..............</span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (ExceptionA | ExceptionB ab) &#123; </span><br><span class="line">        &#125; <span class="keyword">catch</span> (ExceptionC c) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="4-异常抑制"><a href="#4-异常抑制" class="headerlink" title="4.异常抑制"></a>4.异常抑制</h1><p><code>JDK1.7</code> 中为 <code>Throwable类</code> 增加 <code>addSuppressed方法</code>和 <code>getSuppressed方法</code>。</p>
-<p>当一个异常被抛出的时候，可能有其他异常因为该异常而被抑制住，从而无法正常抛出。这时可以通过 <code>addSuppressed方法</code> 把这些被抑制的方法记录下来，被抑制的异常会出现在抛出的异常的堆栈信息中，可以通过 <code>getSuppressed方法</code> 获取到被抑制的异常。</p>
-<p>个人觉得没啥用，懒得写了。</p>
-<h1 id="5-try-with-resources"><a href="#5-try-with-resources" class="headerlink" title="5. try - with - resources"></a>5. try - with - resources</h1><p>同样还是 <code>JDK1.7</code> 增加的新特性。</p>
-<p>以前使用 <code>try / catch / finally</code> 语句块处理资源的时候，如果要关闭资源，需要在 <code>finally{}</code> 语句块中关闭，使用 <code>try - with - resources</code> 方式可以在 <code>try()</code> 的小括号里声明，Java 会自动关闭资源。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">BufferedReader br = <span class="keyword">new</span> BufferedReader(inputString);</span><br><span class="line"><span class="keyword">try</span> (BufferedReader br1 = br) &#123;</span><br><span class="line">    <span class="keyword">return</span> br1.readLine();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>JDK1.9</code> 更进一步， <code>try()</code> 的小括号里不需要声明了，声明过程在外面也可以。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">BufferedReader br = <span class="keyword">new</span> BufferedReader(inputString);</span><br><span class="line"><span class="keyword">try</span> (br) &#123;</span><br><span class="line">    <span class="keyword">return</span> br.readLine();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>try 后面小括号内的东西即为 resources ，resources 必须是实现 <code>java.lang.AutoCloseable</code> 或者 <code>java.io.Closeable</code> 接口的类（需要手动 close() 释放资源的）。</p>
-<h1 id="6-IDEA-的快捷操作"><a href="#6-IDEA-的快捷操作" class="headerlink" title="6.IDEA 的快捷操作"></a>6.IDEA 的快捷操作</h1><p>要是使用的Java开发工具是 IDEA 的话，那么如果想对某一句代码进行异常处理，可以在这句代码写完之后，敲上“ <code>.try</code> “这四个字符，再敲回车，就可以自动为这行代码加上 try / catch 语句了。</p>
-<p>例如这行代码：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> number = <span class="number">1</span>/<span class="number">0</span>;.<span class="keyword">try</span></span><br></pre></td></tr></table></figure>
-
-<p>写完之后敲击回车，自动变成如下代码：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">int</span> number = <span class="number">1</span>/<span class="number">0</span>;</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <br>]]></content>
       <tags>
         <tag>Weekly Post</tag>
@@ -1984,133 +1984,6 @@
 <p><img src="/assets/AQS_ReentrantLock.jpg" alt="AQS_ReentrantLock"></p>
 <p>这里只考虑了最简单的情况，没考虑抢锁、取消锁等情况（不过我觉得总体理解上还可以）。测试了多遍之后，觉得 AQS 类中的 acquireQueued() 方法很有趣，设计上非常精巧，循环运用得非常道格李。</p>
 <p>下周我们来看 Condition 等类，争取下周把 AQS 框架看完。</p>
-]]></content>
-      <tags>
-        <tag>Weekly Post</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>算法：回溯</title>
-    <url>/2020/04/12/%E7%AE%97%E6%B3%95%EF%BC%9A%E5%9B%9E%E6%BA%AF/</url>
-    <content><![CDATA[<br>
-
-<p>四月的第二周，开始学习算法题：回溯算法。</p>
-<p>在二月底就零星地看了一些算法题，当时想着从四月份开始突击一个月的算法，但因为看 Java 并发耽误了一周。从本周开始，博文内容将全部是算法。</p>
-<hr>
-<p>回溯（backtracking）是暴力搜索法中的一种，它采用试错的思想，尝试分布地解决一个问题，在分步解决问题的过程中，当它通过尝试，发现现有的分步答案不能得到有效的正确解答时，它将取消上一步甚至是上几步的计算，再通过其它的可能的分步解答再次尝试寻找问题的答案。</p>
-<p>回溯是基于深度优先遍历（DFS）的一种暴力搜索方法，因此使用回溯算法的前提是，问题本身的数据结构是树，在树的基础上采取 DFS 的方式遍历，在遍历的过程中，保存符合题目条件的叶子节点。</p>
-<p>举一个例子，比如全排列问题（给定几个数字，返回所有可能的全排列），这个问题本身就是一棵树，以[1, 2, 3]这三个数字为例，可以画成如下的树。这一类的问题我们可以通过回溯算法解决。</p>
-<p><img src="/assets/%E6%A0%91%E7%A4%BA%E4%BE%8B.jpg" alt="树示例"></p>
-<p>回溯算法的内核是遍历，如果一个问题能够转化为树，就可以通过回溯算法，遍历树的每一片叶子，暴力解决。在这一背景之下，回溯算法还有以下特征：</p>
-<ol>
-<li>遍历树的方式是递归，因此回溯是通过递归解决的。</li>
-<li>遍历树时，收集叶子（收集结果）往往有约束，比如要求结果不能重复（[1, 2]和[2, 1]只保留其中一个），收集时要根据要求收集。</li>
-<li>遍历树时，在知道某些分支下一定不可能出现结果，就可以忽略遍历这部分，这被称为“剪枝”，是回溯算法提高性能的主要方式。</li>
-</ol>
-<br>
-
-<p>下面试着整理一下套路，但是就我个人经验而言，背过了套路也用处不大，多做一点题目就会慢慢熟悉起来。推荐的做题路线是（使用 LeetCode），39 题 -&gt; 46 题 -&gt; 77 题 -&gt; 78 题 -&gt; 40 题 -&gt; 47 题 -&gt; 90 题，都比较简单，是用来培养手感的。</p>
-<p><strong>先铭记最重要的一条，做回溯算法题，第一步，先画树，画完了再做题。</strong></p>
-<p>回溯算法的主要流程是：试探 - 子递归 - 回溯。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">doSub(list, ...)&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    list.add(item);               <span class="comment">// 试探着加入一个元素</span></span><br><span class="line">    doSub(list, ...);             <span class="comment">// 子递归</span></span><br><span class="line">    list.remove(list.size() - <span class="number">1</span>); <span class="comment">// 把刚才试探加入的元素删掉</span></span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>也就是先加入一个元素，执行子递归操作，再删除掉刚才加的元素。这个套路我们一会在真题中使用。</p>
-<p>初学时由于递归使用得少，因此对递归的结构、递归的方法参数，通常会苦恼很久。在初始阶段，可以试着这么写递归：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 最终的结果可以记在全局变量中，不设置返回值</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">doSub</span><span class="params">(List candidates, <span class="keyword">int</span> level, Object tem)</span> </span>&#123;</span><br><span class="line">                           成员         递归层数    本级递归的结果</span><br><span class="line">                               </span><br><span class="line">    <span class="keyword">if</span> (终止条件) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (成功条件，准备记录结果) &#123;</span><br><span class="line">        <span class="comment">// 记录结果</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">        doSub(candidates, level + <span class="number">1</span>, tem);</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>通常递归需要三个参数：操作的所有元素、递归的层数（通常用于判断什么时候要终止递归）、本级递归的结果（成功后，将参数记录下来）。这么写可能会有冗余代码（ if 的判断条件），但是按照这种思路来写，通常能写出来递归的骨架，然后再慢慢调整。</p>
-<p>除了这三个参数之外，通常递归还需要其他参数，这个需要具体分析。就我做题而言，一般是需要增加两种参数，一会做题时详述。</p>
-<br>
-
-<h1 id="LeetCode39-组合总和"><a href="#LeetCode39-组合总和" class="headerlink" title="LeetCode39 组合总和"></a>LeetCode39 组合总和</h1><blockquote>
-<p>给定一个无重复元素的数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。candidates 中的数字可以无限制重复被选取。</p>
-<table>
-<thead>
-<tr>
-<th>示例输入</th>
-<th>示例输出</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>candidates = [2,3,6,7], target = 7</td>
-<td>[<br>&nbsp;&nbsp;[7],<br>&nbsp;&nbsp;[2,2,3]<br>]</td>
-</tr>
-<tr>
-<td>candidates = [2,3,5], target = 8</td>
-<td>[<br>&nbsp;&nbsp;[2,2,2,2],<br>&nbsp;&nbsp;[2,3,3],<br>&nbsp;&nbsp;[3,5]<br>]</td>
-</tr>
-</tbody></table>
-</blockquote>
-<p>先画树（其实只需要画出终止条件和满足条件就足够分析了）：</p>
-<p><img src="/assets/%E7%BB%84%E5%90%88%E6%80%BB%E5%92%8C.jpg" alt="组合总和"></p>
-<p>主要的逻辑是递归树</p>
-<ul>
-<li>如果求和不足，那么继续递归</li>
-<li>如果求和正好，那么记录结果，返回（返回后删除，进行下一次循环）</li>
-<li>如果求和超了，那么返回（返回后删除，进行下一次循环）</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LeetCode39</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// combinationSum方法返回的是什么，就直接在此定义一个该类型的变量，作为全局变量，最后直接返回该变量就可以了</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> List&lt;List&lt;Integer&gt;&gt; combinationSum(<span class="keyword">int</span>[] candidates, <span class="keyword">int</span> target) &#123;</span><br><span class="line">        <span class="comment">// 很多算法题的测试数据都会搞些数据恶心人，比如输入参数为空字符串，要预过滤</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> == candidates || candidates.length == <span class="number">0</span> || target &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 核心逻辑，本方法是一个无返回值的方法，因为结果记录在一个全局变量result里，省去了处理返回</span></span><br><span class="line">        process(candidates, target, <span class="keyword">new</span> ArrayList&lt;&gt;());</span><br><span class="line">        <span class="comment">// 返回结果</span></span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解释一下核心逻辑，每进入下一层树，在list中增加一个数字，再进入下一层递归</span></span><br><span class="line">    <span class="comment">// 直到求和相同时，记录求和内容</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(<span class="keyword">int</span>[] candidates, <span class="keyword">int</span> target, List&lt;Integer&gt; list)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 第一步：先处理递归终止条件，此题是判断</span></span><br><span class="line">        <span class="keyword">if</span> (target &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        <span class="comment">// 第二步：当递归抵达成功时，记录结果</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (target == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// 注意深拷贝</span></span><br><span class="line">            result.add(<span class="keyword">new</span> ArrayList&lt;&gt;(list));</span><br><span class="line">        <span class="comment">// 第三步：当递归没终止、没成功，准备进入下一层递归</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 遍历所有节点</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; candidates.length; i++) &#123;</span><br><span class="line">                <span class="comment">// 先加</span></span><br><span class="line">                list.add(candidates[i]);</span><br><span class="line">                <span class="comment">// 递归</span></span><br><span class="line">                process(candidates, target - candidates[i], list);</span><br><span class="line">                <span class="comment">// 再删，删完出循环，准备再进循环加下一个</span></span><br><span class="line">                list.remove(list.size() - <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上面的代码就是基础套路：</p>
-<ol>
-<li><p>定义一个全局变量记录结果</p>
-</li>
-<li><p>递归处理</p>
-<ol>
-<li><p>先处理递归终止，直接返回</p>
-</li>
-<li><p>再处理递归成功，记录结果后返回</p>
-</li>
-<li><p>没终止、没成功，就意味着还需要继续递归</p>
-<p>在循环中执行回溯算法的核心</p>
-<ol>
-<li>先加</li>
-<li>递归</li>
-<li>再删</li>
-</ol>
-</li>
-</ol>
-</li>
-</ol>
-<p>执行上述方法，得到这样的结果：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">LeetCode39.combinationSum(<span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">2</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">7</span>&#125;, <span class="number">7</span>);</span><br><span class="line"><span class="comment">// 结果 [[2, 2, 3], [2, 3, 2], [3, 2, 2], [7]]</span></span><br></pre></td></tr></table></figure>
-
-<p>会发现结果没有去重，出现了[2, 2, 3]和[2, 3, 2]这样内容一样但是排序不一样的情况，我们来分析一下如何去重。</p>
-<p>重复的主要原因在于，当我们记录完[2, 2, ?]之后，进入[2, 3, ?]，选择第三个数时，我们不应当再考虑 2 了，因为在[2, 2, ?]的情况下，我们已经全部处理完有 2 的情况了，再之后我们不应该处理 2 了。细琢磨一下这句话：遍历时我们要设置一个起始点，处理过的要素，之后就跳过不参与考虑了。</p>
-<p>这是递归新增参数的第一种情况，增加一个 <code>int start</code> 的参数，目的是为了在遍历时，从 start 位置开始，跳过某些元素。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(<span class="keyword">int</span>[] candidates, <span class="keyword">int</span> target, List&lt;Integer&gt; list, <span class="keyword">int</span> start)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// ... </span></span><br><span class="line">    <span class="comment">// 每次遍历从start开始</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = start; i &lt; candidates.length; i++) &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h1 id="LeetCode46-全排列"><a href="#LeetCode46-全排列" class="headerlink" title="LeetCode46 全排列"></a>LeetCode46 全排列</h1><blockquote>
-<p>给定一个 <strong>没有重复</strong> 数字的序列，返回其所有可能的全排列。</p>
-<table>
-<thead>
-<tr>
-<th>示例输入</th>
-<th>示例输出</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>[1,2,3]</td>
-<td>[<br>&nbsp;&nbsp;[1,2,3],<br>&nbsp;&nbsp;[1,3,2],<br>&nbsp;&nbsp;[2,1,3],<br>&nbsp;&nbsp;[2,3,1],<br>&nbsp;&nbsp;[3,1,2],<br>&nbsp;&nbsp;[3,2,1]<br>]</td>
-</tr>
-</tbody></table>
-</blockquote>
-<p>同样，还是先画递归树：</p>
-<p><img src="/assets/%E6%A0%91%E7%A4%BA%E4%BE%8B.jpg" alt="树示例"></p>
-<p>直接写代码了噢，是完全一样的套路：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LeetCode46</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    List&lt;List&lt;Integer&gt;&gt; res = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; permute(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> == nums || nums.length == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> res;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">boolean</span>[] select = <span class="keyword">new</span> <span class="keyword">boolean</span>[nums.length];</span><br><span class="line">        doPermute(nums, <span class="number">0</span>, <span class="keyword">new</span> ArrayList&lt;&gt;(), select);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">doPermute</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> level, List&lt;Integer&gt; list, <span class="keyword">boolean</span>[] select)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (level &gt; nums.length) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (level == nums.length) &#123;</span><br><span class="line">            res.add(<span class="keyword">new</span> ArrayList&lt;&gt;(list));</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (select[i]) &#123;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    list.add(nums[i]);</span><br><span class="line">                    select[i] = <span class="keyword">true</span>;</span><br><span class="line">                    doPermute(nums, level + <span class="number">1</span>, list, select);</span><br><span class="line">                    list.remove(list.size() - <span class="number">1</span>);</span><br><span class="line">                    select[i] = <span class="keyword">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里递归在原先的三个参数基础上，又增加了一个新的参数，<code>boolean[] select</code>，一个布尔值的数组。</p>
-<p>对于某些题目，就比如这道题，每个元素并不是可以无限使用的，而是只能只用一次，如果使用完一次，怎么标记下来呢，就是使用一个布尔值的数组，记录下标为x的元素，已经被使用过了，不能再使用。</p>
-<p>回溯套路，就从原来的三行，变成了五行：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">list.add(nums[i]);                   -&gt;   list.add(nums[i]);</span><br><span class="line">                                     -&gt;   select[i] = <span class="keyword">true</span>;</span><br><span class="line">doPermute(nums, level + <span class="number">1</span>, list);    -&gt;   doPermute(nums, level + <span class="number">1</span>, list, select);</span><br><span class="line">                                     -&gt;   select[i] = <span class="keyword">false</span>;</span><br><span class="line">list.remove(list.size() - <span class="number">1</span>);        -&gt;   list.remove(list.size() - <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
-
-<p>（上一道题每个元素可以无限制地使用，因此不需要一个布尔值数组记录是否能使用）</p>
-<br>
-
-<p>上面的套路，只是初期不熟悉时的套路，并不能解决所有回溯问题，但是可以在初接触回溯问题时尝试做出来。最好的学习方式仍然是做题，做十几道题，就自然明白了。再发一遍学习路线（LeetCode）：39 题 -&gt; 46 题 -&gt; 77 题 -&gt; 78 题 -&gt; 40 题 -&gt; 47 题 -&gt; 90 题。</p>
 ]]></content>
       <tags>
         <tag>Weekly Post</tag>
@@ -2476,6 +2349,133 @@
       <tags>
         <tag>Weekly Post</tag>
         <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>算法：回溯</title>
+    <url>/2020/04/12/%E7%AE%97%E6%B3%95%EF%BC%9A%E5%9B%9E%E6%BA%AF/</url>
+    <content><![CDATA[<br>
+
+<p>四月的第二周，开始学习算法题：回溯算法。</p>
+<p>在二月底就零星地看了一些算法题，当时想着从四月份开始突击一个月的算法，但因为看 Java 并发耽误了一周。从本周开始，博文内容将全部是算法。</p>
+<hr>
+<p>回溯（backtracking）是暴力搜索法中的一种，它采用试错的思想，尝试分布地解决一个问题，在分步解决问题的过程中，当它通过尝试，发现现有的分步答案不能得到有效的正确解答时，它将取消上一步甚至是上几步的计算，再通过其它的可能的分步解答再次尝试寻找问题的答案。</p>
+<p>回溯是基于深度优先遍历（DFS）的一种暴力搜索方法，因此使用回溯算法的前提是，问题本身的数据结构是树，在树的基础上采取 DFS 的方式遍历，在遍历的过程中，保存符合题目条件的叶子节点。</p>
+<p>举一个例子，比如全排列问题（给定几个数字，返回所有可能的全排列），这个问题本身就是一棵树，以[1, 2, 3]这三个数字为例，可以画成如下的树。这一类的问题我们可以通过回溯算法解决。</p>
+<p><img src="/assets/%E6%A0%91%E7%A4%BA%E4%BE%8B.jpg" alt="树示例"></p>
+<p>回溯算法的内核是遍历，如果一个问题能够转化为树，就可以通过回溯算法，遍历树的每一片叶子，暴力解决。在这一背景之下，回溯算法还有以下特征：</p>
+<ol>
+<li>遍历树的方式是递归，因此回溯是通过递归解决的。</li>
+<li>遍历树时，收集叶子（收集结果）往往有约束，比如要求结果不能重复（[1, 2]和[2, 1]只保留其中一个），收集时要根据要求收集。</li>
+<li>遍历树时，在知道某些分支下一定不可能出现结果，就可以忽略遍历这部分，这被称为“剪枝”，是回溯算法提高性能的主要方式。</li>
+</ol>
+<br>
+
+<p>下面试着整理一下套路，但是就我个人经验而言，背过了套路也用处不大，多做一点题目就会慢慢熟悉起来。推荐的做题路线是（使用 LeetCode），39 题 -&gt; 46 题 -&gt; 77 题 -&gt; 78 题 -&gt; 40 题 -&gt; 47 题 -&gt; 90 题，都比较简单，是用来培养手感的。</p>
+<p><strong>先铭记最重要的一条，做回溯算法题，第一步，先画树，画完了再做题。</strong></p>
+<p>回溯算法的主要流程是：试探 - 子递归 - 回溯。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">doSub(list, ...)&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    list.add(item);               <span class="comment">// 试探着加入一个元素</span></span><br><span class="line">    doSub(list, ...);             <span class="comment">// 子递归</span></span><br><span class="line">    list.remove(list.size() - <span class="number">1</span>); <span class="comment">// 把刚才试探加入的元素删掉</span></span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>也就是先加入一个元素，执行子递归操作，再删除掉刚才加的元素。这个套路我们一会在真题中使用。</p>
+<p>初学时由于递归使用得少，因此对递归的结构、递归的方法参数，通常会苦恼很久。在初始阶段，可以试着这么写递归：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 最终的结果可以记在全局变量中，不设置返回值</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">doSub</span><span class="params">(List candidates, <span class="keyword">int</span> level, Object tem)</span> </span>&#123;</span><br><span class="line">                           成员         递归层数    本级递归的结果</span><br><span class="line">                               </span><br><span class="line">    <span class="keyword">if</span> (终止条件) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (成功条件，准备记录结果) &#123;</span><br><span class="line">        <span class="comment">// 记录结果</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">        doSub(candidates, level + <span class="number">1</span>, tem);</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通常递归需要三个参数：操作的所有元素、递归的层数（通常用于判断什么时候要终止递归）、本级递归的结果（成功后，将参数记录下来）。这么写可能会有冗余代码（ if 的判断条件），但是按照这种思路来写，通常能写出来递归的骨架，然后再慢慢调整。</p>
+<p>除了这三个参数之外，通常递归还需要其他参数，这个需要具体分析。就我做题而言，一般是需要增加两种参数，一会做题时详述。</p>
+<br>
+
+<h1 id="LeetCode39-组合总和"><a href="#LeetCode39-组合总和" class="headerlink" title="LeetCode39 组合总和"></a>LeetCode39 组合总和</h1><blockquote>
+<p>给定一个无重复元素的数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。candidates 中的数字可以无限制重复被选取。</p>
+<table>
+<thead>
+<tr>
+<th>示例输入</th>
+<th>示例输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>candidates = [2,3,6,7], target = 7</td>
+<td>[<br>&nbsp;&nbsp;[7],<br>&nbsp;&nbsp;[2,2,3]<br>]</td>
+</tr>
+<tr>
+<td>candidates = [2,3,5], target = 8</td>
+<td>[<br>&nbsp;&nbsp;[2,2,2,2],<br>&nbsp;&nbsp;[2,3,3],<br>&nbsp;&nbsp;[3,5]<br>]</td>
+</tr>
+</tbody></table>
+</blockquote>
+<p>先画树（其实只需要画出终止条件和满足条件就足够分析了）：</p>
+<p><img src="/assets/%E7%BB%84%E5%90%88%E6%80%BB%E5%92%8C.jpg" alt="组合总和"></p>
+<p>主要的逻辑是递归树</p>
+<ul>
+<li>如果求和不足，那么继续递归</li>
+<li>如果求和正好，那么记录结果，返回（返回后删除，进行下一次循环）</li>
+<li>如果求和超了，那么返回（返回后删除，进行下一次循环）</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LeetCode39</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// combinationSum方法返回的是什么，就直接在此定义一个该类型的变量，作为全局变量，最后直接返回该变量就可以了</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> List&lt;List&lt;Integer&gt;&gt; combinationSum(<span class="keyword">int</span>[] candidates, <span class="keyword">int</span> target) &#123;</span><br><span class="line">        <span class="comment">// 很多算法题的测试数据都会搞些数据恶心人，比如输入参数为空字符串，要预过滤</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> == candidates || candidates.length == <span class="number">0</span> || target &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 核心逻辑，本方法是一个无返回值的方法，因为结果记录在一个全局变量result里，省去了处理返回</span></span><br><span class="line">        process(candidates, target, <span class="keyword">new</span> ArrayList&lt;&gt;());</span><br><span class="line">        <span class="comment">// 返回结果</span></span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解释一下核心逻辑，每进入下一层树，在list中增加一个数字，再进入下一层递归</span></span><br><span class="line">    <span class="comment">// 直到求和相同时，记录求和内容</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(<span class="keyword">int</span>[] candidates, <span class="keyword">int</span> target, List&lt;Integer&gt; list)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 第一步：先处理递归终止条件，此题是判断</span></span><br><span class="line">        <span class="keyword">if</span> (target &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        <span class="comment">// 第二步：当递归抵达成功时，记录结果</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (target == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// 注意深拷贝</span></span><br><span class="line">            result.add(<span class="keyword">new</span> ArrayList&lt;&gt;(list));</span><br><span class="line">        <span class="comment">// 第三步：当递归没终止、没成功，准备进入下一层递归</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 遍历所有节点</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; candidates.length; i++) &#123;</span><br><span class="line">                <span class="comment">// 先加</span></span><br><span class="line">                list.add(candidates[i]);</span><br><span class="line">                <span class="comment">// 递归</span></span><br><span class="line">                process(candidates, target - candidates[i], list);</span><br><span class="line">                <span class="comment">// 再删，删完出循环，准备再进循环加下一个</span></span><br><span class="line">                list.remove(list.size() - <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码就是基础套路：</p>
+<ol>
+<li><p>定义一个全局变量记录结果</p>
+</li>
+<li><p>递归处理</p>
+<ol>
+<li><p>先处理递归终止，直接返回</p>
+</li>
+<li><p>再处理递归成功，记录结果后返回</p>
+</li>
+<li><p>没终止、没成功，就意味着还需要继续递归</p>
+<p>在循环中执行回溯算法的核心</p>
+<ol>
+<li>先加</li>
+<li>递归</li>
+<li>再删</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<p>执行上述方法，得到这样的结果：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">LeetCode39.combinationSum(<span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">2</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">7</span>&#125;, <span class="number">7</span>);</span><br><span class="line"><span class="comment">// 结果 [[2, 2, 3], [2, 3, 2], [3, 2, 2], [7]]</span></span><br></pre></td></tr></table></figure>
+
+<p>会发现结果没有去重，出现了[2, 2, 3]和[2, 3, 2]这样内容一样但是排序不一样的情况，我们来分析一下如何去重。</p>
+<p>重复的主要原因在于，当我们记录完[2, 2, ?]之后，进入[2, 3, ?]，选择第三个数时，我们不应当再考虑 2 了，因为在[2, 2, ?]的情况下，我们已经全部处理完有 2 的情况了，再之后我们不应该处理 2 了。细琢磨一下这句话：遍历时我们要设置一个起始点，处理过的要素，之后就跳过不参与考虑了。</p>
+<p>这是递归新增参数的第一种情况，增加一个 <code>int start</code> 的参数，目的是为了在遍历时，从 start 位置开始，跳过某些元素。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(<span class="keyword">int</span>[] candidates, <span class="keyword">int</span> target, List&lt;Integer&gt; list, <span class="keyword">int</span> start)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// ... </span></span><br><span class="line">    <span class="comment">// 每次遍历从start开始</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = start; i &lt; candidates.length; i++) &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h1 id="LeetCode46-全排列"><a href="#LeetCode46-全排列" class="headerlink" title="LeetCode46 全排列"></a>LeetCode46 全排列</h1><blockquote>
+<p>给定一个 <strong>没有重复</strong> 数字的序列，返回其所有可能的全排列。</p>
+<table>
+<thead>
+<tr>
+<th>示例输入</th>
+<th>示例输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>[1,2,3]</td>
+<td>[<br>&nbsp;&nbsp;[1,2,3],<br>&nbsp;&nbsp;[1,3,2],<br>&nbsp;&nbsp;[2,1,3],<br>&nbsp;&nbsp;[2,3,1],<br>&nbsp;&nbsp;[3,1,2],<br>&nbsp;&nbsp;[3,2,1]<br>]</td>
+</tr>
+</tbody></table>
+</blockquote>
+<p>同样，还是先画递归树：</p>
+<p><img src="/assets/%E6%A0%91%E7%A4%BA%E4%BE%8B.jpg" alt="树示例"></p>
+<p>直接写代码了噢，是完全一样的套路：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LeetCode46</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    List&lt;List&lt;Integer&gt;&gt; res = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; permute(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> == nums || nums.length == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> res;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">boolean</span>[] select = <span class="keyword">new</span> <span class="keyword">boolean</span>[nums.length];</span><br><span class="line">        doPermute(nums, <span class="number">0</span>, <span class="keyword">new</span> ArrayList&lt;&gt;(), select);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">doPermute</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> level, List&lt;Integer&gt; list, <span class="keyword">boolean</span>[] select)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (level &gt; nums.length) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (level == nums.length) &#123;</span><br><span class="line">            res.add(<span class="keyword">new</span> ArrayList&lt;&gt;(list));</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (select[i]) &#123;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    list.add(nums[i]);</span><br><span class="line">                    select[i] = <span class="keyword">true</span>;</span><br><span class="line">                    doPermute(nums, level + <span class="number">1</span>, list, select);</span><br><span class="line">                    list.remove(list.size() - <span class="number">1</span>);</span><br><span class="line">                    select[i] = <span class="keyword">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里递归在原先的三个参数基础上，又增加了一个新的参数，<code>boolean[] select</code>，一个布尔值的数组。</p>
+<p>对于某些题目，就比如这道题，每个元素并不是可以无限使用的，而是只能只用一次，如果使用完一次，怎么标记下来呢，就是使用一个布尔值的数组，记录下标为x的元素，已经被使用过了，不能再使用。</p>
+<p>回溯套路，就从原来的三行，变成了五行：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">list.add(nums[i]);                   -&gt;   list.add(nums[i]);</span><br><span class="line">                                     -&gt;   select[i] = <span class="keyword">true</span>;</span><br><span class="line">doPermute(nums, level + <span class="number">1</span>, list);    -&gt;   doPermute(nums, level + <span class="number">1</span>, list, select);</span><br><span class="line">                                     -&gt;   select[i] = <span class="keyword">false</span>;</span><br><span class="line">list.remove(list.size() - <span class="number">1</span>);        -&gt;   list.remove(list.size() - <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+<p>（上一道题每个元素可以无限制地使用，因此不需要一个布尔值数组记录是否能使用）</p>
+<br>
+
+<p>上面的套路，只是初期不熟悉时的套路，并不能解决所有回溯问题，但是可以在初接触回溯问题时尝试做出来。最好的学习方式仍然是做题，做十几道题，就自然明白了。再发一遍学习路线（LeetCode）：39 题 -&gt; 46 题 -&gt; 77 题 -&gt; 78 题 -&gt; 40 题 -&gt; 47 题 -&gt; 90 题。</p>
+]]></content>
+      <tags>
+        <tag>Weekly Post</tag>
       </tags>
   </entry>
   <entry>
@@ -3242,196 +3242,6 @@
       </tags>
   </entry>
   <entry>
-    <title>单例模式</title>
-    <url>/2020/04/14/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</url>
-    <content><![CDATA[<br>
-
-<p>从本周开始，新增一个博文模块 <code>Random Post</code>，用于不定期的学习与整理，原本的每周博文 <code>Weekly Post</code> 仍是主要更新计划（名为每周实则随缘hhh），当每周时间有余，或者不屑于将学习内容作为周计划时，在此更新。</p>
-<p>本篇是该模块的第一篇文章，学习单例模式。我在随缘学习单例模式时，发现这种设计模式的水很深，不是 Java 初学人员能够完全理解的，涉及到并发基础、类加载过程、枚举设计等内容，因此来写篇文章整理一下。</p>
-<p>本文主要参考自博文<a href="https://www.javadoop.com/post/design-pattern#toc_4" target="_blank" rel="noopener">《设计模式也可以这么简单》</a>的单例模式部分。</p>
-<hr>
-<p>单例模式，GOF 分类下（最常见的那种分类）的 23 种设计模式之一，创建型模式中的一种，面试常备题目之一。</p>
-<p>单例模式的意思是，类必须保证只有一个实例存在，整个系统，所有线程，可以有并且最多只能有一个该类的对象，这是一个针对于整个程序而言的全局对象。通常的实现思路是，该类提供一个静态的获取实例对象的方法（方法名通常为 getInstance），并且将构造函数定义为私有方法（这样就不能 new 对象出来了）。</p>
-<p>单例模式有多种实现方式，常见的有四种，分别是饿汉模式、懒汉模式、嵌套类、枚举。</p>
-<h1 id="饿汉模式"><a href="#饿汉模式" class="headerlink" title="饿汉模式"></a>饿汉模式</h1><p>饿汉模式（Eager Initialization）和懒汉模式（Lazy Initialization），这两个名字的翻译，让我觉得早期的程序员都是上海电影译制厂的配音演员退休转业来的，硬是拉大了本就已经存在的文化代沟，垃圾翻译。</p>
-<ul>
-<li><p>饿汉模式的意思是，不管是否使用都抢着在第一时间加载。</p>
-</li>
-<li><p>懒汉模式的意思是，什么时候要用了，什么时候再加载。</p>
-</li>
-</ul>
-<p>厘清两汉区别之后，我们先来看饿汉模式。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 首先，将构造函数定义为私有方法，将 new Singleton() 堵死</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;&#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 创建私有静态实例，意味着这个类第一次使用的时候就会进行创建</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>（以下内容基本来源于《深入理解 Java 虚拟机》第七章，但可能因为我自身理解不足导致有错误）</p>
-<p>饿汉模式创建对象的时机，是在类加载过程中，当类加载完成之后，无论是否需要，此时单例对象都已经被创建了。饿汉模式实现单例模式要靠 static 关键字，而理解 static 关键字需要了解类加载机制。</p>
-<p><img src="/assets/%E7%B1%BB%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="类的生命周期"></p>
-<p>一个类的生命周期有七个阶段，如上图，其中前五个阶段是类加载的过程，分别是：</p>
-<ul>
-<li>加载（Loading）</li>
-<li>验证（Verification）</li>
-<li>准备（Preparation）</li>
-<li>解析（Resolution）</li>
-<li>初始化（Initialization）</li>
-</ul>
-<p>中间三个阶段又可以统称为连接（Linking）阶段。</p>
-<p>以上五个类加载阶段基本上交由 Java 虚拟机主导控制，而不是由业务程序去控制。</p>
-<p>对于小白而言，一个很反直觉的地方在于，类加载过程（即上面的五个阶段），并不是在编译期执行完成的，而是在程序的运行期间完成的，如果类没有被用到，那么类就不会被加载，如果用到了就在程序运行过程中现场加载。这种设计为 Java 提供了极高的扩展性和动态连接性，当程序运行之后，仍然可以在不停机的情况下输入新的类，比如从网络上加载一段二进制流作为程序的一部分。</p>
-<p>Java 虚拟机规范中，对于类加载过程的约束是相当宽容的，这使得不同的 Java 虚拟机可以按照编写人员自己的想法来设计。比如对于不同的 Java 虚拟机而言，最开始的加载阶段需要在什么时候完成，随便你，各个阶段能否交叉混合执行，随便你，各个阶段具体要做什么事情，（在保证一定前提下）随便你。当然还是有一些限制，在这里需要指出的有两点：</p>
-<ol>
-<li><p>加载、验证、准备、初始化这四个阶段（即除了解析之外的类加载阶段），开始执行的顺序必须如图依次开始（但是允许上一个阶段没执行完，下一个阶段就已经开始）。</p>
-</li>
-<li><p>明确地说明了，初始化阶段的执行时机，并且是有且仅有这些场景下，Java 虚拟机需要立即执行初始化过程。场景还是挺多的，就不一一列举了，其中包括：</p>
-<ul>
-<li>使用 new 关键字实例化对象的时候</li>
-<li>调用一个类型的静态方法的时候</li>
-</ul>
-<p>这也隐性地规定了，在这些场景之下，加载、验证、准备这三个阶段也已经开始执行（因为要按顺序开始）。</p>
-</li>
-</ol>
-<p>因此，当 new 一个对象，或者调用一个对象的静态方法时（正如饿汉模式示例代码中的 <code>getInstance()</code> 方法），类加载过程一定会被执行，且执行完毕。</p>
-<br>
-
-<p>简单地描述一下，各个阶段分别在做什么事情：</p>
-<ul>
-<li>加载：获取类的二进制字节流，并存储在方法区中（存储格式由 JVM 自行决定）</li>
-<li>验证：确保二进制字节流格式等合规</li>
-<li>准备：为静态变量（被 static 修饰的变量）分配空间并设置初始值（请注意是初始值，比如 int 类型设为 0）</li>
-<li>解析：（没懂）将常量池内的符号引用替换为直接引用</li>
-<li>初始化：执行类构造器 <code>&lt;clinit&gt;()</code> 方法，该方法执行类变量的赋值动作、并执行 static 块中的内容。该方法在多线程环境下会被加锁同步执行，确保多线程环境下类只会被加载一次。</li>
-</ul>
-<p>总结一下，饿汉模式创建对象实例，会在准备阶段分配出空间，并在初始化阶段进行真正的赋值，这一切都发生在类加载过程中，当类加载阶段结束之后，饿汉模式的单例就已经被创建出来了。</p>
-<br>
-
-<p>如果要给饿汉模式一个缺点，那么如果该类里面有一个静态方法，执行该类的静态方法，就会触发初始化阶段，从而导致该类的单例对象也会被一同创建，浪费了性能和空间。（但是我觉得，生产中似乎没有这种可能吧，通过饿汉模式写了一个类，不要该类的实例对象，反而只调用该类的一个静态方法，这么任性吗？）</p>
-<hr>
-<h1 id="懒汉模式"><a href="#懒汉模式" class="headerlink" title="懒汉模式"></a>懒汉模式</h1><p>懒汉模式（也有叫饱汉模式的，都是垃圾翻译）有多种实现代码，这主要是因为懒汉模式的创建逻辑是懒加载，当程序需要单例对象时才创建，而创建的过程中有并发风险，为了处理并发风险，就出现了多种处理方式。</p>
-<p>我在这里不循序渐进地写多套代码，直接把最好的一种复制如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 首先，也是先堵死 new Singleton() 这条路</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 和饿汉模式相比，这边不需要先实例化出来，注意这里的 volatile，它是必须的</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> Singleton instance = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 加锁</span></span><br><span class="line">            <span class="keyword">synchronized</span> (Singleton.class) &#123;</span><br><span class="line">                <span class="comment">// 这一次判断也是必须的，不然会有并发问题</span></span><br><span class="line">                <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>懒汉模式需要对并发、Java 的内存模型有一定认识，主要是要理解 volatile 关键字，这里只解释 volatile 的作用。</p>
-<p>volatile 关键字主要实现两方面的作用：内存可见性、禁止重排序，懒汉模式使用 volatile 修饰单例对象，是用到了第二个特性，禁止指令重排序。但我们还是按顺序说，先讲内存可见性。</p>
-<ol>
-<li><p>内存可见性</p>
-<p>内存可见性的问题，指的是如果多条线程同时操作资源，这边改变了数据，另一边能否及时知道数据发生了改变。</p>
-<p>共享变量的可见性问题，不是由于多核导致的，而是由于多缓存导致的，所有的共享变量都存储在主内存中，每个线程也有自己独自的本地内存，这种设计能够加快运算速度，但导致了内存可见性的问题。</p>
-<p>学习内存可见性应当去学习 Java 内存模型，这里分享一篇博文<a href="https://cyc2018.github.io/CS-Notes/#/notes/Java%20%E5%B9%B6%E5%8F%91?id=%e5%8d%81%e3%80%81java-%e5%86%85%e5%ad%98%e6%a8%a1%e5%9e%8b" target="_blank" rel="noopener">《Java 并发 - Java 内存模型》</a>。</p>
-</li>
-<li><p>禁止重排序</p>
-<p>为了运行更快，编译器、CPU、内存系统都进行了重排序，下列三行代码：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> i = <span class="number">10</span>;      <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">int</span> j = <span class="number">20</span>;      <span class="comment">// 2</span></span><br><span class="line"><span class="keyword">int</span> sum = i + j; <span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
-
-<p>从代码上看，执行顺序应该是 1 2 3，但是实际的执行顺序有可能是 2 1 3。</p>
-<p>我原来一直不理解重排序有什么影响，后来我才明白：对于单线程而言确实是没有影响，即使重排序了，实际的执行逻辑也不会有变化，但是多线程情况下就不一定了，当存在数据竞争的情况时，重排序可能会导致违反直觉的现象发生。</p>
-<p>这里就以懒汉模式为例，说明如果发生重排序，可能会发生什么问题：</p>
-<p>在 synchronized 代码块中，<code>instance = new Singleton();</code> 这行实例化对象的代码，可以拆分成三个指令（可参考《Java 并发编程的艺术》）：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">memory = allocate();  <span class="comment">// 1. 分配内存 相当于c的malloc</span></span><br><span class="line">ctorInstanc(memory);  <span class="comment">// 2. 初始化对象</span></span><br><span class="line">s = memory;           <span class="comment">// 3. 设置s指向刚分配的地址</span></span><br></pre></td></tr></table></figure>
-
-<p>new 对象的过程可以拆解为：</p>
-<ul>
-<li>首先 JVM 将申请一块空间（1）</li>
-<li>然后执行构造方法为属性赋值（2）</li>
-<li>最后让对象指向刚刚分配好的地址（3）。</li>
-</ul>
-<p>如果发生指令重排序，那么 new 对象的过程就有可能变成：</p>
-<ul>
-<li>首先 JVM 将申请一块空间（1）</li>
-<li>让对象指向刚刚分配好的地址（3）</li>
-<li>执行构造方法为属性赋值（2）</li>
-</ul>
-<p>如果只有一条线程则没问题，但出现了另一条线程，执行 getInstance() 方法时，先检查单例对象 instance 是否为空（<code>if (instance == null)</code>），完全有可能检查到 instance 不为空（因为已经指向了刚刚分配好的地址），但是 instance 还没有执行完构造方法，最终拿到了一个没真正创建完毕的对象。</p>
-<br>
-
-<p>volatile 关键字实现的第二个作用，就是禁止指令重排序。（顺便一提，不光是禁止两个被 volatile 修饰的属性，在操作上不能重排序，而且被 volatile 修饰的属性，和它周围的普通属性的相关操作都不能重排序）。</p>
-<p>被 volatile 修饰的单例对象，将严格按照指令顺序被创建，因此不存在问题。</p>
-</li>
-</ol>
-<br>
-
-<hr>
-<h1 id="嵌套类方式"><a href="#嵌套类方式" class="headerlink" title="嵌套类方式"></a>嵌套类方式</h1><p>先看代码吧，然后再解释一下嵌套类。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 首先，还是先堵死 new Singleton() 这条路</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 主要是使用了 嵌套类可以访问外部类的静态属性和静态方法 的特性</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Holder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Holder.instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>先解释一下嵌套类是什么。</p>
-<p>Java 中，类的内部也可以有类，这种情况被称为嵌套类（nested class），嵌套类分为两种，分别是静态嵌套类（static nested class）和内部类（inner class）。</p>
-<p>我认为，这里要从文法的角度上琢磨一下语义，请注意，Java 中把类中有类的现象称为嵌套类，嵌套是一种位置性的描述词语，只是在描述两个类的位置关系，并没有从属关系。也就是说，两个类是嵌套关系，并不能认为其中一个类归属于另一个类，而只是从位置上来讲，一个类出现在了另一个类的里面，但是是否有从属关系，这个不好说。嵌套类中有一种情况是内部类，内部（inner）就有一定的归属关系了，如果一个类是另一个类的内部类，就说明这个类是归属于另一个类，是任另一个类操纵的。</p>
-<p>我认为这种文法上的理解是很有必要的，对于访问权限、类加载时机等等的理解都是有帮助的。</p>
-<p>Java 从语言语法上对嵌套类的区分，是判断有没有 static 关键字：</p>
-<ul>
-<li><p>静态嵌套类（static nested class），有 static 修饰</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 有static -&gt; 静态嵌套类</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">B</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>内部类（inner classer），没有 static 修饰</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 没有static -&gt; 内部类</span></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">B</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>内部类还可以再细分为三种，主要是在访问权限上的区别，这里为了主干清晰，就不介绍了。</p>
-</li>
-</ul>
-<p>在民间叫法上，往往把这两种情况都称为“内部类”，因为从直观的角度上看，这两种好像都是“类中类”，感觉都是内部的，因此民间往往把带有 static 关键字的称为静态内部类（也就是官方说的静态嵌套类），而把没有 static 关键字的称为内部类。这种叫法非常广泛，也有一定的道理，但我觉得这种叫法会模糊意义，具有迷惑性，最好不要这么称呼。</p>
-<p>还有一种民间声音，把静态嵌套类直接称为嵌套类，也就是说”类中类“分为两种，分别是嵌套类和内部类，这种叫法很坚决地表明了区别，我觉得还有点道理。</p>
-<p>下图是几种称呼的示意图：</p>
-<p><img src="/assets/%E5%B5%8C%E5%A5%97%E7%B1%BB%E7%9A%84%E7%A7%B0%E5%91%BC.jpg" alt="嵌套类的称呼"></p>
-<p>这里的单例模式，是通过静态嵌套类来实现的，接下来讨论一下原理。</p>
-<p>从语法层面，静态嵌套类和内部类的区别，在于类是否被 static 修饰，然后根据 static 访问权限划分出了不同的用法，例如“static 语句块中不能使用 non- static 语句”、“内部类不能有 static 变量”、“static 的类加载时机不同”等等的问题。</p>
-<p>通过语法进行解释这两种类型的区别，当然是可以的，但如果揣摩为什么这么设计的原因，应该会更易理解和记忆很多。静态嵌套类和内部类的区别，从 Java 设计的角度上讲，是跟外部类的关系是不一样的：静态嵌套类跟外部类可以说是没什么关系（除了位置特殊了些），但是内部类要依赖于外部类，它可以视为外部类的一个成员。</p>
-<ul>
-<li><p>静态嵌套类：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">B</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>我们可以认为，A 类（外部类）和 B 类（静态嵌套类）是没有关系的，这里的没有关系体现在：</p>
-<ul>
-<li>不需要实例化 A 类出来，就可以实例化 B 类</li>
-<li>B 类不能直接访问 A 类的非静态变量（只能直接访问 A 类的静态变量，即类变量，访问类变量是不需要先获取对象的）</li>
-<li>A 类和 B 类的类加载时间没有关系，如果完全可以 A 类加载了，但是 B 类还没有加载（这是实现单例模式的核心）</li>
-</ul>
-<p>值得一提的是，静态嵌套类是可以用 private、protected、public 修饰的，指的是访问它的权限，比如如果是 public 的话，那么所有地方都可以访问该静态嵌套类，但是如果是 private 修饰的话，只有外部类可以访问静态嵌套类。</p>
-</li>
-<li><p>内部类</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里 A 类（外部类）和 C 类（内部类）之间是有关系的，这种关系大概像是“A 有一个成员变量 C”，具体体现在：</p>
-<ul>
-<li>A 类没有实例化出来之前，C 类不能创建，就像是一个对象成员变量一样</li>
-<li>C 类可以访问 A 类的所有变量，无论是否是静态变量</li>
-<li>C 类可以自定义变量，但是不能有自己的静态变量（因为没有必要，这里可以自己多想一下）</li>
-</ul>
-</li>
-</ul>
-<br>
-
-<p>我们来回头看一下这里单例模式的实现。</p>
-<p>外部类中套一个静态嵌套类，外部类进行类加载时，静态嵌套类并没有加载，而当调用了外部类的 <code>getInstance()</code> 方法之后，该方法会触发静态嵌套类进行类加载（这里跟饿汉模式是一样的原理），然后实例化出来想要的单例。</p>
-<p>因此通过嵌套类实现单例模式，实际上就是饿汉模式的一种特殊使用方法，通过类套类的方式，延时加载了饿汉模式。这是最方便实用的一种单例模式。</p>
-<br>
-
-<hr>
-<h1 id="枚举方式"><a href="#枚举方式" class="headerlink" title="枚举方式"></a>枚举方式</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 首先，还是先堵死 new Singleton() 这条路</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 枚举创建单例</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">enum</span> SingletonEnum &#123;</span><br><span class="line">        INSTANCE;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> Singleton instance;</span><br><span class="line"></span><br><span class="line">        SingletonEnum() &#123;</span><br><span class="line">            instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> instance;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 对外暴露的获取单例的方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> SingletonEnum.INSTANCE.getInstance();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这种方式怎么说呢，人人都夸，人人都不用hhh</p>
-<p>简单的讲，枚举类会在类加载时，初始化所有实例，由 JVM 保证它们不会再被实例化，天生就实现了单例模式。</p>
-<p>（以下内容来源自知乎文章<a href="https://zhuanlan.zhihu.com/p/55327937" target="_blank" rel="noopener">《枚举的本质》</a>，建议直接阅读）</p>
-<p>在类加载过程中，枚举中定义的枚举值，实际上是一个个的 <code>static final</code> 的变量，并且会被直接赋值，不存在再次被实例化的可能。</p>
-<p>下面写一段很简单的枚举代码，定义了一个水果的枚举类，并且规定有一个金额的属性。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> Fruit &#123;</span><br><span class="line">    </span><br><span class="line">    APPLE(<span class="number">10</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> money;</span><br><span class="line">    Noodle(<span class="keyword">int</span> money)&#123;</span><br><span class="line">        <span class="keyword">this</span>.money = money;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这段代码经过反编译之后，可以等效为如下代码（经过了删减）：</p>
-<p>可以看出，枚举值实际上是一个静态的 final 变量，并且会在类加载的过程中就被赋值（static 代码块中的内容会在类加载过程中被执行），因此保证了单例。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Fruit</span> <span class="keyword">extends</span> <span class="title">Enum</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Fruit APPLE;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Fruit</span><span class="params">(String s, <span class="keyword">int</span> i, <span class="keyword">int</span> j)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(s, i);</span><br><span class="line">        code = j;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        APPLE = <span class="keyword">new</span> Fruit(<span class="string">"APPLE"</span>, <span class="number">0</span>, <span class="number">10</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>多说一点有关枚举的知识点：</p>
-<ul>
-<li>枚举类实际上继承自 Enum 类（参照上面的反编译代码），因此枚举类均不能继承（因为 Java 单继承）</li>
-<li>枚举类默认有两个成员变量（可以自行增加更多的），分别是 <code>name</code> 和 <code>ordinal</code>，代表枚举值的名字和顺序，<code>toString()</code> 方法重写为返回 <code>name</code>。</li>
-<li>枚举值使用 <code>==</code> 和 <code>equals()</code> 进行比较，作用是相同的，枚举类的 <code>equals()</code> 经过重写，实际上就是 <code>==</code>，其含义是比较内存地址（由于天生单例，所以通过地址就可以判断是否是同一个）</li>
-<li>枚举不允许克隆和反序列化，永远保证单例（因此很安全）</li>
-<li>枚举类有两个方法：<code>values()</code> 返回所有枚举值、<code>valueOf()</code> 根据 <code>name</code> 返回枚举值。</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>Random Post</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>从 NIO 到 Netty</title>
     <url>/2020/09/05/%E4%BB%8E-NIO-%E5%88%B0-Netty/</url>
     <content><![CDATA[<br>
@@ -3649,178 +3459,193 @@
       </tags>
   </entry>
   <entry>
-    <title>各容器迭代器的实现</title>
-    <url>/2019/12/08/%E5%90%84%E5%AE%B9%E5%99%A8%E8%BF%AD%E4%BB%A3%E5%99%A8%E7%9A%84%E5%AE%9E%E7%8E%B0/</url>
+    <title>单例模式</title>
+    <url>/2020/04/14/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</url>
     <content><![CDATA[<br>
 
-<p>十二月的第二周，来学习迭代器在各个容器中的具体实现。</p>
-<p>不知道自己能看多少，ArrayList 和 HashSet 的实现是应该必须看完的，如果时间有余也要看看 TreeSet 的实现（哈哈哈……不相信自己的苍白的微笑）。</p>
-<p>这周的目标应该不是在迭代器上，而是在容器设计和怎么看源码这两件事上。迭代器是因和果，但从因走到果的那条路是更有价值的。</p>
+<p>从本周开始，新增一个博文模块 <code>Random Post</code>，用于不定期的学习与整理，原本的每周博文 <code>Weekly Post</code> 仍是主要更新计划（名为每周实则随缘hhh），当每周时间有余，或者不屑于将学习内容作为周计划时，在此更新。</p>
+<p>本篇是该模块的第一篇文章，学习单例模式。我在随缘学习单例模式时，发现这种设计模式的水很深，不是 Java 初学人员能够完全理解的，涉及到并发基础、类加载过程、枚举设计等内容，因此来写篇文章整理一下。</p>
+<p>本文主要参考自博文<a href="https://www.javadoop.com/post/design-pattern#toc_4" target="_blank" rel="noopener">《设计模式也可以这么简单》</a>的单例模式部分。</p>
 <hr>
-<h1 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h1><p>ArrayList 是可调整大小的 List，实现了两种迭代器：迭代器、列表迭代器。</p>
-<p>列表迭代器是在原本迭代器的基础上增加了顺序，例如增加了<code>是否有前一个元素</code>、<code>下一个元素的坐标</code>等方法。</p>
-<p>我在这里只关注 ArrayList 实现的普通迭代器。</p>
-<br>
-
-<p>获取 ArrayList 的迭代器，与其他容器的方式一样，都是调用 <code>Iterator()</code> 方法，获得一个迭代器。（这里迭代器支持泛型）</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Iterator&lt;E&gt; iterator = arrayList.iterator();</span><br></pre></td></tr></table></figure>
-
-<p>公共方法 <code>Iterator()</code>，返回了一个 ArrayList 类内部实现的迭代器 <code>Itr</code>。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Iterator&lt;E&gt; <span class="title">iterator</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Itr();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Itr</span> <span class="keyword">implements</span> <span class="title">Iterator</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">// Itr类的内部实现...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>那我们要关注的就是 <code>Itr</code> 类内部是怎么实现的。</p>
-<br>
-
-<p>ArrayList 的迭代器，<code>Itr</code> 类的基本骨架是这样子的：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Itr</span> <span class="keyword">implements</span> <span class="title">Iterator</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> cursor;</span><br><span class="line">    <span class="keyword">int</span> lastRet = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> expectedModCount = modCount;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> E <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 还有其他两个方法</span></span><br><span class="line">    <span class="comment">// 包括jdk 1.8版本新增的方法forEachRemaining，以及一个私有的辅助方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>ArrayList 在实现迭代器时，自己又定义了三个 int 类型的局部变量：<code>cursor</code>、<code>lastRet</code>、<code>expectedModCount</code>。我们先不看迭代器重写的方法是怎么实现，先关注这三个局部变量是做什么的。</p>
+<p>单例模式，GOF 分类下（最常见的那种分类）的 23 种设计模式之一，创建型模式中的一种，面试常备题目之一。</p>
+<p>单例模式的意思是，类必须保证只有一个实例存在，整个系统，所有线程，可以有并且最多只能有一个该类的对象，这是一个针对于整个程序而言的全局对象。通常的实现思路是，该类提供一个静态的获取实例对象的方法（方法名通常为 getInstance），并且将构造函数定义为私有方法（这样就不能 new 对象出来了）。</p>
+<p>单例模式有多种实现方式，常见的有四种，分别是饿汉模式、懒汉模式、嵌套类、枚举。</p>
+<h1 id="饿汉模式"><a href="#饿汉模式" class="headerlink" title="饿汉模式"></a>饿汉模式</h1><p>饿汉模式（Eager Initialization）和懒汉模式（Lazy Initialization），这两个名字的翻译，让我觉得早期的程序员都是上海电影译制厂的配音演员退休转业来的，硬是拉大了本就已经存在的文化代沟，垃圾翻译。</p>
 <ul>
-<li><p><strong>cursor</strong> 坐标</p>
-<p>表示迭代器移动到了 ArrayList 的第几个元素，它会伴随着迭代器的移动而移动。</p>
-<p>用于判断迭代器的位置，也用于错误判断（比如越界）</p>
+<li><p>饿汉模式的意思是，不管是否使用都抢着在第一时间加载。</p>
 </li>
-<li><p><strong>lastRet</strong> 上个坐标</p>
-<p>最开始是 -1，随着 cursor 一同增加，但始终比 cursor 小 1。</p>
-<p>用于判断迭代器刚刚经过的位置，来删除元素，或是错误判断。</p>
-</li>
-<li><p><strong>expectedModCount</strong> 列表结构变化次数</p>
-<p>这是一个很有趣的设计，它不光出现在 ArrayList 的迭代器里，而是出现在 ArrayList 的各个方法中。</p>
-<p>这个变量，记录的是列表改变了多少次结构（即列表内元素的数量，发生了多少次变化）。比如初始化一个 ArrayList 之后，add 了一个元素，那么 modCount 就是 1，又 add 了一个元素，那么 modCount 就是 2，之后 remove 了一个元素，列表的结构又发生了改变，modCount 变成了 3。modCount 记录的，就是列表的结构发生了多少次的变化（mod：modification)。</p>
-<p>记录列表结构发生变化的次数，这有什么意义呢。ArrayList 是一个非线程安全的类，当有多个线程共用时，很有可能一边新增或删除了列表的某个元素，另一边对此毫不知情而发生错误。对此，ArrayList 为迭代器专门设计了一个 transient 的变量 modCount，不论任何位置，只要改变了列表的结构，都把这一次记录下来。那么，当迭代器初始化时，记录下来 modCount，之后迭代器工作前简单比较一下，当初记录的次数和现在的次数是否相同，就能知道列表有没有发生结构性变化。虽然这不是一个很保险的方式（即使 modCount 相同也有可能出现问题），但是这种方式很轻便，也基本能覆盖大部分问题。</p>
-<p>实际上 modCount 并不是 ArrayList 独有的设计，在很多容器（ArrayList、LinkedList、HashMap……）都能看到这种设计：记录容器结构变化的次数，迭代器工作时能快速纠错。这被称为 Java 的 fail-fast 机制，一种用于容器的错误检错机制。</p>
+<li><p>懒汉模式的意思是，什么时候要用了，什么时候再加载。</p>
 </li>
 </ul>
-<p>好了，那么开始看源码吧。</p>
-<br>
+<p>厘清两汉区别之后，我们先来看饿汉模式。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 首先，将构造函数定义为私有方法，将 new Singleton() 堵死</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;&#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 创建私有静态实例，意味着这个类第一次使用的时候就会进行创建</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="hasNext"><a href="#hasNext" class="headerlink" title="hasNext"></a>hasNext</h2><p>极为简单，当前坐标是否达到容器的长度，达到则返回 false，没达到则返回 true。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> cursor != size;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>为什么是容器的长度，而不是长度 - 1，这个要根据其他两个方法来看，cursor 坐标究竟指向哪个元素。</p>
-<br>
-
-<h2 id="next"><a href="#next" class="headerlink" title="next"></a>next</h2><p>next 方法的目的，是返回容器的下一个元素。对于列表而言，元素之间是有顺序的，按顺序返回即可。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">next</span><span class="params">()</span> </span>&#123; <span class="comment">// E 代表泛型</span></span><br><span class="line">    checkForComodification();</span><br><span class="line">    <span class="keyword">int</span> i = cursor;</span><br><span class="line">    <span class="keyword">if</span> (i &gt;= size)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</span><br><span class="line">    Object[] elementData = ArrayList.<span class="keyword">this</span>.elementData;</span><br><span class="line">    <span class="keyword">if</span> (i &gt;= elementData.length)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">    cursor = i + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> (E) elementData[lastRet = i];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>大致上分两个步骤：</p>
+<p>（以下内容基本来源于《深入理解 Java 虚拟机》第七章，但可能因为我自身理解不足导致有错误）</p>
+<p>饿汉模式创建对象的时机，是在类加载过程中，当类加载完成之后，无论是否需要，此时单例对象都已经被创建了。饿汉模式实现单例模式要靠 static 关键字，而理解 static 关键字需要了解类加载机制。</p>
+<p><img src="/assets/%E7%B1%BB%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="类的生命周期"></p>
+<p>一个类的生命周期有七个阶段，如上图，其中前五个阶段是类加载的过程，分别是：</p>
+<ul>
+<li>加载（Loading）</li>
+<li>验证（Verification）</li>
+<li>准备（Preparation）</li>
+<li>解析（Resolution）</li>
+<li>初始化（Initialization）</li>
+</ul>
+<p>中间三个阶段又可以统称为连接（Linking）阶段。</p>
+<p>以上五个类加载阶段基本上交由 Java 虚拟机主导控制，而不是由业务程序去控制。</p>
+<p>对于小白而言，一个很反直觉的地方在于，类加载过程（即上面的五个阶段），并不是在编译期执行完成的，而是在程序的运行期间完成的，如果类没有被用到，那么类就不会被加载，如果用到了就在程序运行过程中现场加载。这种设计为 Java 提供了极高的扩展性和动态连接性，当程序运行之后，仍然可以在不停机的情况下输入新的类，比如从网络上加载一段二进制流作为程序的一部分。</p>
+<p>Java 虚拟机规范中，对于类加载过程的约束是相当宽容的，这使得不同的 Java 虚拟机可以按照编写人员自己的想法来设计。比如对于不同的 Java 虚拟机而言，最开始的加载阶段需要在什么时候完成，随便你，各个阶段能否交叉混合执行，随便你，各个阶段具体要做什么事情，（在保证一定前提下）随便你。当然还是有一些限制，在这里需要指出的有两点：</p>
 <ol>
-<li><p>检查</p>
-<p>ArrayList 实现的 next 方法首先检查 modCount，如果列表发生结构性变化，快速失败。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 迭代器的内部方法</span></span><br><span class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">checkForComodification</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (modCount != expectedModCount)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>检查非常简单，比较迭代器初始化时的 modCount（expectedModCount），和当前列表的 modCount 是否相同，不同就是结构变了。</p>
-<p>然后还会检查 cursor 坐标是否指向了越界的位置。</p>
+<li><p>加载、验证、准备、初始化这四个阶段（即除了解析之外的类加载阶段），开始执行的顺序必须如图依次开始（但是允许上一个阶段没执行完，下一个阶段就已经开始）。</p>
+</li>
+<li><p>明确地说明了，初始化阶段的执行时机，并且是有且仅有这些场景下，Java 虚拟机需要立即执行初始化过程。场景还是挺多的，就不一一列举了，其中包括：</p>
+<ul>
+<li>使用 new 关键字实例化对象的时候</li>
+<li>调用一个类型的静态方法的时候</li>
+</ul>
+<p>这也隐性地规定了，在这些场景之下，加载、验证、准备这三个阶段也已经开始执行（因为要按顺序开始）。</p>
 </li>
 </ol>
-<ol start="2">
-<li><p>移动</p>
-<p>在检查完结构后，next 方法正式工作。</p>
-<p>它利用 cursor 来判断位置，返回列表的第 cursor 个元素，由于 ArrayList 的背后是由数组实现的，next 方法实际上返回的是数组的第 cursor 个元素，即 <code>return elementData[cursor];</code>。</p>
-<p>在迭代器执行 next 方法返回下一个元素的同时，它的两个类变量 cursor、lastRet 也自增 1。</p>
-</li>
-</ol>
-<p>观察发现，cursor 始终指向迭代器的下一个元素的位置，当 next 方法还没执行时，cursor 指向的是要返回的那个“下一个元素”，但当 next 方法要返回下个元素的时候，cursor 就又自增 1，指向了更下一个的元素。还有一种说法是，迭代器是以 cursor 为当前坐标的，next 方法是越过当前元素，到下一个元素的位置上，并返回刚刚越过去的那个元素。</p>
-<p>lastRet 是 cursor 的跟班，紧跟在 cursor 一步远的距离，做迭代器的校验工具人。</p>
+<p>因此，当 new 一个对象，或者调用一个对象的静态方法时（正如饿汉模式示例代码中的 <code>getInstance()</code> 方法），类加载过程一定会被执行，且执行完毕。</p>
 <br>
 
-<h2 id="remove"><a href="#remove" class="headerlink" title="remove"></a>remove</h2><p>remove 方法的目的，就是把迭代器的当前元素，在整个列表里剔除掉。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (lastRet &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException();</span><br><span class="line">    checkForComodification();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ArrayList.<span class="keyword">this</span>.remove(lastRet);</span><br><span class="line">        cursor = lastRet;</span><br><span class="line">        lastRet = -<span class="number">1</span>;</span><br><span class="line">        expectedModCount = modCount;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IndexOutOfBoundsException ex) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>简单地描述一下，各个阶段分别在做什么事情：</p>
+<ul>
+<li>加载：获取类的二进制字节流，并存储在方法区中（存储格式由 JVM 自行决定）</li>
+<li>验证：确保二进制字节流格式等合规</li>
+<li>准备：为静态变量（被 static 修饰的变量）分配空间并设置初始值（请注意是初始值，比如 int 类型设为 0）</li>
+<li>解析：（没懂）将常量池内的符号引用替换为直接引用</li>
+<li>初始化：执行类构造器 <code>&lt;clinit&gt;()</code> 方法，该方法执行类变量的赋值动作、并执行 static 块中的内容。该方法在多线程环境下会被加锁同步执行，确保多线程环境下类只会被加载一次。</li>
+</ul>
+<p>总结一下，饿汉模式创建对象实例，会在准备阶段分配出空间，并在初始化阶段进行真正的赋值，这一切都发生在类加载过程中，当类加载阶段结束之后，饿汉模式的单例就已经被创建出来了。</p>
+<br>
 
-<p>照例还是分两步走，第一步校验。next 方法校验的是结构是否变化、下个位置是否越界。与之对称的，remove 方法校验的是结构是否变化，当前元素是否不存在。</p>
-<p>第二步移除。这里迭代器的 remove 方法，实际上就是列表自己的 remove 方法。列表的 remove 方法实际上是在调用 <code>System.arraycopy</code> 方法，将数组需要移除那个元素，之后的所有元素逐个往前挪位置，以达到数组复制的效果，是个开销不小的实现方法。不过仔细看，迭代器的 remove 方式是只能执行一次的，执行之后 lastRet 就归为初始的 -1 值，不能再 remove 了。</p>
+<p>如果要给饿汉模式一个缺点，那么如果该类里面有一个静态方法，执行该类的静态方法，就会触发初始化阶段，从而导致该类的单例对象也会被一同创建，浪费了性能和空间。（但是我觉得，生产中似乎没有这种可能吧，通过饿汉模式写了一个类，不要该类的实例对象，反而只调用该类的一个静态方法，这么任性吗？）</p>
 <hr>
-<h1 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h1><p>看了源码才知道，原来 HashSet 基本就是 HashMap，它的迭代器实现也是 HashMap 里面的。</p>
-<p>HashSet 内部维护一张 HashMap 表，HashMap 有 <code>key</code> 和 <code>value</code>，<code>key</code> 就是 HashSet 的值，而 <code>value</code> 统一都是一个空对象。当创建一个 HashSet 时，实际上就是在创建一张 HashMap，修改 set 的值实际上就是在修改 map 的键值对。可以从 HashSet 的 add 方法来粗略一窥：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// HashSet内部用map存储</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> HashMap&lt;E, Object&gt; map;</span><br><span class="line"></span><br><span class="line"><span class="comment">// HashSet存储时，key是集合的值，value是这个空对象</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Object PRESENT = <span class="keyword">new</span> Object();</span><br><span class="line"></span><br><span class="line"><span class="comment">// HashSet的add方法，增加元素实际上就是在往map里存键值对</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> map.put(e, PRESENT) == <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="懒汉模式"><a href="#懒汉模式" class="headerlink" title="懒汉模式"></a>懒汉模式</h1><p>懒汉模式（也有叫饱汉模式的，都是垃圾翻译）有多种实现代码，这主要是因为懒汉模式的创建逻辑是懒加载，当程序需要单例对象时才创建，而创建的过程中有并发风险，为了处理并发风险，就出现了多种处理方式。</p>
+<p>我在这里不循序渐进地写多套代码，直接把最好的一种复制如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 首先，也是先堵死 new Singleton() 这条路</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 和饿汉模式相比，这边不需要先实例化出来，注意这里的 volatile，它是必须的</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> Singleton instance = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 加锁</span></span><br><span class="line">            <span class="keyword">synchronized</span> (Singleton.class) &#123;</span><br><span class="line">                <span class="comment">// 这一次判断也是必须的，不然会有并发问题</span></span><br><span class="line">                <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>向 HashSet 里增加一个元素，实际上就是在内部维护的 HashMap 里，存入一个 key 为想要增加的元素、value 为空对象的键值对。</p>
-<br>
-
-<p>HashMap 自己是没有迭代器的，因为 map 里的每个元素都是有两部分的键和值，迭代器无法同时迭代两个部分。但是迭代其中的一部分是可行的，例如迭代 key，或是迭代 value。实际上，HashSet 的迭代器，就是在迭代 key。</p>
-<p>在 HashMap 的源码中，与迭代器相关的内部类有四个，它们被码在同一个区域。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* ------------------------------------------------------------ */</span></span><br><span class="line"><span class="comment">// iterators</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">HashIterator</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">KeyIterator</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ValueIterator</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">EntryIterator</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 其实还有四个与 Spliterator 相关的迭代器类 （Spliterator：splitable iterator）</span></span><br><span class="line"><span class="comment">// 它们是可分隔迭代器，用于并行迭代，但我们目前忽视它们</span></span><br></pre></td></tr></table></figure>
-
-<p>这四个迭代器，第一个是抽象类，后面三个是我们能使用的类：</p>
-<ul>
-<li><font color="#32CD32"><strong>KeyIterator</strong></font>  key 迭代器</li>
-<li><font color="#32CD32"><strong>ValueIterator</strong></font>  value 迭代器</li>
-<li><font color="#32CD32"><strong>EntryIterator</strong></font>  key-value （键值对）迭代器</li>
-</ul>
-<p>第一个迭代器 <font color="#32CD32"><strong>HashIterator</strong></font> 是上面这三个迭代器的父类，它算是实现了迭代器的 hasNext、next、remove 三个方法，后面三个迭代器直接继承了它的 hasNext 和 remove 方法，简单写了 next 方法。</p>
-<p>是怎么简单实现 next 方法的呢，以 <font color="#32CD32"><strong>KeyIterator</strong></font> 类为例：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// K 是泛型类，与迭代器的泛型类相同</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> K <span class="title">next</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> nextNode().key; &#125;</span><br></pre></td></tr></table></figure>
-
-<p>就是返回了父类定义的键值对的 key 值，一行代码。</p>
-<p>其他两个类也是如此，返回 value 和返回 key-value，因此我们就不提 HashMap 的后面三个迭代器了，重点看第一个迭代器的实现。</p>
-<br>
-
-<p>从整体上看，HashIterator 类的骨架是这样的：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">HashIterator</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Node 类是 HashMap 里定义的键值对类，它继承了 Map.Entry 类</span></span><br><span class="line">    Node&lt;K,V&gt; next;        </span><br><span class="line">    Node&lt;K,V&gt; current;     </span><br><span class="line">    <span class="keyword">int</span> expectedModCount;  </span><br><span class="line">    <span class="keyword">int</span> index;             </span><br><span class="line"></span><br><span class="line">    HashIterator() &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">final</span> Node&lt;K,V&gt; <span class="title">nextNode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>一共四个内部变量，</p>
-<ul>
-<li><font color="#32CD32"><strong>next</strong></font>  下一个键值对</li>
-<li><font color="#32CD32"><strong>current</strong></font>  当前键值对</li>
-<li><font color="#32CD32"><strong>expectedModCount</strong></font>  预期 hashMap 的结构变化次数</li>
-<li><font color="#32CD32"><strong>index</strong></font> 当前键值对的坐标（HashMap 存放键值对，是以数组的方式来存储的）</li>
-</ul>
-<p>以及四个方法。</p>
-<ul>
-<li><font color="#32CD32"><strong>HashIterator</strong></font>  构造方法，初始化迭代器</li>
-<li><font color="#32CD32"><strong>hasNext</strong></font>  是否有下一个元素 </li>
-<li><font color="#32CD32"><strong>nextNode</strong></font>  下一个键值对</li>
-<li><font color="#32CD32"><strong>remove</strong></font>  删除当前元素</li>
-</ul>
-<p>四个内部变量，跟 ArrayList 实现迭代器的逻辑是相同的，就不写两遍了，看后面的四个方法是怎么实现的。</p>
-<br>
-
-<h2 id="HashIterator"><a href="#HashIterator" class="headerlink" title="HashIterator"></a>HashIterator</h2><p>HashMap 的迭代器的构造器，初始化了四个内部变量。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">HashIterator() &#123;</span><br><span class="line">    expectedModCount = modCount;</span><br><span class="line">    Node&lt;K,V&gt;[] t = table;</span><br><span class="line">    current = next = <span class="keyword">null</span>;</span><br><span class="line">    index = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (t != <span class="keyword">null</span> &amp;&amp; size &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">do</span> &#123;&#125; <span class="keyword">while</span> (index &lt; t.length &amp;&amp; (next = t[index++]) == <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>初始化 modCount 和 current 没什么好讲的，简单赋值。</p>
-<p><code>table</code> 是 HashMap 内部存储键值对的数组，具体内容这周不看，但是我们需要知道的是，这个数组内部并不是连续排列，一个键值对紧跟着一个键值对的，中间可能会有 null。</p>
-<p>为了考虑内部存储的结构，当前元素存储的下一个数组格子，可能没有存储任何东西，只是 null，因此需要跳过这些空格。为 next 变量赋值时，以及为 index 变量赋值时，是需要跳过空白格子的。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">do</span> &#123;&#125; </span><br><span class="line"><span class="keyword">while</span> (index &lt; t.length &amp;&amp; (next = t[index++]) == <span class="keyword">null</span>);</span><br></pre></td></tr></table></figure>
-
-<p>（这行代码还真是紧凑……）</p>
-<br>
-
-<h2 id="hasNext-1"><a href="#hasNext-1" class="headerlink" title="hasNext"></a>hasNext</h2><p>迭代器是否有下个元素，去掉方法的结构体只有一行代码：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> next != <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h2 id="nextNode"><a href="#nextNode" class="headerlink" title="nextNode"></a>nextNode</h2><p>HashMap 的抽象迭代器并没有 next 方法，next 方法交由子类实现，但是它实现了 next 方法所必需的，搜索下一个键值对的逻辑。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">final</span> Node&lt;K,V&gt; <span class="title">nextNode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Node&lt;K,V&gt;[] t;</span><br><span class="line">    Node&lt;K,V&gt; e = next;</span><br><span class="line">    <span class="keyword">if</span> (modCount != expectedModCount)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">    <span class="keyword">if</span> (e == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</span><br><span class="line">    <span class="keyword">if</span> ((next = (current = e).next) == <span class="keyword">null</span> &amp;&amp; (t = table) != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">do</span> &#123;&#125; <span class="keyword">while</span> (index &lt; t.length &amp;&amp; (next = t[index++]) == <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> e;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>首先检查 HashMap 的结构是否发生变化（fail-fast 机制），然后检查存储键值对的数组是否为 null（即没有初始化过）。再之后是两行密度很高的代码：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> ((next = (current = e).next) == <span class="keyword">null</span> &amp;&amp; (t = table) != <span class="keyword">null</span>) &#123;</span><br><span class="line">	<span class="keyword">do</span> &#123;&#125; <span class="keyword">while</span> (index &lt; t.length &amp;&amp; (next = t[index++]) == <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这两行代码的含义是：</p>
+<p>懒汉模式需要对并发、Java 的内存模型有一定认识，主要是要理解 volatile 关键字，这里只解释 volatile 的作用。</p>
+<p>volatile 关键字主要实现两方面的作用：内存可见性、禁止重排序，懒汉模式使用 volatile 修饰单例对象，是用到了第二个特性，禁止指令重排序。但我们还是按顺序说，先讲内存可见性。</p>
 <ol>
-<li>为迭代器的当前元素赋值（也就是上一轮迭代器的 next 元素）。</li>
-<li>如果没遍历完存储的内容，那么让 index 移动，让 next 键值对往后挪。</li>
-<li>存储键值对的数组，可能存在 null 值，要跳过这些 null 值，让 next 变量指向真正的下一个元素，让 index 坐标指向真正的下一个元素的再下一个位置。</li>
-</ol>
-<p>从 HashMap 的迭代器，能够大概看出，HashMap 似乎用链表和数组两种方式来存储键值对，数组中放着一个个的链表节点，而链表节点又能指向下一个元素。在数组中的每个元素都连续排列的情况下，用链表检索下一个；当数组中出现“缝隙”，元素之间断开时，又用数组来检索下一个。</p>
-<p>没看 HashMap 的其他源码，不知道这种处理方式有什么好处。</p>
-<p>（次日改：我智障了，我原来以为链表和数组是互补的，同时使用提高效率，其实链表的作用是让同一个数组格子能够存放多个元素，因为 HashMap 存储元素时，存储的位置是计算出来的，如果计算出来结果相同，那就要存在相同的地方。）</p>
+<li><p>内存可见性</p>
+<p>内存可见性的问题，指的是如果多条线程同时操作资源，这边改变了数据，另一边能否及时知道数据发生了改变。</p>
+<p>共享变量的可见性问题，不是由于多核导致的，而是由于多缓存导致的，所有的共享变量都存储在主内存中，每个线程也有自己独自的本地内存，这种设计能够加快运算速度，但导致了内存可见性的问题。</p>
+<p>学习内存可见性应当去学习 Java 内存模型，这里分享一篇博文<a href="https://cyc2018.github.io/CS-Notes/#/notes/Java%20%E5%B9%B6%E5%8F%91?id=%e5%8d%81%e3%80%81java-%e5%86%85%e5%ad%98%e6%a8%a1%e5%9e%8b" target="_blank" rel="noopener">《Java 并发 - Java 内存模型》</a>。</p>
+</li>
+<li><p>禁止重排序</p>
+<p>为了运行更快，编译器、CPU、内存系统都进行了重排序，下列三行代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> i = <span class="number">10</span>;      <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">int</span> j = <span class="number">20</span>;      <span class="comment">// 2</span></span><br><span class="line"><span class="keyword">int</span> sum = i + j; <span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
+
+<p>从代码上看，执行顺序应该是 1 2 3，但是实际的执行顺序有可能是 2 1 3。</p>
+<p>我原来一直不理解重排序有什么影响，后来我才明白：对于单线程而言确实是没有影响，即使重排序了，实际的执行逻辑也不会有变化，但是多线程情况下就不一定了，当存在数据竞争的情况时，重排序可能会导致违反直觉的现象发生。</p>
+<p>这里就以懒汉模式为例，说明如果发生重排序，可能会发生什么问题：</p>
+<p>在 synchronized 代码块中，<code>instance = new Singleton();</code> 这行实例化对象的代码，可以拆分成三个指令（可参考《Java 并发编程的艺术》）：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">memory = allocate();  <span class="comment">// 1. 分配内存 相当于c的malloc</span></span><br><span class="line">ctorInstanc(memory);  <span class="comment">// 2. 初始化对象</span></span><br><span class="line">s = memory;           <span class="comment">// 3. 设置s指向刚分配的地址</span></span><br></pre></td></tr></table></figure>
+
+<p>new 对象的过程可以拆解为：</p>
+<ul>
+<li>首先 JVM 将申请一块空间（1）</li>
+<li>然后执行构造方法为属性赋值（2）</li>
+<li>最后让对象指向刚刚分配好的地址（3）。</li>
+</ul>
+<p>如果发生指令重排序，那么 new 对象的过程就有可能变成：</p>
+<ul>
+<li>首先 JVM 将申请一块空间（1）</li>
+<li>让对象指向刚刚分配好的地址（3）</li>
+<li>执行构造方法为属性赋值（2）</li>
+</ul>
+<p>如果只有一条线程则没问题，但出现了另一条线程，执行 getInstance() 方法时，先检查单例对象 instance 是否为空（<code>if (instance == null)</code>），完全有可能检查到 instance 不为空（因为已经指向了刚刚分配好的地址），但是 instance 还没有执行完构造方法，最终拿到了一个没真正创建完毕的对象。</p>
 <br>
 
-<h2 id="remove-1"><a href="#remove-1" class="headerlink" title="remove"></a>remove</h2><p>感觉 remove 方法没什么太多可说的，检查完然后调用 HashMap 的删除方法，代码如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Node&lt;K,V&gt; p = current;</span><br><span class="line">    <span class="keyword">if</span> (p == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException();</span><br><span class="line">    <span class="keyword">if</span> (modCount != expectedModCount)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">    current = <span class="keyword">null</span>;</span><br><span class="line">    K key = p.key;</span><br><span class="line">    removeNode(hash(key), key, <span class="keyword">null</span>, <span class="keyword">false</span>, <span class="keyword">false</span>);</span><br><span class="line">    expectedModCount = modCount;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>volatile 关键字实现的第二个作用，就是禁止指令重排序。（顺便一提，不光是禁止两个被 volatile 修饰的属性，在操作上不能重排序，而且被 volatile 修饰的属性，和它周围的普通属性的相关操作都不能重排序）。</p>
+<p>被 volatile 修饰的单例对象，将严格按照指令顺序被创建，因此不存在问题。</p>
+</li>
+</ol>
+<br>
 
 <hr>
-<p>写这篇迭代器的原因，是因为写业务代码时犯了错误，在 for-each 循环里调用了容器的 remove 方法，结果让生产代码回滚了。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (String str : list) &#123;</span><br><span class="line">    <span class="comment">// 执行逻辑...</span></span><br><span class="line">    list.remove(str);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="嵌套类方式"><a href="#嵌套类方式" class="headerlink" title="嵌套类方式"></a>嵌套类方式</h1><p>先看代码吧，然后再解释一下嵌套类。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 首先，还是先堵死 new Singleton() 这条路</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 主要是使用了 嵌套类可以访问外部类的静态属性和静态方法 的特性</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Holder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Holder.instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>for-each 实际上是用迭代器实现的（这个找不到源码，但可以从反编译代码中推断出来），容器使用了 remove 方法改变了结构，modCount 改变了，和迭代器中的 expectModCount 不相同，会直接抛异常（ConcurrentModificationException）。</p>
-<p>当时测试没有看出来，因为只测试了列表的倒数第二个元素。很有趣的是，列表迭代器中的每个元素都会报错，唯独倒数第二个不会报错，就这样侥幸通过了代码自测……至于为什么倒数第二个不会报错，这个跟坐标有关，就不写下去了。</p>
+<p>先解释一下嵌套类是什么。</p>
+<p>Java 中，类的内部也可以有类，这种情况被称为嵌套类（nested class），嵌套类分为两种，分别是静态嵌套类（static nested class）和内部类（inner class）。</p>
+<p>我认为，这里要从文法的角度上琢磨一下语义，请注意，Java 中把类中有类的现象称为嵌套类，嵌套是一种位置性的描述词语，只是在描述两个类的位置关系，并没有从属关系。也就是说，两个类是嵌套关系，并不能认为其中一个类归属于另一个类，而只是从位置上来讲，一个类出现在了另一个类的里面，但是是否有从属关系，这个不好说。嵌套类中有一种情况是内部类，内部（inner）就有一定的归属关系了，如果一个类是另一个类的内部类，就说明这个类是归属于另一个类，是任另一个类操纵的。</p>
+<p>我认为这种文法上的理解是很有必要的，对于访问权限、类加载时机等等的理解都是有帮助的。</p>
+<p>Java 从语言语法上对嵌套类的区分，是判断有没有 static 关键字：</p>
+<ul>
+<li><p>静态嵌套类（static nested class），有 static 修饰</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 有static -&gt; 静态嵌套类</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">B</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>内部类（inner classer），没有 static 修饰</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 没有static -&gt; 内部类</span></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">B</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>内部类还可以再细分为三种，主要是在访问权限上的区别，这里为了主干清晰，就不介绍了。</p>
+</li>
+</ul>
+<p>在民间叫法上，往往把这两种情况都称为“内部类”，因为从直观的角度上看，这两种好像都是“类中类”，感觉都是内部的，因此民间往往把带有 static 关键字的称为静态内部类（也就是官方说的静态嵌套类），而把没有 static 关键字的称为内部类。这种叫法非常广泛，也有一定的道理，但我觉得这种叫法会模糊意义，具有迷惑性，最好不要这么称呼。</p>
+<p>还有一种民间声音，把静态嵌套类直接称为嵌套类，也就是说”类中类“分为两种，分别是嵌套类和内部类，这种叫法很坚决地表明了区别，我觉得还有点道理。</p>
+<p>下图是几种称呼的示意图：</p>
+<p><img src="/assets/%E5%B5%8C%E5%A5%97%E7%B1%BB%E7%9A%84%E7%A7%B0%E5%91%BC.jpg" alt="嵌套类的称呼"></p>
+<p>这里的单例模式，是通过静态嵌套类来实现的，接下来讨论一下原理。</p>
+<p>从语法层面，静态嵌套类和内部类的区别，在于类是否被 static 修饰，然后根据 static 访问权限划分出了不同的用法，例如“static 语句块中不能使用 non- static 语句”、“内部类不能有 static 变量”、“static 的类加载时机不同”等等的问题。</p>
+<p>通过语法进行解释这两种类型的区别，当然是可以的，但如果揣摩为什么这么设计的原因，应该会更易理解和记忆很多。静态嵌套类和内部类的区别，从 Java 设计的角度上讲，是跟外部类的关系是不一样的：静态嵌套类跟外部类可以说是没什么关系（除了位置特殊了些），但是内部类要依赖于外部类，它可以视为外部类的一个成员。</p>
+<ul>
+<li><p>静态嵌套类：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">B</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以认为，A 类（外部类）和 B 类（静态嵌套类）是没有关系的，这里的没有关系体现在：</p>
+<ul>
+<li>不需要实例化 A 类出来，就可以实例化 B 类</li>
+<li>B 类不能直接访问 A 类的非静态变量（只能直接访问 A 类的静态变量，即类变量，访问类变量是不需要先获取对象的）</li>
+<li>A 类和 B 类的类加载时间没有关系，如果完全可以 A 类加载了，但是 B 类还没有加载（这是实现单例模式的核心）</li>
+</ul>
+<p>值得一提的是，静态嵌套类是可以用 private、protected、public 修饰的，指的是访问它的权限，比如如果是 public 的话，那么所有地方都可以访问该静态嵌套类，但是如果是 private 修饰的话，只有外部类可以访问静态嵌套类。</p>
+</li>
+<li><p>内部类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里 A 类（外部类）和 C 类（内部类）之间是有关系的，这种关系大概像是“A 有一个成员变量 C”，具体体现在：</p>
+<ul>
+<li>A 类没有实例化出来之前，C 类不能创建，就像是一个对象成员变量一样</li>
+<li>C 类可以访问 A 类的所有变量，无论是否是静态变量</li>
+<li>C 类可以自定义变量，但是不能有自己的静态变量（因为没有必要，这里可以自己多想一下）</li>
+</ul>
+</li>
+</ul>
+<br>
+
+<p>我们来回头看一下这里单例模式的实现。</p>
+<p>外部类中套一个静态嵌套类，外部类进行类加载时，静态嵌套类并没有加载，而当调用了外部类的 <code>getInstance()</code> 方法之后，该方法会触发静态嵌套类进行类加载（这里跟饿汉模式是一样的原理），然后实例化出来想要的单例。</p>
+<p>因此通过嵌套类实现单例模式，实际上就是饿汉模式的一种特殊使用方法，通过类套类的方式，延时加载了饿汉模式。这是最方便实用的一种单例模式。</p>
+<br>
+
+<hr>
+<h1 id="枚举方式"><a href="#枚举方式" class="headerlink" title="枚举方式"></a>枚举方式</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 首先，还是先堵死 new Singleton() 这条路</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 枚举创建单例</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">enum</span> SingletonEnum &#123;</span><br><span class="line">        INSTANCE;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> Singleton instance;</span><br><span class="line"></span><br><span class="line">        SingletonEnum() &#123;</span><br><span class="line">            instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> instance;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 对外暴露的获取单例的方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> SingletonEnum.INSTANCE.getInstance();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种方式怎么说呢，人人都夸，人人都不用hhh</p>
+<p>简单的讲，枚举类会在类加载时，初始化所有实例，由 JVM 保证它们不会再被实例化，天生就实现了单例模式。</p>
+<p>（以下内容来源自知乎文章<a href="https://zhuanlan.zhihu.com/p/55327937" target="_blank" rel="noopener">《枚举的本质》</a>，建议直接阅读）</p>
+<p>在类加载过程中，枚举中定义的枚举值，实际上是一个个的 <code>static final</code> 的变量，并且会被直接赋值，不存在再次被实例化的可能。</p>
+<p>下面写一段很简单的枚举代码，定义了一个水果的枚举类，并且规定有一个金额的属性。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> Fruit &#123;</span><br><span class="line">    </span><br><span class="line">    APPLE(<span class="number">10</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> money;</span><br><span class="line">    Noodle(<span class="keyword">int</span> money)&#123;</span><br><span class="line">        <span class="keyword">this</span>.money = money;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码经过反编译之后，可以等效为如下代码（经过了删减）：</p>
+<p>可以看出，枚举值实际上是一个静态的 final 变量，并且会在类加载的过程中就被赋值（static 代码块中的内容会在类加载过程中被执行），因此保证了单例。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Fruit</span> <span class="keyword">extends</span> <span class="title">Enum</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Fruit APPLE;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Fruit</span><span class="params">(String s, <span class="keyword">int</span> i, <span class="keyword">int</span> j)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(s, i);</span><br><span class="line">        code = j;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        APPLE = <span class="keyword">new</span> Fruit(<span class="string">"APPLE"</span>, <span class="number">0</span>, <span class="number">10</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>多说一点有关枚举的知识点：</p>
+<ul>
+<li>枚举类实际上继承自 Enum 类（参照上面的反编译代码），因此枚举类均不能继承（因为 Java 单继承）</li>
+<li>枚举类默认有两个成员变量（可以自行增加更多的），分别是 <code>name</code> 和 <code>ordinal</code>，代表枚举值的名字和顺序，<code>toString()</code> 方法重写为返回 <code>name</code>。</li>
+<li>枚举值使用 <code>==</code> 和 <code>equals()</code> 进行比较，作用是相同的，枚举类的 <code>equals()</code> 经过重写，实际上就是 <code>==</code>，其含义是比较内存地址（由于天生单例，所以通过地址就可以判断是否是同一个）</li>
+<li>枚举不允许克隆和反序列化，永远保证单例（因此很安全）</li>
+<li>枚举类有两个方法：<code>values()</code> 返回所有枚举值、<code>valueOf()</code> 根据 <code>name</code> 返回枚举值。</li>
+</ul>
 ]]></content>
       <tags>
-        <tag>Weekly Post</tag>
-        <tag>java</tag>
+        <tag>Random Post</tag>
       </tags>
   </entry>
   <entry>
@@ -4000,6 +3825,181 @@
 <p>算下来一共是 9 个属性，每个属性很巧都是 4 字节，一共是 9×4 = 36 字节，因此 HashMap 的对象内容为 36 字节。</p>
 <p>HashMap 对象的对象头 12 字节 + 对象内容 36 字节总共是 48 字节，是 8 字节的倍数，无需对齐填充。</p>
 <p>因此一个 HashMap 对象的大小是 48 字节。</p>
+]]></content>
+      <tags>
+        <tag>Weekly Post</tag>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>各容器迭代器的实现</title>
+    <url>/2019/12/08/%E5%90%84%E5%AE%B9%E5%99%A8%E8%BF%AD%E4%BB%A3%E5%99%A8%E7%9A%84%E5%AE%9E%E7%8E%B0/</url>
+    <content><![CDATA[<br>
+
+<p>十二月的第二周，来学习迭代器在各个容器中的具体实现。</p>
+<p>不知道自己能看多少，ArrayList 和 HashSet 的实现是应该必须看完的，如果时间有余也要看看 TreeSet 的实现（哈哈哈……不相信自己的苍白的微笑）。</p>
+<p>这周的目标应该不是在迭代器上，而是在容器设计和怎么看源码这两件事上。迭代器是因和果，但从因走到果的那条路是更有价值的。</p>
+<hr>
+<h1 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h1><p>ArrayList 是可调整大小的 List，实现了两种迭代器：迭代器、列表迭代器。</p>
+<p>列表迭代器是在原本迭代器的基础上增加了顺序，例如增加了<code>是否有前一个元素</code>、<code>下一个元素的坐标</code>等方法。</p>
+<p>我在这里只关注 ArrayList 实现的普通迭代器。</p>
+<br>
+
+<p>获取 ArrayList 的迭代器，与其他容器的方式一样，都是调用 <code>Iterator()</code> 方法，获得一个迭代器。（这里迭代器支持泛型）</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Iterator&lt;E&gt; iterator = arrayList.iterator();</span><br></pre></td></tr></table></figure>
+
+<p>公共方法 <code>Iterator()</code>，返回了一个 ArrayList 类内部实现的迭代器 <code>Itr</code>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Iterator&lt;E&gt; <span class="title">iterator</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Itr();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Itr</span> <span class="keyword">implements</span> <span class="title">Iterator</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">// Itr类的内部实现...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那我们要关注的就是 <code>Itr</code> 类内部是怎么实现的。</p>
+<br>
+
+<p>ArrayList 的迭代器，<code>Itr</code> 类的基本骨架是这样子的：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Itr</span> <span class="keyword">implements</span> <span class="title">Iterator</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> cursor;</span><br><span class="line">    <span class="keyword">int</span> lastRet = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> expectedModCount = modCount;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> E <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 还有其他两个方法</span></span><br><span class="line">    <span class="comment">// 包括jdk 1.8版本新增的方法forEachRemaining，以及一个私有的辅助方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ArrayList 在实现迭代器时，自己又定义了三个 int 类型的局部变量：<code>cursor</code>、<code>lastRet</code>、<code>expectedModCount</code>。我们先不看迭代器重写的方法是怎么实现，先关注这三个局部变量是做什么的。</p>
+<ul>
+<li><p><strong>cursor</strong> 坐标</p>
+<p>表示迭代器移动到了 ArrayList 的第几个元素，它会伴随着迭代器的移动而移动。</p>
+<p>用于判断迭代器的位置，也用于错误判断（比如越界）</p>
+</li>
+<li><p><strong>lastRet</strong> 上个坐标</p>
+<p>最开始是 -1，随着 cursor 一同增加，但始终比 cursor 小 1。</p>
+<p>用于判断迭代器刚刚经过的位置，来删除元素，或是错误判断。</p>
+</li>
+<li><p><strong>expectedModCount</strong> 列表结构变化次数</p>
+<p>这是一个很有趣的设计，它不光出现在 ArrayList 的迭代器里，而是出现在 ArrayList 的各个方法中。</p>
+<p>这个变量，记录的是列表改变了多少次结构（即列表内元素的数量，发生了多少次变化）。比如初始化一个 ArrayList 之后，add 了一个元素，那么 modCount 就是 1，又 add 了一个元素，那么 modCount 就是 2，之后 remove 了一个元素，列表的结构又发生了改变，modCount 变成了 3。modCount 记录的，就是列表的结构发生了多少次的变化（mod：modification)。</p>
+<p>记录列表结构发生变化的次数，这有什么意义呢。ArrayList 是一个非线程安全的类，当有多个线程共用时，很有可能一边新增或删除了列表的某个元素，另一边对此毫不知情而发生错误。对此，ArrayList 为迭代器专门设计了一个 transient 的变量 modCount，不论任何位置，只要改变了列表的结构，都把这一次记录下来。那么，当迭代器初始化时，记录下来 modCount，之后迭代器工作前简单比较一下，当初记录的次数和现在的次数是否相同，就能知道列表有没有发生结构性变化。虽然这不是一个很保险的方式（即使 modCount 相同也有可能出现问题），但是这种方式很轻便，也基本能覆盖大部分问题。</p>
+<p>实际上 modCount 并不是 ArrayList 独有的设计，在很多容器（ArrayList、LinkedList、HashMap……）都能看到这种设计：记录容器结构变化的次数，迭代器工作时能快速纠错。这被称为 Java 的 fail-fast 机制，一种用于容器的错误检错机制。</p>
+</li>
+</ul>
+<p>好了，那么开始看源码吧。</p>
+<br>
+
+<h2 id="hasNext"><a href="#hasNext" class="headerlink" title="hasNext"></a>hasNext</h2><p>极为简单，当前坐标是否达到容器的长度，达到则返回 false，没达到则返回 true。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> cursor != size;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为什么是容器的长度，而不是长度 - 1，这个要根据其他两个方法来看，cursor 坐标究竟指向哪个元素。</p>
+<br>
+
+<h2 id="next"><a href="#next" class="headerlink" title="next"></a>next</h2><p>next 方法的目的，是返回容器的下一个元素。对于列表而言，元素之间是有顺序的，按顺序返回即可。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">next</span><span class="params">()</span> </span>&#123; <span class="comment">// E 代表泛型</span></span><br><span class="line">    checkForComodification();</span><br><span class="line">    <span class="keyword">int</span> i = cursor;</span><br><span class="line">    <span class="keyword">if</span> (i &gt;= size)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</span><br><span class="line">    Object[] elementData = ArrayList.<span class="keyword">this</span>.elementData;</span><br><span class="line">    <span class="keyword">if</span> (i &gt;= elementData.length)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">    cursor = i + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> (E) elementData[lastRet = i];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>大致上分两个步骤：</p>
+<ol>
+<li><p>检查</p>
+<p>ArrayList 实现的 next 方法首先检查 modCount，如果列表发生结构性变化，快速失败。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 迭代器的内部方法</span></span><br><span class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">checkForComodification</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (modCount != expectedModCount)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>检查非常简单，比较迭代器初始化时的 modCount（expectedModCount），和当前列表的 modCount 是否相同，不同就是结构变了。</p>
+<p>然后还会检查 cursor 坐标是否指向了越界的位置。</p>
+</li>
+</ol>
+<ol start="2">
+<li><p>移动</p>
+<p>在检查完结构后，next 方法正式工作。</p>
+<p>它利用 cursor 来判断位置，返回列表的第 cursor 个元素，由于 ArrayList 的背后是由数组实现的，next 方法实际上返回的是数组的第 cursor 个元素，即 <code>return elementData[cursor];</code>。</p>
+<p>在迭代器执行 next 方法返回下一个元素的同时，它的两个类变量 cursor、lastRet 也自增 1。</p>
+</li>
+</ol>
+<p>观察发现，cursor 始终指向迭代器的下一个元素的位置，当 next 方法还没执行时，cursor 指向的是要返回的那个“下一个元素”，但当 next 方法要返回下个元素的时候，cursor 就又自增 1，指向了更下一个的元素。还有一种说法是，迭代器是以 cursor 为当前坐标的，next 方法是越过当前元素，到下一个元素的位置上，并返回刚刚越过去的那个元素。</p>
+<p>lastRet 是 cursor 的跟班，紧跟在 cursor 一步远的距离，做迭代器的校验工具人。</p>
+<br>
+
+<h2 id="remove"><a href="#remove" class="headerlink" title="remove"></a>remove</h2><p>remove 方法的目的，就是把迭代器的当前元素，在整个列表里剔除掉。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (lastRet &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException();</span><br><span class="line">    checkForComodification();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ArrayList.<span class="keyword">this</span>.remove(lastRet);</span><br><span class="line">        cursor = lastRet;</span><br><span class="line">        lastRet = -<span class="number">1</span>;</span><br><span class="line">        expectedModCount = modCount;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IndexOutOfBoundsException ex) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>照例还是分两步走，第一步校验。next 方法校验的是结构是否变化、下个位置是否越界。与之对称的，remove 方法校验的是结构是否变化，当前元素是否不存在。</p>
+<p>第二步移除。这里迭代器的 remove 方法，实际上就是列表自己的 remove 方法。列表的 remove 方法实际上是在调用 <code>System.arraycopy</code> 方法，将数组需要移除那个元素，之后的所有元素逐个往前挪位置，以达到数组复制的效果，是个开销不小的实现方法。不过仔细看，迭代器的 remove 方式是只能执行一次的，执行之后 lastRet 就归为初始的 -1 值，不能再 remove 了。</p>
+<hr>
+<h1 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h1><p>看了源码才知道，原来 HashSet 基本就是 HashMap，它的迭代器实现也是 HashMap 里面的。</p>
+<p>HashSet 内部维护一张 HashMap 表，HashMap 有 <code>key</code> 和 <code>value</code>，<code>key</code> 就是 HashSet 的值，而 <code>value</code> 统一都是一个空对象。当创建一个 HashSet 时，实际上就是在创建一张 HashMap，修改 set 的值实际上就是在修改 map 的键值对。可以从 HashSet 的 add 方法来粗略一窥：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// HashSet内部用map存储</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> HashMap&lt;E, Object&gt; map;</span><br><span class="line"></span><br><span class="line"><span class="comment">// HashSet存储时，key是集合的值，value是这个空对象</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Object PRESENT = <span class="keyword">new</span> Object();</span><br><span class="line"></span><br><span class="line"><span class="comment">// HashSet的add方法，增加元素实际上就是在往map里存键值对</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> map.put(e, PRESENT) == <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>向 HashSet 里增加一个元素，实际上就是在内部维护的 HashMap 里，存入一个 key 为想要增加的元素、value 为空对象的键值对。</p>
+<br>
+
+<p>HashMap 自己是没有迭代器的，因为 map 里的每个元素都是有两部分的键和值，迭代器无法同时迭代两个部分。但是迭代其中的一部分是可行的，例如迭代 key，或是迭代 value。实际上，HashSet 的迭代器，就是在迭代 key。</p>
+<p>在 HashMap 的源码中，与迭代器相关的内部类有四个，它们被码在同一个区域。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* ------------------------------------------------------------ */</span></span><br><span class="line"><span class="comment">// iterators</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">HashIterator</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">KeyIterator</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ValueIterator</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">EntryIterator</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 其实还有四个与 Spliterator 相关的迭代器类 （Spliterator：splitable iterator）</span></span><br><span class="line"><span class="comment">// 它们是可分隔迭代器，用于并行迭代，但我们目前忽视它们</span></span><br></pre></td></tr></table></figure>
+
+<p>这四个迭代器，第一个是抽象类，后面三个是我们能使用的类：</p>
+<ul>
+<li><font color="#32CD32"><strong>KeyIterator</strong></font>  key 迭代器</li>
+<li><font color="#32CD32"><strong>ValueIterator</strong></font>  value 迭代器</li>
+<li><font color="#32CD32"><strong>EntryIterator</strong></font>  key-value （键值对）迭代器</li>
+</ul>
+<p>第一个迭代器 <font color="#32CD32"><strong>HashIterator</strong></font> 是上面这三个迭代器的父类，它算是实现了迭代器的 hasNext、next、remove 三个方法，后面三个迭代器直接继承了它的 hasNext 和 remove 方法，简单写了 next 方法。</p>
+<p>是怎么简单实现 next 方法的呢，以 <font color="#32CD32"><strong>KeyIterator</strong></font> 类为例：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// K 是泛型类，与迭代器的泛型类相同</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> K <span class="title">next</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> nextNode().key; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>就是返回了父类定义的键值对的 key 值，一行代码。</p>
+<p>其他两个类也是如此，返回 value 和返回 key-value，因此我们就不提 HashMap 的后面三个迭代器了，重点看第一个迭代器的实现。</p>
+<br>
+
+<p>从整体上看，HashIterator 类的骨架是这样的：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">HashIterator</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Node 类是 HashMap 里定义的键值对类，它继承了 Map.Entry 类</span></span><br><span class="line">    Node&lt;K,V&gt; next;        </span><br><span class="line">    Node&lt;K,V&gt; current;     </span><br><span class="line">    <span class="keyword">int</span> expectedModCount;  </span><br><span class="line">    <span class="keyword">int</span> index;             </span><br><span class="line"></span><br><span class="line">    HashIterator() &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">final</span> Node&lt;K,V&gt; <span class="title">nextNode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一共四个内部变量，</p>
+<ul>
+<li><font color="#32CD32"><strong>next</strong></font>  下一个键值对</li>
+<li><font color="#32CD32"><strong>current</strong></font>  当前键值对</li>
+<li><font color="#32CD32"><strong>expectedModCount</strong></font>  预期 hashMap 的结构变化次数</li>
+<li><font color="#32CD32"><strong>index</strong></font> 当前键值对的坐标（HashMap 存放键值对，是以数组的方式来存储的）</li>
+</ul>
+<p>以及四个方法。</p>
+<ul>
+<li><font color="#32CD32"><strong>HashIterator</strong></font>  构造方法，初始化迭代器</li>
+<li><font color="#32CD32"><strong>hasNext</strong></font>  是否有下一个元素 </li>
+<li><font color="#32CD32"><strong>nextNode</strong></font>  下一个键值对</li>
+<li><font color="#32CD32"><strong>remove</strong></font>  删除当前元素</li>
+</ul>
+<p>四个内部变量，跟 ArrayList 实现迭代器的逻辑是相同的，就不写两遍了，看后面的四个方法是怎么实现的。</p>
+<br>
+
+<h2 id="HashIterator"><a href="#HashIterator" class="headerlink" title="HashIterator"></a>HashIterator</h2><p>HashMap 的迭代器的构造器，初始化了四个内部变量。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">HashIterator() &#123;</span><br><span class="line">    expectedModCount = modCount;</span><br><span class="line">    Node&lt;K,V&gt;[] t = table;</span><br><span class="line">    current = next = <span class="keyword">null</span>;</span><br><span class="line">    index = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (t != <span class="keyword">null</span> &amp;&amp; size &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">do</span> &#123;&#125; <span class="keyword">while</span> (index &lt; t.length &amp;&amp; (next = t[index++]) == <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>初始化 modCount 和 current 没什么好讲的，简单赋值。</p>
+<p><code>table</code> 是 HashMap 内部存储键值对的数组，具体内容这周不看，但是我们需要知道的是，这个数组内部并不是连续排列，一个键值对紧跟着一个键值对的，中间可能会有 null。</p>
+<p>为了考虑内部存储的结构，当前元素存储的下一个数组格子，可能没有存储任何东西，只是 null，因此需要跳过这些空格。为 next 变量赋值时，以及为 index 变量赋值时，是需要跳过空白格子的。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">do</span> &#123;&#125; </span><br><span class="line"><span class="keyword">while</span> (index &lt; t.length &amp;&amp; (next = t[index++]) == <span class="keyword">null</span>);</span><br></pre></td></tr></table></figure>
+
+<p>（这行代码还真是紧凑……）</p>
+<br>
+
+<h2 id="hasNext-1"><a href="#hasNext-1" class="headerlink" title="hasNext"></a>hasNext</h2><p>迭代器是否有下个元素，去掉方法的结构体只有一行代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> next != <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h2 id="nextNode"><a href="#nextNode" class="headerlink" title="nextNode"></a>nextNode</h2><p>HashMap 的抽象迭代器并没有 next 方法，next 方法交由子类实现，但是它实现了 next 方法所必需的，搜索下一个键值对的逻辑。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">final</span> Node&lt;K,V&gt; <span class="title">nextNode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Node&lt;K,V&gt;[] t;</span><br><span class="line">    Node&lt;K,V&gt; e = next;</span><br><span class="line">    <span class="keyword">if</span> (modCount != expectedModCount)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">    <span class="keyword">if</span> (e == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</span><br><span class="line">    <span class="keyword">if</span> ((next = (current = e).next) == <span class="keyword">null</span> &amp;&amp; (t = table) != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">do</span> &#123;&#125; <span class="keyword">while</span> (index &lt; t.length &amp;&amp; (next = t[index++]) == <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> e;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先检查 HashMap 的结构是否发生变化（fail-fast 机制），然后检查存储键值对的数组是否为 null（即没有初始化过）。再之后是两行密度很高的代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> ((next = (current = e).next) == <span class="keyword">null</span> &amp;&amp; (t = table) != <span class="keyword">null</span>) &#123;</span><br><span class="line">	<span class="keyword">do</span> &#123;&#125; <span class="keyword">while</span> (index &lt; t.length &amp;&amp; (next = t[index++]) == <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这两行代码的含义是：</p>
+<ol>
+<li>为迭代器的当前元素赋值（也就是上一轮迭代器的 next 元素）。</li>
+<li>如果没遍历完存储的内容，那么让 index 移动，让 next 键值对往后挪。</li>
+<li>存储键值对的数组，可能存在 null 值，要跳过这些 null 值，让 next 变量指向真正的下一个元素，让 index 坐标指向真正的下一个元素的再下一个位置。</li>
+</ol>
+<p>从 HashMap 的迭代器，能够大概看出，HashMap 似乎用链表和数组两种方式来存储键值对，数组中放着一个个的链表节点，而链表节点又能指向下一个元素。在数组中的每个元素都连续排列的情况下，用链表检索下一个；当数组中出现“缝隙”，元素之间断开时，又用数组来检索下一个。</p>
+<p>没看 HashMap 的其他源码，不知道这种处理方式有什么好处。</p>
+<p>（次日改：我智障了，我原来以为链表和数组是互补的，同时使用提高效率，其实链表的作用是让同一个数组格子能够存放多个元素，因为 HashMap 存储元素时，存储的位置是计算出来的，如果计算出来结果相同，那就要存在相同的地方。）</p>
+<br>
+
+<h2 id="remove-1"><a href="#remove-1" class="headerlink" title="remove"></a>remove</h2><p>感觉 remove 方法没什么太多可说的，检查完然后调用 HashMap 的删除方法，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Node&lt;K,V&gt; p = current;</span><br><span class="line">    <span class="keyword">if</span> (p == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException();</span><br><span class="line">    <span class="keyword">if</span> (modCount != expectedModCount)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">    current = <span class="keyword">null</span>;</span><br><span class="line">    K key = p.key;</span><br><span class="line">    removeNode(hash(key), key, <span class="keyword">null</span>, <span class="keyword">false</span>, <span class="keyword">false</span>);</span><br><span class="line">    expectedModCount = modCount;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>写这篇迭代器的原因，是因为写业务代码时犯了错误，在 for-each 循环里调用了容器的 remove 方法，结果让生产代码回滚了。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (String str : list) &#123;</span><br><span class="line">    <span class="comment">// 执行逻辑...</span></span><br><span class="line">    list.remove(str);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>for-each 实际上是用迭代器实现的（这个找不到源码，但可以从反编译代码中推断出来），容器使用了 remove 方法改变了结构，modCount 改变了，和迭代器中的 expectModCount 不相同，会直接抛异常（ConcurrentModificationException）。</p>
+<p>当时测试没有看出来，因为只测试了列表的倒数第二个元素。很有趣的是，列表迭代器中的每个元素都会报错，唯独倒数第二个不会报错，就这样侥幸通过了代码自测……至于为什么倒数第二个不会报错，这个跟坐标有关，就不写下去了。</p>
 ]]></content>
       <tags>
         <tag>Weekly Post</tag>
