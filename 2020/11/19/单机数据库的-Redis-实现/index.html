@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="十一月的第四周，学习单机数据库下的 Redis 实现。 本文的主要内容和部分图片来源自《Redis 设计与实现》，该书的 Redis 版本是 3.0，粗浅学习一下。  Redis 数据库设计Redis 服务器的属性都保存在 redisServer 类中，其中就包含数据库。 Redis 默认会创建 16 个数据库，以数组的形式保存在 RedisServer 中，数组的每一个元素都是一个 redi">
+<meta name="keywords" content="Weekly Post">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单机数据库的 Redis 实现">
+<meta property="og:url" content="http://hellopz.netlify.com/2020/11/19/单机数据库的-Redis-实现/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="十一月的第四周，学习单机数据库下的 Redis 实现。 本文的主要内容和部分图片来源自《Redis 设计与实现》，该书的 Redis 版本是 3.0，粗浅学习一下。  Redis 数据库设计Redis 服务器的属性都保存在 redisServer 类中，其中就包含数据库。 Redis 默认会创建 16 个数据库，以数组的形式保存在 RedisServer 中，数组的每一个元素都是一个 redi">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-1605759405645.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E6%96%87%E4%BB%B6%E4%BA%8B%E4%BB%B6.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/Redis%E6%97%B6%E9%97%B4%E4%BA%8B%E4%BB%B6.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/RDB%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.jpg">
+<meta property="og:updated_time" content="2020-11-19T15:33:43.730Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="单机数据库的 Redis 实现">
+<meta name="twitter:description" content="十一月的第四周，学习单机数据库下的 Redis 实现。 本文的主要内容和部分图片来源自《Redis 设计与实现》，该书的 Redis 版本是 3.0，粗浅学习一下。  Redis 数据库设计Redis 服务器的属性都保存在 redisServer 类中，其中就包含数据库。 Redis 默认会创建 16 个数据库，以数组的形式保存在 RedisServer 中，数组的每一个元素都是一个 redi">
+<meta name="twitter:image" content="http://hellopz.netlify.com/assets/Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-1605759405645.jpg">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>单机数据库的 Redis 实现</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/Weekly-Post/">Weekly Post</a></li>
+         
+          <li><a href="/tags/Random-Post/">Random Post</a></li>
+         
+          <li><a href="/tags/tips/">Tips</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2020/11/15/Redis-数据结构/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2020/11/19/单机数据库的-Redis-实现/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2020/11/19/单机数据库的-Redis-实现/&text=单机数据库的 Redis 实现"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2020/11/19/单机数据库的-Redis-实现/&is_video=false&description=单机数据库的 Redis 实现"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis-数据库设计"><span class="toc-number">1.</span> <span class="toc-text">Redis 数据库设计</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis-的客户端和服务端"><span class="toc-number">2.</span> <span class="toc-text">Redis 的客户端和服务端</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#客户端"><span class="toc-number">2.1.</span> <span class="toc-text">客户端</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#服务端"><span class="toc-number">2.2.</span> <span class="toc-text">服务端</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#事件驱动"><span class="toc-number">3.</span> <span class="toc-text">事件驱动</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#文件事件"><span class="toc-number">3.1.</span> <span class="toc-text">文件事件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#时间事件"><span class="toc-number">3.2.</span> <span class="toc-text">时间事件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis-的持久化"><span class="toc-number">4.</span> <span class="toc-text">Redis 的持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#RDB-持久化"><span class="toc-number">4.1.</span> <span class="toc-text">RDB 持久化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AOF-持久化"><span class="toc-number">4.2.</span> <span class="toc-text">AOF 持久化</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        单机数据库的 Redis 实现
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2020-11-19T15:24:10.000Z" itemprop="datePublished">2020-11-19</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Weekly-Post/">Weekly Post</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>十一月的第四周，学习单机数据库下的 Redis 实现。</p>
+<p>本文的主要内容和部分图片来源自《Redis 设计与实现》，该书的 Redis 版本是 3.0，粗浅学习一下。</p>
+<hr>
+<h1 id="Redis-数据库设计"><a href="#Redis-数据库设计" class="headerlink" title="Redis 数据库设计"></a>Redis 数据库设计</h1><p>Redis 服务器的属性都保存在 redisServer 类中，其中就包含数据库。</p>
+<p>Redis 默认会创建 16 个数据库，以数组的形式保存在 RedisServer 中，数组的每一个元素都是一个 redisDb 对象，里面有 dict 属性，包含着所有键值对。</p>
+<p><img src="/assets/Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-1605759405645.jpg" alt="Redis数据结构"></p>
+<p>每一个 Redis 客户端都有自己的目标数据库，默认情况下会选择 0 号数据库，对数据的增删查改全部都在这一个数据库内进行。</p>
+<p>客户端命令新增一条数据时，会在数据库（redisDb 类）中的 dict 字典中增加一个 key-value。</p>
+<p>如果客户端需要设置键的过期时间，除了在 dict 字典中增加键值对，还会同时在 expires 字典中增加一个 key-value，value 是毫秒精度的 UNIX 时间戳，也就是过期时间。（Redis 过期时间在底层存储时，都是绝对时间）</p>
+<hr>
+<h1 id="Redis-的客户端和服务端"><a href="#Redis-的客户端和服务端" class="headerlink" title="Redis 的客户端和服务端"></a>Redis 的客户端和服务端</h1><p>Redis 是一对多服务器程序，即一个服务器可以与多个客户端建立网络连接。</p>
+<p>服务端基于 I/O 多路复用，能够同时接受多个客户端的请求，然后将 socket 连接加入到队列当中，逐个处理，单线程单进程处理命令请求。</p>
+<h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><p>客户端以 redisClient 类的形式存在于 Redis 中，其中包括 name、fd 等通用属性，以及执行事务所需的 mstate 等特定功能属性。</p>
+<p>所有客户端（redisClient 类对象）以链表的形式，存储在 redisServer 的 clients 属性中，即服务端可以获取到所有客户端。</p>
+<p>通过 <code>client list</code> 命令可以获取到所有客户端信息（属性）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id=6 addr=127.0.0.1:59038 fd=7 name= age=5 idle=0 flags=N db=0 sub=0 psub=0 multi=-1 qbuf=0 qbuf-free=32768 obl=0 oll=0 omem=18446744073709537584 events=r cmd=client</span><br></pre></td></tr></table></figure>
+
+<p>重要的客户端属性如下：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>属性作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>fd</td>
+<td>socket 文件描述符（-1 代表伪客户端，例如 AOF 文件还原）</td>
+</tr>
+<tr>
+<td>name</td>
+<td>名称，默认没有</td>
+</tr>
+<tr>
+<td>flags</td>
+<td>标志，记录客户端的角色和状态，可多个（如 REDIS_MULTI 代表客户端正在执行事务）</td>
+</tr>
+<tr>
+<td>querybuf</td>
+<td>输入缓冲区，记录所有客户端发来的所有命令（类型 SDS）</td>
+</tr>
+<tr>
+<td>argv</td>
+<td>最新一条命令的输入参数，数组（如 [“SET”, “key”, “value”]）</td>
+</tr>
+<tr>
+<td>argc</td>
+<td>argv 数组的长度</td>
+</tr>
+<tr>
+<td>cmd</td>
+<td>命令的实现函数（类型 redisCommand）</td>
+</tr>
+<tr>
+<td>buf</td>
+<td>输出缓冲区</td>
+</tr>
+<tr>
+<td>bufpos</td>
+<td>buf 已使用的字节数量</td>
+</tr>
+<tr>
+<td>authenticated</td>
+<td>身份验证（0 未通过，1 通过）</td>
+</tr>
+<tr>
+<td>ctime</td>
+<td>创建客户端的时间</td>
+</tr>
+<tr>
+<td>lastinteraction</td>
+<td>客户端与服务端最后一次互动的时间</td>
+</tr>
+<tr>
+<td>obuf_soft_limit_reached_time</td>
+<td>输出缓冲区第一次到达软性限制的时间</td>
+</tr>
+</tbody></table>
+<h2 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h2><p>服务端在启动时，会依次执行如下内容：</p>
+<ol>
+<li>初始化服务器的状态结构，如 ID、运行频率、默认端口号等</li>
+<li>载入 conf 配置文件</li>
+<li>初始化服务器数据结构，如 db 数组</li>
+<li>还原数据库持久化数据，开启 AOF 则使用 AOF 文件还原，没有则使用 RDB 文件还原</li>
+<li>执行事件循环（loop），由事件驱动程序运行</li>
+</ol>
+<br>
+
+<p>当一条命令请求，从客户端传送到服务端，整个过程可以概括如下：</p>
+<ol>
+<li><p>客户端发送请求，经编码后发送给服务器。</p>
+<p>如发送 <code>SET key value</code> ，编码成 <code>*3\r\n$3\r\nSET\r\n$3\r\nkey\r\n$3\r\nvalue\r\n</code> 送达服务端。</p>
+</li>
+<li><p>服务端检测到 socket 可读，包装成事件交给命令请求处理器（这段过程详情参考下一节）</p>
+</li>
+<li><p>读取命令，处理后写入到 redisClient 属性中</p>
+</li>
+<li><p>查找命令函数（例如查找 SET 函数的实现）</p>
+</li>
+<li><p>调用命令函数</p>
+</li>
+<li><p>执行后续工作（例如写 AOF 缓冲区）</p>
+</li>
+<li><p>将命令回复发送给客户端</p>
+</li>
+</ol>
+<hr>
+<h1 id="事件驱动"><a href="#事件驱动" class="headerlink" title="事件驱动"></a>事件驱动</h1><p>Redis 服务器是一个事件驱动程序，来一个事件，处理一个事件，并且是单线程处理的。</p>
+<p>Redis 有两类时间：文件事件、时间事件。</p>
+<h2 id="文件事件"><a href="#文件事件" class="headerlink" title="文件事件"></a>文件事件</h2><p>服务器通过 socket 与客户端连接，文件事件就是服务器对 socket 操作的抽象。</p>
+<p>多个客户端与同一个服务端建立连接，会使用不同的 socket，服务端通过 I/O 多路复用器，将多个 socket 放到一个队列里面，有序、同步、逐个地向文件事件分派器传送 socket，这可以保证 Redis 以单线程处理网络请求。</p>
+<p><img src="/assets/%E6%96%87%E4%BB%B6%E4%BA%8B%E4%BB%B6.jpg" alt="文件事件"></p>
+<p>最常见的事件是 AE_READABLE 事件（可读事件）和 AE_WRITABLE 事件（可写事件），例如客户端连接服务端，或对 socket 执行 write 操作时，就会触发可读事件，而客户端对 socket 执行 read 操作时，就会触发可写事件。</p>
+<p>事件处理器有很多种，最常用的是连接应答处理器、命令请求处理器、命令回复处理器。</p>
+<p>这些操作跟 netty 等网络框架的概念差不多，不详述了。</p>
+<h2 id="时间事件"><a href="#时间事件" class="headerlink" title="时间事件"></a>时间事件</h2><p>时间事件是 Redis 服务端对定时操作的抽象。</p>
+<p>Redis 有两种时间事件：定时事件、周期性事件，在 Redis 3.0 版本时还没有使用定时事件。</p>
+<p>Redis 服务器将所有的时间事件都放在一个链表当中，每个链表节点代表一个时间事件，记录着 id、when（执行时间，UNIX 时间戳）、timeProc（执行函数）。周期性事件会在执行时间事件之后，更新 when 时间戳。</p>
+<p><img src="/assets/Redis%E6%97%B6%E9%97%B4%E4%BA%8B%E4%BB%B6.jpg" alt="Redis时间事件"></p>
+<p>一个典型的时间事件是 serverCron 函数，它会更新时间、内存占用，清理过期键、失效客户端等等。</p>
+<p>时间事件并不一定会准确地在 when 时间戳执行，因为 Redis 主程序会先处理文件事件，再处理时间事件，因此时间事件的实际执行时间通常会比设定的执行时间稍晚一点。</p>
+<hr>
+<h1 id="Redis-的持久化"><a href="#Redis-的持久化" class="headerlink" title="Redis 的持久化"></a>Redis 的持久化</h1><p>Redis 有两种持久化机制，都可以将内存数据保存到硬盘中，并且能在重启后加载回内存。两种持久化机制分别是 RDB 和 AOF。</p>
+<p>RDB 持久化是 Redis 的默认方式，它定期执行，将所有内存数据（键值对）保存成二进制文件。AOF 持久化会将 Redis 执行的写命令存储起来，重启 Redis 后执行所有命令来还原数据。</p>
+<h2 id="RDB-持久化"><a href="#RDB-持久化" class="headerlink" title="RDB 持久化"></a>RDB 持久化</h2><p>RDB（Redis Database）持久化会将 Redis 中的全部数据，以一定的数据结构，存储成一个二进制文件（RDB 文件）。</p>
+<p>有两个 RDB 持久化的命令：<code>SAVE</code> 和 <code>BGSAVE</code> </p>
+<ul>
+<li><code>SAVE</code> 会阻塞 Redis 服务器进程，执行时 Redis 服务器会阻塞所有客户端发送的命令</li>
+<li><code>BGSAVE</code> 执行时仍可继续处理客户端的命令，但会拒绝客户端 <code>SAVE</code> 和 <code>BGSAVE</code> 的命令，延迟 <code>BGREWRITEAOF</code> 命令。</li>
+</ul>
+<p>RDB 的存储过程是定期执行的（也可以手动触发），默认情况下有三种定时条件触发 <code>BGSAVE</code> 命令，配置在 conf 文件中：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 服务器在 900 秒内，对数据库进行了至少 1 次修改</span></span><br><span class="line">save 900 1</span><br><span class="line"><span class="comment"># 服务器在 300 秒内，对数据库进行了至少 10 次修改</span></span><br><span class="line">save 300 10</span><br><span class="line"><span class="comment"># 服务器在 60 秒内，对数据库进行了至少 10000 次修改</span></span><br><span class="line">save 60 10000</span><br></pre></td></tr></table></figure>
+
+<p>上次 RDB 持久化的时间，以及又修改了多少次，都存储在 RedisServer 类对象的 lastsave 属性（UNIX 时间戳）和 dirty 属性（long long 类型的计数器）中。</p>
+<p>由于 RDB 持久化是有时间间隔的，因此可能发生数据丢失，如果服务端宕机，上次 RDB 之后的命令都会丢失。</p>
+<br>
+
+<p>持久化后的 RDB 文件是一种以 <code>.rdb</code> 为后缀的二进制文件，默认命名 <code>dump.rdb</code> 储存在 Redis 根目录里。</p>
+<p>RDB 文件有特定的数据结构，可以将所有数据库的所有键值对都存储下来，具体可以参考官方文档《<a href="https://github.com/sripathikrishnan/redis-rdb-tools/wiki/Redis-RDB-Dump-File-Format" target="_blank" rel="noopener">RDB 文件结构</a>》和《<a href="https://github.com/sripathikrishnan/redis-rdb-tools/blob/master/docs/RDB_Version_History.textile" target="_blank" rel="noopener">RDB 历代更新说明</a>》。</p>
+<p><img src="/assets/RDB%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.jpg" alt="RDB数据结构"></p>
+<h2 id="AOF-持久化"><a href="#AOF-持久化" class="headerlink" title="AOF 持久化"></a>AOF 持久化</h2><p>AOF（Append Only File）持久化会将 Redis 的所有写命令保存下来，默认不开启，如果开启，Redis 在重启后会优先选用 AOF 恢复。</p>
+<p>AOF 默认命名 <code>appendonly.aof</code> 储存在 Redis 根目录里，内容是纯文本格式的，可以直接阅读。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SET msg <span class="string">"hello"</span></span><br><span class="line">SADD fruits <span class="string">"apple"</span> <span class="string">"banana"</span> <span class="string">"peach"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># AOF文件存储的内容是（\r\n是回车换行）：</span></span><br><span class="line"><span class="comment"># *3\r\n$3\r\nSET\r\n$3\r\nmsg\r\n$5\r\nhello\r\n</span></span><br><span class="line"><span class="comment"># *5\r\n$4\r\nSADD\r\n$6\r\n$5\napple\r\nbanana\r\n$5\npeach\r\n</span></span><br></pre></td></tr></table></figure>
+
+<p>AOF 的存储分为两部分，一部分是内存，一部分是硬盘。内存累计一些数据之后，同步到硬盘当中，内存起到缓存的作用，能提高文件的写入效率。Redis 执行一条写命令时，AOF 相关操作如下：</p>
+<ol>
+<li>服务器执行完一条写命令</li>
+<li>在 redisServer 对象中的 aof_buf 属性（SDS 字符串）的末尾，追加上这条命令</li>
+<li>按照一定的逻辑，将 aof_buf 中的内容，同步到硬盘文件中。同步逻辑有三种：<ul>
+<li>每次都同步</li>
+<li>每秒同步一次（默认）</li>
+<li>不同步，由操作系统来决定何时同步</li>
+</ul>
+</li>
+</ol>
+<p>由内存缓存，再同步到硬盘文件中，这种设计能提高写入效率，但可能会造成数据丢失。</p>
+<br>
+
+<p>AOF 有一个问题：随着命令的增多，AOF 文件的体积会不断膨胀，存储占用空间，还原所需的时间也很长。</p>
+<p>在这种情况下，可以通过 <code>BGREWRITEAOF</code> 命令重写 AOF 文件。重写的逻辑是，将多条写命令等效成一条，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">RPUSH list <span class="string">"A"</span> <span class="string">"B"</span></span><br><span class="line">RPUSH list <span class="string">"C"</span></span><br><span class="line">RPUSH list <span class="string">"D"</span> <span class="string">"E"</span></span><br><span class="line">LPOP list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 以上命令可以等效为一条命令：【RPUSH list "B" "C" "D" "E"】</span></span><br><span class="line"><span class="comment"># 存储在AOF文件中就是：【*6\r\n$5\r\nRPUSH\r\n$4\r\nlist\r\n$1\r\nB\r\n$1\r\nC\r\n$1\r\nD\r\n$1\r\nE\r\n】</span></span><br></pre></td></tr></table></figure>
+
+<p>为避免阻塞，<code>BGREWRITEAOF</code> 重写在子进程中执行，但这样会带来脏写的问题：AOF 重写完一条 key-value 之后，这个 key-value 又修改了。</p>
+<p>为解决这个问题，在 AOF 重写期间，所有的写命令除了需要写入 AOF 缓冲区（aof_buf）之外，还需要写入 AOF 重写缓冲区。</p>
+<p>当子进程执行完 AOF 重写后，主进程将 AOF 重写缓冲区内的内容写入到新的 AOF 文件，再将新的 AOF 文件改名替换到原来的 AOF 文件，这样就可以避免脏写的问题。</p>
+<hr>
+<p>这周就学习到这里，还要学习多机 Redis 的实现，以及部分拓展功能。</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 pz
+  </div>
+  <div class="footer-right">
+    <img src="/images/govPolice.png">
+    <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44030502006101">粤公网安备 44030502006101号</a>
+    <a>&nbsp;</a>
+    <a href="http://beian.miit.gov.cn">粤ICP备2020090003号</a>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+
