@@ -9,7 +9,7 @@
     <meta name="description" content="十一月的第四周，学习单机数据库下的 Redis 实现。 本文的主要内容和部分图片来源自《Redis 设计与实现》，该书的 Redis 版本是 3.0，粗浅学习一下。  Redis 数据库设计Redis 服务器的属性都保存在 redisServer 类中，其中就包含数据库。 Redis 默认会创建 16 个数据库，以数组的形式保存在 RedisServer 中，数组的每一个元素都是一个 redi">
 <meta name="keywords" content="Weekly Post">
 <meta property="og:type" content="article">
-<meta property="og:title" content="单机数据库的 Redis 实现">
+<meta property="og:title" content="单机 Redis 的实现">
 <meta property="og:url" content="http://hellopz.netlify.com/2020/11/19/单机数据库的-Redis-实现/index.html">
 <meta property="og:site_name" content="这里是pz阁下">
 <meta property="og:description" content="十一月的第四周，学习单机数据库下的 Redis 实现。 本文的主要内容和部分图片来源自《Redis 设计与实现》，该书的 Redis 版本是 3.0，粗浅学习一下。  Redis 数据库设计Redis 服务器的属性都保存在 redisServer 类中，其中就包含数据库。 Redis 默认会创建 16 个数据库，以数组的形式保存在 RedisServer 中，数组的每一个元素都是一个 redi">
@@ -18,9 +18,9 @@
 <meta property="og:image" content="http://hellopz.netlify.com/assets/%E6%96%87%E4%BB%B6%E4%BA%8B%E4%BB%B6.jpg">
 <meta property="og:image" content="http://hellopz.netlify.com/assets/Redis%E6%97%B6%E9%97%B4%E4%BA%8B%E4%BB%B6.jpg">
 <meta property="og:image" content="http://hellopz.netlify.com/assets/RDB%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.jpg">
-<meta property="og:updated_time" content="2020-11-19T15:33:43.730Z">
+<meta property="og:updated_time" content="2020-11-19T15:39:20.460Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="单机数据库的 Redis 实现">
+<meta name="twitter:title" content="单机 Redis 的实现">
 <meta name="twitter:description" content="十一月的第四周，学习单机数据库下的 Redis 实现。 本文的主要内容和部分图片来源自《Redis 设计与实现》，该书的 Redis 版本是 3.0，粗浅学习一下。  Redis 数据库设计Redis 服务器的属性都保存在 redisServer 类中，其中就包含数据库。 Redis 默认会创建 16 个数据库，以数组的形式保存在 RedisServer 中，数组的每一个元素都是一个 redi">
 <meta name="twitter:image" content="http://hellopz.netlify.com/assets/Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-1605759405645.jpg">
     
@@ -42,7 +42,7 @@
         
     
     <!-- title -->
-    <title>单机数据库的 Redis 实现</title>
+    <title>单机 Redis 的实现</title>
     <!-- styles -->
     <link rel="stylesheet" href="/css/style.css">
     <!-- rss -->
@@ -76,6 +76,8 @@
     <span id="actions">
       <ul>
         
+        <li><a class="icon" href="/2020/12/06/多机-Redis-的实现/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
         
         <li><a class="icon" href="/2020/11/15/Redis-数据结构/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
@@ -91,8 +93,8 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2020/11/19/单机数据库的-Redis-实现/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2020/11/19/单机数据库的-Redis-实现/&text=单机数据库的 Redis 实现"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2020/11/19/单机数据库的-Redis-实现/&is_video=false&description=单机数据库的 Redis 实现"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2020/11/19/单机数据库的-Redis-实现/&text=单机 Redis 的实现"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2020/11/19/单机数据库的-Redis-实现/&is_video=false&description=单机 Redis 的实现"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -109,7 +111,7 @@
   <header>
     
     <h1 class="posttitle" itemprop="name headline">
-        单机数据库的 Redis 实现
+        单机 Redis 的实现
     </h1>
 
 
