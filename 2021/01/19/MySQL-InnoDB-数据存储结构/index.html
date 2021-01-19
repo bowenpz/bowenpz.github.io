@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="新年的第四周，来学习 MySQL 默认存储引擎 InnoDB。 这一周从数据存储结构入门，学习 MySQL 是怎么存储数据的。 我学习 MySQL 基本全部来源自《MySQL 是怎样运行的：从根儿上理解 MySQL》，这是本电子书，下面的绝大多数图片、表格、内容都来源自本书，这本书写得非常详尽，是我最近一年读过最好的书。  MySQL 数据库，从宏观看到微观，最大的是表空间（最大 64TB），">
+<meta name="keywords" content="Weekly Post">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL InnoDB 数据存储结构">
+<meta property="og:url" content="http://hellopz.netlify.com/2021/01/19/MySQL-InnoDB-数据存储结构/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="新年的第四周，来学习 MySQL 默认存储引擎 InnoDB。 这一周从数据存储结构入门，学习 MySQL 是怎么存储数据的。 我学习 MySQL 基本全部来源自《MySQL 是怎样运行的：从根儿上理解 MySQL》，这是本电子书，下面的绝大多数图片、表格、内容都来源自本书，这本书写得非常详尽，是我最近一年读过最好的书。  MySQL 数据库，从宏观看到微观，最大的是表空间（最大 64TB），">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/compact%E8%A1%8C%E6%A0%BC%E5%BC%8F.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/compact%E8%A1%8C%E5%A4%B4%E4%BF%A1%E6%81%AF.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/MySQL%E5%AD%98%E5%82%A8%E8%A1%8C.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/Compact%E5%A4%B4%E4%BF%A1%E6%81%AF.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E7%B4%A2%E5%BC%95%E9%A1%B5%E4%B8%AD%E8%A1%8C%E7%9A%84%E6%95%B0%E6%8D%AE%E9%80%BB%E8%BE%91.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E9%A1%B5%E7%9B%AE%E5%BD%95.jpg">
+<meta property="og:updated_time" content="2021-01-19T08:21:12.823Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL InnoDB 数据存储结构">
+<meta name="twitter:description" content="新年的第四周，来学习 MySQL 默认存储引擎 InnoDB。 这一周从数据存储结构入门，学习 MySQL 是怎么存储数据的。 我学习 MySQL 基本全部来源自《MySQL 是怎样运行的：从根儿上理解 MySQL》，这是本电子书，下面的绝大多数图片、表格、内容都来源自本书，这本书写得非常详尽，是我最近一年读过最好的书。  MySQL 数据库，从宏观看到微观，最大的是表空间（最大 64TB），">
+<meta name="twitter:image" content="http://hellopz.netlify.com/assets/compact%E8%A1%8C%E6%A0%BC%E5%BC%8F.jpg">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>MySQL InnoDB 数据存储结构</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/Weekly-Post/">Weekly Post</a></li>
+         
+          <li><a href="/tags/Random-Post/">Random Post</a></li>
+         
+          <li><a href="/tags/tips/">Tips</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2020/12/27/三次握手与四次挥手/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2021/01/19/MySQL-InnoDB-数据存储结构/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2021/01/19/MySQL-InnoDB-数据存储结构/&text=MySQL InnoDB 数据存储结构"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2021/01/19/MySQL-InnoDB-数据存储结构/&is_video=false&description=MySQL InnoDB 数据存储结构"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#行"><span class="toc-number">1.</span> <span class="toc-text">行</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#页"><span class="toc-number">2.</span> <span class="toc-text">页</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#File-Header-amp-File-Trailer"><span class="toc-number">2.1.</span> <span class="toc-text">File Header &amp; File Trailer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Page-Header"><span class="toc-number">2.2.</span> <span class="toc-text">Page  Header</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Infimum-amp-Supremum"><span class="toc-number">2.3.</span> <span class="toc-text">Infimum &amp; Supremum</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Records-amp-Free-Space"><span class="toc-number">2.4.</span> <span class="toc-text">User Records &amp; Free Space</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Page-Directory"><span class="toc-number">2.5.</span> <span class="toc-text">Page  Directory</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#表空间-amp-组-amp-区"><span class="toc-number">3.</span> <span class="toc-text">表空间 &amp; 组 &amp; 区</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#表空间"><span class="toc-number">3.1.</span> <span class="toc-text">表空间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#组"><span class="toc-number">3.2.</span> <span class="toc-text">组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#区"><span class="toc-number">3.3.</span> <span class="toc-text">区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#段"><span class="toc-number">3.4.</span> <span class="toc-text">段</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        MySQL InnoDB 数据存储结构
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2021-01-19T03:01:19.000Z" itemprop="datePublished">2021-01-19</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Weekly-Post/">Weekly Post</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>新年的第四周，来学习 MySQL 默认存储引擎 InnoDB。</p>
+<p>这一周从数据存储结构入门，学习 MySQL 是怎么存储数据的。</p>
+<p>我学习 MySQL 基本全部来源自《<a href="https://juejin.cn/book/6844733769996304392/section" target="_blank" rel="noopener">MySQL 是怎样运行的：从根儿上理解 MySQL</a>》，这是本电子书，下面的绝大多数图片、表格、内容都来源自本书，这本书写得非常详尽，是我最近一年读过最好的书。</p>
+<hr>
+<p>MySQL 数据库，从宏观看到微观，最大的是<strong>表空间</strong>（最大 64TB），表空间中有若干个<strong>组</strong>（256MB），一个组中有 256 个<strong>区</strong>（1MB），一个区中有 64 个<strong>页</strong>（16KB），一个页中有若干<strong>行</strong>，每一行都是一条数据。</p>
+<p>行是 MySQL 中最小的单位，代表一条数据，比如下面这个数据库，体现在存储上就是两行数据。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">+----+-----+------+------+</span><br><span class="line">| ID | c1  | c2   | c3   |</span><br><span class="line">+----+-----+------+------+</span><br><span class="line">| 1  | bbb | cc   | d    |</span><br><span class="line">| 2  | fff | NULL | NULL |</span><br><span class="line">+----+-----+------+------+</span><br></pre></td></tr></table></figure>
+
+<p>我们从 MySQL 最小的单位<code>行</code>，一直往大学习，最后学习到<code>表空间</code>。</p>
+<hr>
+<h1 id="行"><a href="#行" class="headerlink" title="行"></a>行</h1><p>MySQL 表中的一条数据，存储方式被称为<strong>行格式</strong>，MySQL 5.0 之后默认的行格式是 <code>Compact</code>。除了 <code>Compact</code> 行格式外，还有三种，原理大致相同，下面只学习 <code>Compact</code> 行格式。</p>
+<p>以两条数据为例，做了一张示意图：</p>
+<p><img src="/assets/compact%E8%A1%8C%E6%A0%BC%E5%BC%8F.jpg" alt="compact行格式"></p>
+<p>大致可以列出这些注意点：</p>
+<ol start="0">
+<li><p><code>CHAR(M)</code> 和 <code>VARCHAR(M)</code> 的 M 都是指最大字符长度，<code>CHAR(M)</code> 固定长度，<code>VARCHAR(M)</code> 可变长度。</p>
+<ul>
+<li><code>CHAR(10)</code> 存储 “aaa” 为 “aaa       （补 7 个空格）”（空格在 ascii 中是 0x20）</li>
+<li><code>VARCHAR(10)</code> 存储 “aaa” 为 “aaa”</li>
+<li>顺便一提，以 utf-8 为例（1 个字符占 3 个字节），<code>CHAR(10)</code> 在 MySQL 5 之前占用 10 × 3 = 30 字节，在 MySQL 5 之后占用 10 - 30 字节，在节省空间和避免碎片之间做了平衡。</li>
+</ul>
+</li>
+<li><p>变长字段长度列表</p>
+<ul>
+<li>所有非 NULL 的变长字段，字节长度，倒序排列</li>
+<li>每个长度可能占 1 个字节（例如上图），也可能占 2 个字节</li>
+</ul>
+</li>
+<li><p>NULL 列表</p>
+<ul>
+<li>可以不存在，如果该表的所有字段都不能为 NULL</li>
+<li>允许为 NULL 的字段，是否为 NULL，倒序排序成 bitmap，补足整字节</li>
+</ul>
+</li>
+<li><p>头信息</p>
+<p>共 5 字节，即 40 bit。</p>
+<p><img src="/assets/compact%E8%A1%8C%E5%A4%B4%E4%BF%A1%E6%81%AF.jpg" alt="compact行头信息"></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>大小（单位：bit）</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>预留位1</td>
+<td>1</td>
+<td>没有使用</td>
+</tr>
+<tr>
+<td>预留位2</td>
+<td>1</td>
+<td>没有使用</td>
+</tr>
+<tr>
+<td>delete_mask</td>
+<td>1</td>
+<td>标记该记录是否被删除</td>
+</tr>
+<tr>
+<td>min_rec_mask</td>
+<td>1</td>
+<td>B+树的每层非叶子节点中的最小记录都会添加该标记</td>
+</tr>
+<tr>
+<td>n_owned</td>
+<td>4</td>
+<td>表示当前记录拥有的记录数</td>
+</tr>
+<tr>
+<td>heap_no</td>
+<td>13</td>
+<td>表示当前记录在记录堆的位置信息</td>
+</tr>
+<tr>
+<td>record_type</td>
+<td>3</td>
+<td>表示当前记录的类型，0表示普通记录，1表示B+树非叶子节点记录，2表示最小记录，3表示最大记录</td>
+</tr>
+<tr>
+<td>next_record</td>
+<td>16</td>
+<td>表示下一条记录的相对位置</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>真实数据</p>
+<ul>
+<li><code>DB_ROW_ID</code> 不一定存在，如果存在就起到主键的作用。<ol>
+<li>有主键就用主键</li>
+<li>没有主键就选取一个 <code>Unique</code> 键作为主键</li>
+<li>都没有就添加一个隐藏键 <code>DB_ROW_ID</code></li>
+</ol>
+</li>
+<li><code>DB_TRX_ID</code>（事务 ID）和 <code>DB_ROLL_PTR</code>（回滚指针）一定存在，意义后面有机会再说</li>
+<li>其他字段，如果非 NULL 才存在</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h1 id="页"><a href="#页" class="headerlink" title="页"></a>页</h1><p>页的大小是固定的，每一页都是 16KB，页是装载行的容器，一页中有很多行（记录）。</p>
+<p>页有很多的类型，比如表头页、日志页等，装载数据行的页是索引页（INDEX），我们以下说的内容都是索引页，下表是它的数据结构：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>中文名</th>
+<th>占用空间大小</th>
+<th>简单描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>File  Header</td>
+<td>文件头部</td>
+<td>38字节</td>
+<td>页的一些通用信息</td>
+</tr>
+<tr>
+<td>Page  Header</td>
+<td>页面头部</td>
+<td>56字节</td>
+<td>数据页专有的一些信息</td>
+</tr>
+<tr>
+<td>Infimum  + Supremum</td>
+<td>最小记录和最大记录</td>
+<td>26字节</td>
+<td>两个虚拟的行记录</td>
+</tr>
+<tr>
+<td>User  Records</td>
+<td>用户记录</td>
+<td>不确定</td>
+<td>实际存储的行记录内容</td>
+</tr>
+<tr>
+<td>Free Space</td>
+<td>空闲空间</td>
+<td>不确定</td>
+<td>页中尚未使用的空间</td>
+</tr>
+<tr>
+<td>Page  Directory</td>
+<td>页面目录</td>
+<td>不确定</td>
+<td>页中的某些记录的相对位置</td>
+</tr>
+<tr>
+<td>File  Trailer</td>
+<td>文件尾部</td>
+<td>8字节</td>
+<td>校验页是否完整</td>
+</tr>
+</tbody></table>
+<p><img src="/assets/MySQL%E5%AD%98%E5%82%A8%E8%A1%8C.jpg" alt="MySQL存储行"></p>
+<h2 id="File-Header-amp-File-Trailer"><a href="#File-Header-amp-File-Trailer" class="headerlink" title="File Header &amp; File Trailer"></a>File Header &amp; File Trailer</h2><p>所有类型的页，都有这两个部分的数据，也就是一页最上面的 File Header，以及一页最下面的 File Trailer。</p>
+<p>File Header 是一页最开头的部分，它记录了页 ID、校验和、LSN 等内容：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>占用空间大小</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FIL_PAGE_SPACE_OR_CHKSUM</td>
+<td>4字节</td>
+<td>页的校验和（checksum值）</td>
+</tr>
+<tr>
+<td>FIL_PAGE_OFFSET</td>
+<td>4字节</td>
+<td>页号</td>
+</tr>
+<tr>
+<td>FIL_PAGE_PREV</td>
+<td>4字节</td>
+<td>上一个页的页号</td>
+</tr>
+<tr>
+<td>FIL_PAGE_NEXT</td>
+<td>4字节</td>
+<td>下一个页的页号</td>
+</tr>
+<tr>
+<td>FIL_PAGE_LSN</td>
+<td>8字节</td>
+<td>页面被最后修改时对应的日志序列位置（英文名是：Log  Sequence Number）</td>
+</tr>
+<tr>
+<td>FIL_PAGE_TYPE</td>
+<td>2字节</td>
+<td>该页的类型</td>
+</tr>
+<tr>
+<td>FIL_PAGE_FILE_FLUSH_LSN</td>
+<td>8字节</td>
+<td>仅在系统表空间的一个页中定义，代表文件至少被刷新到了对应的LSN值</td>
+</tr>
+<tr>
+<td>FIL_PAGE_ARCH_LOG_NO_OR_SPACE_ID</td>
+<td>4字节</td>
+<td>页属于哪个表空间</td>
+</tr>
+</tbody></table>
+<p>File Trailer 是一页最后的部分，它由两部分构成（各 4 字节，共 8 字节），前半部分是校验和，与 File Header 中的校验和相同，避免因磁盘加载问题导致数据错误，后半部分是 LSN，具体作用后面再说。</p>
+<h2 id="Page-Header"><a href="#Page-Header" class="headerlink" title="Page  Header"></a>Page  Header</h2><p>索引页的 Page Header 部分，存储了本页存储了多少条记录、第一条记录的地址是多少等信息，比较复杂。</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>占用空间大小</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PAGE_N_DIR_SLOTS</td>
+<td>2字节</td>
+<td>在页目录中的槽数量</td>
+</tr>
+<tr>
+<td>PAGE_HEAP_TOP</td>
+<td>2字节</td>
+<td>还未使用的空间最小地址，也就是说从该地址之后就是Free Space</td>
+</tr>
+<tr>
+<td>PAGE_N_HEAP</td>
+<td>2字节</td>
+<td>本页中的记录的数量（包括最小和最大记录以及标记为删除的记录）</td>
+</tr>
+<tr>
+<td>PAGE_FREE</td>
+<td>2字节</td>
+<td>第一个已经标记为删除的记录地址（各个已删除的记录通过next_record也会组成一个单链表，这个单链表中的记录可以被重新利用）</td>
+</tr>
+<tr>
+<td>PAGE_GARBAGE</td>
+<td>2字节</td>
+<td>已删除记录占用的字节数</td>
+</tr>
+<tr>
+<td>PAGE_LAST_INSERT</td>
+<td>2字节</td>
+<td>最后插入记录的位置</td>
+</tr>
+<tr>
+<td>PAGE_DIRECTION</td>
+<td>2字节</td>
+<td>记录插入的方向</td>
+</tr>
+<tr>
+<td>PAGE_N_DIRECTION</td>
+<td>2字节</td>
+<td>一个方向连续插入的记录数量</td>
+</tr>
+<tr>
+<td>PAGE_N_RECS</td>
+<td>2字节</td>
+<td>该页中记录的数量（不包括最小和最大记录以及被标记为删除的记录）</td>
+</tr>
+<tr>
+<td>PAGE_MAX_TRX_ID</td>
+<td>8字节</td>
+<td>修改当前页的最大事务ID，该值仅在二级索引中定义</td>
+</tr>
+<tr>
+<td>PAGE_LEVEL</td>
+<td>2字节</td>
+<td>当前页在B+树中所处的层级</td>
+</tr>
+<tr>
+<td>PAGE_INDEX_ID</td>
+<td>8字节</td>
+<td>索引ID，表示当前页属于哪个索引</td>
+</tr>
+<tr>
+<td>PAGE_BTR_SEG_LEAF</td>
+<td>10字节</td>
+<td>B+树叶子段的头部信息，仅在B+树的Root页定义</td>
+</tr>
+<tr>
+<td>PAGE_BTR_SEG_TOP</td>
+<td>10字节</td>
+<td>B+树非叶子段的头部信息，仅在B+树的Root页定义</td>
+</tr>
+</tbody></table>
+<p>不是很重要，过吧。</p>
+<h2 id="Infimum-amp-Supremum"><a href="#Infimum-amp-Supremum" class="headerlink" title="Infimum &amp; Supremum"></a>Infimum &amp; Supremum</h2><p>最小记录和最大记录，具体作用需要理解记录的存储逻辑。</p>
+<p>上一节画的行格式示意图，没有画出头信息，现在需要画出来这部分了（这是 Compact 行格式的头信息，其他行格式也差不多）。</p>
+<p><img src="/assets/Compact%E5%A4%B4%E4%BF%A1%E6%81%AF.jpg" alt="Compact头信息"></p>
+<p>我们接下来要学习，多行数据是怎么逻辑相连的，这部分只跟行格式的头信息有关，因此在示意图上省略了其他信息：</p>
+<p><img src="/assets/%E7%B4%A2%E5%BC%95%E9%A1%B5%E4%B8%AD%E8%A1%8C%E7%9A%84%E6%95%B0%E6%8D%AE%E9%80%BB%E8%BE%91.jpg" alt="索引页中行的数据逻辑"></p>
+<p>InnoDB 把多行数据做成链表的形式，创建页时会首先创建出链表头和链表尾，每多加一条数据，都会在链表中插入一条数据。（忽略了很多细节，比如一行数据太大怎么办，某一行怎么删掉，数据行太多一页装不下怎么办）</p>
+<p>链表头是最小记录，由 5 字节的头信息和 8 字节的“Infimum”组成，链表尾是最大记录，由 5 字节的头信息和 8 字节的“Supremum”组成（当然，存储的都是二进制数据）。</p>
+<p>再重新看一遍头信息的格式（Compact 行格式）：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>大小（单位：bit）</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>预留位1</td>
+<td>1</td>
+<td>没有使用</td>
+</tr>
+<tr>
+<td>预留位2</td>
+<td>1</td>
+<td>没有使用</td>
+</tr>
+<tr>
+<td>delete_mask</td>
+<td>1</td>
+<td>标记该记录是否被删除</td>
+</tr>
+<tr>
+<td>min_rec_mask</td>
+<td>1</td>
+<td>B+树的每层非叶子节点中的最小记录都会添加该标记</td>
+</tr>
+<tr>
+<td>n_owned</td>
+<td>4</td>
+<td>表示当前记录拥有的记录数</td>
+</tr>
+<tr>
+<td>heap_no</td>
+<td>13</td>
+<td>表示当前记录在记录堆的位置信息</td>
+</tr>
+<tr>
+<td>record_type</td>
+<td>3</td>
+<td>表示当前记录的类型，0表示普通记录，1表示B+树非叶子节点记录，2表示最小记录，3表示最大记录</td>
+</tr>
+<tr>
+<td>next_record</td>
+<td>16</td>
+<td>表示下一条记录的相对位置</td>
+</tr>
+</tbody></table>
+<h2 id="User-Records-amp-Free-Space"><a href="#User-Records-amp-Free-Space" class="headerlink" title="User Records &amp; Free Space"></a>User Records &amp; Free Space</h2><p>这部分就是每页存储数据的地方。</p>
+<p>已经存储数据行的部分，叫做 User Records，还没使用的部分，叫做 Free Space。结合最开始的页示意图，很容易看懂。</p>
+<h2 id="Page-Directory"><a href="#Page-Directory" class="headerlink" title="Page  Directory"></a>Page  Directory</h2><p>一页有 16 KB 的大小，可以放很多很多行数据（具体能放多少条，跟每行数据有多少个字段相关）。</p>
+<p>链表的搜索效率的 O(n)，如果数据量很大，那么查询速度会非常慢。因此 InnoDB 又提出了 <code>页目录</code>（Page Directory）的概念，将搜索效率提高到 O(logn)。</p>
+<p>逻辑是这样的：</p>
+<ol>
+<li>链表需要按照主键的大小排序（如果没有主键，就使用 <code>Unique</code> 键，再没有就生成一个隐藏键 <code>DB_ROW_ID</code>）</li>
+<li>链表每几个节点分一个组，把每组最后的链表节点的地址，记录在 Page Directory 里（相当于记录在一个数组里）</li>
+</ol>
+<p>这样就能通过二分检索数组，将搜索效率提高到 O(logn) 了。下图是示意图，最左侧就是 Page Directory：</p>
+<p><img src="/assets/%E9%A1%B5%E7%9B%AE%E5%BD%95.jpg" alt="页目录"></p>
+<p>补充几个细节：</p>
+<ol>
+<li>头信息中的 <code>n_owned</code> 字段，代表分组后本组有多少行数据，只有每组最后的一个链表节点有这个数据。</li>
+<li>每一组最多 8 行数据（最小记录只有自己 1 行，最大记录允许 1-8 行，其他组 4-8 行）。</li>
+</ol>
+<p>二分法查找主键的过程不写了。</p>
+<hr>
+<h1 id="表空间-amp-组-amp-区"><a href="#表空间-amp-组-amp-区" class="headerlink" title="表空间 &amp; 组 &amp; 区"></a>表空间 &amp; 组 &amp; 区</h1><p>这部分的概念非常多，但是感觉偏向具体实现，对理解 InnoDB 帮助没有那么大，因此简略写写就过了。</p>
+<h2 id="表空间"><a href="#表空间" class="headerlink" title="表空间"></a>表空间</h2><p>表空间是 InnoDB 中最大的概念，最大可以 64TB（因为页号最大 2^32，单页 16KB，总共最多 64TB）。</p>
+<p>有很多种表空间，比如系统表空间、独立表空间、临时表空间等。在如今的 MySQL 版本中，表数据基本都存储在独立表空间当中（为每一个表建立一个独立表空间）。</p>
+<h2 id="组"><a href="#组" class="headerlink" title="组"></a>组</h2><p>表空间由组构成，每个组 256MB（2^14 页）。</p>
+<p>表空间的第一个组，头三个页是固定的，其他组的头两个页是固定的。</p>
+<p>第一个组的前三个页面分别是 <code>FSP_HDR</code> 页、<code>IBUF_BITMAP</code> 页，<code>INODE</code> 页：</p>
+<ul>
+<li><code>FSP_HDR</code> 页：这是整个表空间的第一个页，记录了整个表空间的信息，以及本组的区信息（区的概念下面说）</li>
+<li><code>IBUF_BITMAP</code> 页：本组关于 <code>INSERT BUFFER</code> 的信息（这个后面的文章说）</li>
+<li><code>INODE</code> 页：本组的段信息（段的概念下面说）</li>
+</ul>
+<p>其他组的前两个页面分别是 <code>XDES</code> 页、<code>IBUF_BITMAP</code> 页：</p>
+<ul>
+<li><code>XDES</code> 页：本组的区信息</li>
+<li><code>IBUF_BITMAP</code> 页：本组关于 <code>INSERT BUFFER</code> 的信息</li>
+</ul>
+<p>我感觉这些都不是很重要，只需要知道每个组会把一些统计信息单独抽出几个页出来，放在最前面。</p>
+<h2 id="区"><a href="#区" class="headerlink" title="区"></a>区</h2><p>由于组还是太大了，管理页不方便，因此还有区（extent）的概念，一个区 1MB（64 页）。</p>
+<p>引入区的概念，主要还是增加读写速度。InnoDB 的数据是以链表的形式存储的，链表可以东存一块，西存一块。但是对于存储系统来说，随机读写的速度要远低于顺序读写，如果内存是连续的，读写速度会大幅提升。因此如果把数据存到连续的磁盘区域，能提高很多速度。</p>
+<p>因此 InnoDB 一次申请一个区的磁盘空间（1 MB，64 个页），浪费一点空间，但是消除很多随机读写，提高性能。但是如果数据量很小，直接申请一个区的空间显得很浪费，因此有碎片区的概念，不同的表都可以使用同一个碎片区，新插入数据先使用碎片区的页，超过 32 页之后再单独创建区。</p>
+<h2 id="段"><a href="#段" class="headerlink" title="段"></a>段</h2><p>上面所说的都是物理空间，有固定的大小，段（Segment）是逻辑上的空间，没有固定大小。段由一些零散的页面以及一些固定的区构成。</p>
+<p>接下来要说的内容是下一篇文章的主题，就是 InnoDB 是怎么存储索引的。每个索引在 InnoDB 中都是一棵 B+ 树，按照索引值的大小排序，因此可以达到 O(logn) 的查询效率。这棵二叉树的叶子节点（最下面一层）和非叶子节点，数据结构是不相同的，查询逻辑也是不相同的，因此把这两部分存储在不同的区域。</p>
+<p>存放叶子节点的存储区域，被称为一个段，存放非叶子节点的存储区域，被称为另一个段。也就是说每个索引在存储时，默认会出现两个段，这两个段使用不同的存储区域。</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2021 pz
+  </div>
+  <div class="footer-right">
+    <img src="/images/govPolice.png">
+    <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44030502006101">粤公网安备 44030502006101号</a>
+    <a>&nbsp;</a>
+    <a href="http://beian.miit.gov.cn">粤ICP备2020090003号</a>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+

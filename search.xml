@@ -216,57 +216,6 @@
       </tags>
   </entry>
   <entry>
-    <title>(tips) hexo图片加载</title>
-    <url>/2019/08/11/hexo%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD/</url>
-    <content><![CDATA[<br>
-
-<p>hexo搭配typora加载图片时，要设置图片路径。</p>
-<p>共分两步走：</p>
-<ol>
-<li>设置typora的图片根目录</li>
-<li>粘贴图片时，图片要放进assets文件夹中</li>
-</ol>
-<p>具体操作如下：</p>
-<br>
-
-<p>首先点击typora工具栏的<code>格式</code>，然后选择<code>图像</code>，再选择<code>设置图片根目录</code>，就会在markdown文件的页首（header）中出现这样一句：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">typora-root-url: ..</span><br></pre></td></tr></table></figure>
-
-<p>注意冒号后面要设置成 <code>..</code> ，意思是说typora的图片根目录，是文件的上一级文件夹。</p>
-<p>（页首header截图如下）</p>
-<p><img src="/assets/%E5%9B%BE1.png" alt="图1"></p>
-<br>
-
-<p>设置完typora的图片根目录后，就可以粘贴图片了，但是要注意图片要放进<code>assets</code>文件夹当中。</p>
-<p>拿刚刚粘贴进来的上张图片来说，在markdown文件中，路径是这么写的：</p>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">![<span class="string">图1</span>](<span class="link">/assets/图1.png</span>)</span><br></pre></td></tr></table></figure>
-
-<p><img src="/assets/%E5%9B%BE2.png" alt="图2"></p>
-<p>这样就可以了。</p>
-<br>
-
-<p>目录结构是这样子的：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">├── _posts</span><br><span class="line">│   └── (tips) hexo图片加载.md</span><br><span class="line">└── assets</span><br><span class="line">    ├── 图1.png</span><br><span class="line">    └── 图2.png</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>每次用hexo写文章，都要被环境配置搞得心态崩溃 = =</p>
-<br>]]></content>
-      <tags>
-        <tag>tips</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>hello world</title>
-    <url>/2019/07/21/helloworld/</url>
-    <content><![CDATA[<br>
-
-<p>你好呀。</p>
-<p>这里是我写编程相关文章的地方，（尽量）每周更新一篇，来强迫自己学习。</p>
-<p>我努力以<font color="#32CD32">说人话</font>为目标来写东西，尽量组织语言到谁都能听懂为止，虽然最终也不会有什么人来看啦。</p>
-<p>我不会留任何联系方式的，这样你就没办法骂我写得渣了，嘻。</p>
-]]></content>
-  </entry>
-  <entry>
     <title>IoC的引入</title>
     <url>/2019/08/04/SpringIoC/</url>
     <content><![CDATA[<br>
@@ -311,6 +260,57 @@
       <tags>
         <tag>Weekly Post</tag>
         <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>hello world</title>
+    <url>/2019/07/21/helloworld/</url>
+    <content><![CDATA[<br>
+
+<p>你好呀。</p>
+<p>这里是我写编程相关文章的地方，（尽量）每周更新一篇，来强迫自己学习。</p>
+<p>我努力以<font color="#32CD32">说人话</font>为目标来写东西，尽量组织语言到谁都能听懂为止，虽然最终也不会有什么人来看啦。</p>
+<p>我不会留任何联系方式的，这样你就没办法骂我写得渣了，嘻。</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>(tips) hexo图片加载</title>
+    <url>/2019/08/11/hexo%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD/</url>
+    <content><![CDATA[<br>
+
+<p>hexo搭配typora加载图片时，要设置图片路径。</p>
+<p>共分两步走：</p>
+<ol>
+<li>设置typora的图片根目录</li>
+<li>粘贴图片时，图片要放进assets文件夹中</li>
+</ol>
+<p>具体操作如下：</p>
+<br>
+
+<p>首先点击typora工具栏的<code>格式</code>，然后选择<code>图像</code>，再选择<code>设置图片根目录</code>，就会在markdown文件的页首（header）中出现这样一句：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">typora-root-url: ..</span><br></pre></td></tr></table></figure>
+
+<p>注意冒号后面要设置成 <code>..</code> ，意思是说typora的图片根目录，是文件的上一级文件夹。</p>
+<p>（页首header截图如下）</p>
+<p><img src="/assets/%E5%9B%BE1.png" alt="图1"></p>
+<br>
+
+<p>设置完typora的图片根目录后，就可以粘贴图片了，但是要注意图片要放进<code>assets</code>文件夹当中。</p>
+<p>拿刚刚粘贴进来的上张图片来说，在markdown文件中，路径是这么写的：</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">![<span class="string">图1</span>](<span class="link">/assets/图1.png</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/assets/%E5%9B%BE2.png" alt="图2"></p>
+<p>这样就可以了。</p>
+<br>
+
+<p>目录结构是这样子的：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">├── _posts</span><br><span class="line">│   └── (tips) hexo图片加载.md</span><br><span class="line">└── assets</span><br><span class="line">    ├── 图1.png</span><br><span class="line">    └── 图2.png</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>每次用hexo写文章，都要被环境配置搞得心态崩溃 = =</p>
+<br>]]></content>
+      <tags>
+        <tag>tips</tag>
       </tags>
   </entry>
   <entry>
@@ -795,6 +795,403 @@
       <tags>
         <tag>Weekly Post</tag>
         <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL InnoDB 数据存储结构</title>
+    <url>/2021/01/19/MySQL-InnoDB-%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84/</url>
+    <content><![CDATA[<br>
+
+<p>新年的第四周，来学习 MySQL 默认存储引擎 InnoDB。</p>
+<p>这一周从数据存储结构入门，学习 MySQL 是怎么存储数据的。</p>
+<p>我学习 MySQL 基本全部来源自《<a href="https://juejin.cn/book/6844733769996304392/section" target="_blank" rel="noopener">MySQL 是怎样运行的：从根儿上理解 MySQL</a>》，这是本电子书，下面的绝大多数图片、表格、内容都来源自本书，这本书写得非常详尽，是我最近一年读过最好的书。</p>
+<hr>
+<p>MySQL 数据库，从宏观看到微观，最大的是<strong>表空间</strong>（最大 64TB），表空间中有若干个<strong>组</strong>（256MB），一个组中有 256 个<strong>区</strong>（1MB），一个区中有 64 个<strong>页</strong>（16KB），一个页中有若干<strong>行</strong>，每一行都是一条数据。</p>
+<p>行是 MySQL 中最小的单位，代表一条数据，比如下面这个数据库，体现在存储上就是两行数据。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">+----+-----+------+------+</span><br><span class="line">| ID | c1  | c2   | c3   |</span><br><span class="line">+----+-----+------+------+</span><br><span class="line">| 1  | bbb | cc   | d    |</span><br><span class="line">| 2  | fff | NULL | NULL |</span><br><span class="line">+----+-----+------+------+</span><br></pre></td></tr></table></figure>
+
+<p>我们从 MySQL 最小的单位<code>行</code>，一直往大学习，最后学习到<code>表空间</code>。</p>
+<hr>
+<h1 id="行"><a href="#行" class="headerlink" title="行"></a>行</h1><p>MySQL 表中的一条数据，存储方式被称为<strong>行格式</strong>，MySQL 5.0 之后默认的行格式是 <code>Compact</code>。除了 <code>Compact</code> 行格式外，还有三种，原理大致相同，下面只学习 <code>Compact</code> 行格式。</p>
+<p>以两条数据为例，做了一张示意图：</p>
+<p><img src="/assets/compact%E8%A1%8C%E6%A0%BC%E5%BC%8F.jpg" alt="compact行格式"></p>
+<p>大致可以列出这些注意点：</p>
+<ol start="0">
+<li><p><code>CHAR(M)</code> 和 <code>VARCHAR(M)</code> 的 M 都是指最大字符长度，<code>CHAR(M)</code> 固定长度，<code>VARCHAR(M)</code> 可变长度。</p>
+<ul>
+<li><code>CHAR(10)</code> 存储 “aaa” 为 “aaa       （补 7 个空格）”（空格在 ascii 中是 0x20）</li>
+<li><code>VARCHAR(10)</code> 存储 “aaa” 为 “aaa”</li>
+<li>顺便一提，以 utf-8 为例（1 个字符占 3 个字节），<code>CHAR(10)</code> 在 MySQL 5 之前占用 10 × 3 = 30 字节，在 MySQL 5 之后占用 10 - 30 字节，在节省空间和避免碎片之间做了平衡。</li>
+</ul>
+</li>
+<li><p>变长字段长度列表</p>
+<ul>
+<li>所有非 NULL 的变长字段，字节长度，倒序排列</li>
+<li>每个长度可能占 1 个字节（例如上图），也可能占 2 个字节</li>
+</ul>
+</li>
+<li><p>NULL 列表</p>
+<ul>
+<li>可以不存在，如果该表的所有字段都不能为 NULL</li>
+<li>允许为 NULL 的字段，是否为 NULL，倒序排序成 bitmap，补足整字节</li>
+</ul>
+</li>
+<li><p>头信息</p>
+<p>共 5 字节，即 40 bit。</p>
+<p><img src="/assets/compact%E8%A1%8C%E5%A4%B4%E4%BF%A1%E6%81%AF.jpg" alt="compact行头信息"></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>大小（单位：bit）</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>预留位1</td>
+<td>1</td>
+<td>没有使用</td>
+</tr>
+<tr>
+<td>预留位2</td>
+<td>1</td>
+<td>没有使用</td>
+</tr>
+<tr>
+<td>delete_mask</td>
+<td>1</td>
+<td>标记该记录是否被删除</td>
+</tr>
+<tr>
+<td>min_rec_mask</td>
+<td>1</td>
+<td>B+树的每层非叶子节点中的最小记录都会添加该标记</td>
+</tr>
+<tr>
+<td>n_owned</td>
+<td>4</td>
+<td>表示当前记录拥有的记录数</td>
+</tr>
+<tr>
+<td>heap_no</td>
+<td>13</td>
+<td>表示当前记录在记录堆的位置信息</td>
+</tr>
+<tr>
+<td>record_type</td>
+<td>3</td>
+<td>表示当前记录的类型，0表示普通记录，1表示B+树非叶子节点记录，2表示最小记录，3表示最大记录</td>
+</tr>
+<tr>
+<td>next_record</td>
+<td>16</td>
+<td>表示下一条记录的相对位置</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>真实数据</p>
+<ul>
+<li><code>DB_ROW_ID</code> 不一定存在，如果存在就起到主键的作用。<ol>
+<li>有主键就用主键</li>
+<li>没有主键就选取一个 <code>Unique</code> 键作为主键</li>
+<li>都没有就添加一个隐藏键 <code>DB_ROW_ID</code></li>
+</ol>
+</li>
+<li><code>DB_TRX_ID</code>（事务 ID）和 <code>DB_ROLL_PTR</code>（回滚指针）一定存在，意义后面有机会再说</li>
+<li>其他字段，如果非 NULL 才存在</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h1 id="页"><a href="#页" class="headerlink" title="页"></a>页</h1><p>页的大小是固定的，每一页都是 16KB，页是装载行的容器，一页中有很多行（记录）。</p>
+<p>页有很多的类型，比如表头页、日志页等，装载数据行的页是索引页（INDEX），我们以下说的内容都是索引页，下表是它的数据结构：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>中文名</th>
+<th>占用空间大小</th>
+<th>简单描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>File  Header</td>
+<td>文件头部</td>
+<td>38字节</td>
+<td>页的一些通用信息</td>
+</tr>
+<tr>
+<td>Page  Header</td>
+<td>页面头部</td>
+<td>56字节</td>
+<td>数据页专有的一些信息</td>
+</tr>
+<tr>
+<td>Infimum  + Supremum</td>
+<td>最小记录和最大记录</td>
+<td>26字节</td>
+<td>两个虚拟的行记录</td>
+</tr>
+<tr>
+<td>User  Records</td>
+<td>用户记录</td>
+<td>不确定</td>
+<td>实际存储的行记录内容</td>
+</tr>
+<tr>
+<td>Free Space</td>
+<td>空闲空间</td>
+<td>不确定</td>
+<td>页中尚未使用的空间</td>
+</tr>
+<tr>
+<td>Page  Directory</td>
+<td>页面目录</td>
+<td>不确定</td>
+<td>页中的某些记录的相对位置</td>
+</tr>
+<tr>
+<td>File  Trailer</td>
+<td>文件尾部</td>
+<td>8字节</td>
+<td>校验页是否完整</td>
+</tr>
+</tbody></table>
+<p><img src="/assets/MySQL%E5%AD%98%E5%82%A8%E8%A1%8C.jpg" alt="MySQL存储行"></p>
+<h2 id="File-Header-amp-File-Trailer"><a href="#File-Header-amp-File-Trailer" class="headerlink" title="File Header &amp; File Trailer"></a>File Header &amp; File Trailer</h2><p>所有类型的页，都有这两个部分的数据，也就是一页最上面的 File Header，以及一页最下面的 File Trailer。</p>
+<p>File Header 是一页最开头的部分，它记录了页 ID、校验和、LSN 等内容：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>占用空间大小</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FIL_PAGE_SPACE_OR_CHKSUM</td>
+<td>4字节</td>
+<td>页的校验和（checksum值）</td>
+</tr>
+<tr>
+<td>FIL_PAGE_OFFSET</td>
+<td>4字节</td>
+<td>页号</td>
+</tr>
+<tr>
+<td>FIL_PAGE_PREV</td>
+<td>4字节</td>
+<td>上一个页的页号</td>
+</tr>
+<tr>
+<td>FIL_PAGE_NEXT</td>
+<td>4字节</td>
+<td>下一个页的页号</td>
+</tr>
+<tr>
+<td>FIL_PAGE_LSN</td>
+<td>8字节</td>
+<td>页面被最后修改时对应的日志序列位置（英文名是：Log  Sequence Number）</td>
+</tr>
+<tr>
+<td>FIL_PAGE_TYPE</td>
+<td>2字节</td>
+<td>该页的类型</td>
+</tr>
+<tr>
+<td>FIL_PAGE_FILE_FLUSH_LSN</td>
+<td>8字节</td>
+<td>仅在系统表空间的一个页中定义，代表文件至少被刷新到了对应的LSN值</td>
+</tr>
+<tr>
+<td>FIL_PAGE_ARCH_LOG_NO_OR_SPACE_ID</td>
+<td>4字节</td>
+<td>页属于哪个表空间</td>
+</tr>
+</tbody></table>
+<p>File Trailer 是一页最后的部分，它由两部分构成（各 4 字节，共 8 字节），前半部分是校验和，与 File Header 中的校验和相同，避免因磁盘加载问题导致数据错误，后半部分是 LSN，具体作用后面再说。</p>
+<h2 id="Page-Header"><a href="#Page-Header" class="headerlink" title="Page  Header"></a>Page  Header</h2><p>索引页的 Page Header 部分，存储了本页存储了多少条记录、第一条记录的地址是多少等信息，比较复杂。</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>占用空间大小</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PAGE_N_DIR_SLOTS</td>
+<td>2字节</td>
+<td>在页目录中的槽数量</td>
+</tr>
+<tr>
+<td>PAGE_HEAP_TOP</td>
+<td>2字节</td>
+<td>还未使用的空间最小地址，也就是说从该地址之后就是Free Space</td>
+</tr>
+<tr>
+<td>PAGE_N_HEAP</td>
+<td>2字节</td>
+<td>本页中的记录的数量（包括最小和最大记录以及标记为删除的记录）</td>
+</tr>
+<tr>
+<td>PAGE_FREE</td>
+<td>2字节</td>
+<td>第一个已经标记为删除的记录地址（各个已删除的记录通过next_record也会组成一个单链表，这个单链表中的记录可以被重新利用）</td>
+</tr>
+<tr>
+<td>PAGE_GARBAGE</td>
+<td>2字节</td>
+<td>已删除记录占用的字节数</td>
+</tr>
+<tr>
+<td>PAGE_LAST_INSERT</td>
+<td>2字节</td>
+<td>最后插入记录的位置</td>
+</tr>
+<tr>
+<td>PAGE_DIRECTION</td>
+<td>2字节</td>
+<td>记录插入的方向</td>
+</tr>
+<tr>
+<td>PAGE_N_DIRECTION</td>
+<td>2字节</td>
+<td>一个方向连续插入的记录数量</td>
+</tr>
+<tr>
+<td>PAGE_N_RECS</td>
+<td>2字节</td>
+<td>该页中记录的数量（不包括最小和最大记录以及被标记为删除的记录）</td>
+</tr>
+<tr>
+<td>PAGE_MAX_TRX_ID</td>
+<td>8字节</td>
+<td>修改当前页的最大事务ID，该值仅在二级索引中定义</td>
+</tr>
+<tr>
+<td>PAGE_LEVEL</td>
+<td>2字节</td>
+<td>当前页在B+树中所处的层级</td>
+</tr>
+<tr>
+<td>PAGE_INDEX_ID</td>
+<td>8字节</td>
+<td>索引ID，表示当前页属于哪个索引</td>
+</tr>
+<tr>
+<td>PAGE_BTR_SEG_LEAF</td>
+<td>10字节</td>
+<td>B+树叶子段的头部信息，仅在B+树的Root页定义</td>
+</tr>
+<tr>
+<td>PAGE_BTR_SEG_TOP</td>
+<td>10字节</td>
+<td>B+树非叶子段的头部信息，仅在B+树的Root页定义</td>
+</tr>
+</tbody></table>
+<p>不是很重要，过吧。</p>
+<h2 id="Infimum-amp-Supremum"><a href="#Infimum-amp-Supremum" class="headerlink" title="Infimum &amp; Supremum"></a>Infimum &amp; Supremum</h2><p>最小记录和最大记录，具体作用需要理解记录的存储逻辑。</p>
+<p>上一节画的行格式示意图，没有画出头信息，现在需要画出来这部分了（这是 Compact 行格式的头信息，其他行格式也差不多）。</p>
+<p><img src="/assets/Compact%E5%A4%B4%E4%BF%A1%E6%81%AF.jpg" alt="Compact头信息"></p>
+<p>我们接下来要学习，多行数据是怎么逻辑相连的，这部分只跟行格式的头信息有关，因此在示意图上省略了其他信息：</p>
+<p><img src="/assets/%E7%B4%A2%E5%BC%95%E9%A1%B5%E4%B8%AD%E8%A1%8C%E7%9A%84%E6%95%B0%E6%8D%AE%E9%80%BB%E8%BE%91.jpg" alt="索引页中行的数据逻辑"></p>
+<p>InnoDB 把多行数据做成链表的形式，创建页时会首先创建出链表头和链表尾，每多加一条数据，都会在链表中插入一条数据。（忽略了很多细节，比如一行数据太大怎么办，某一行怎么删掉，数据行太多一页装不下怎么办）</p>
+<p>链表头是最小记录，由 5 字节的头信息和 8 字节的“Infimum”组成，链表尾是最大记录，由 5 字节的头信息和 8 字节的“Supremum”组成（当然，存储的都是二进制数据）。</p>
+<p>再重新看一遍头信息的格式（Compact 行格式）：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>大小（单位：bit）</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>预留位1</td>
+<td>1</td>
+<td>没有使用</td>
+</tr>
+<tr>
+<td>预留位2</td>
+<td>1</td>
+<td>没有使用</td>
+</tr>
+<tr>
+<td>delete_mask</td>
+<td>1</td>
+<td>标记该记录是否被删除</td>
+</tr>
+<tr>
+<td>min_rec_mask</td>
+<td>1</td>
+<td>B+树的每层非叶子节点中的最小记录都会添加该标记</td>
+</tr>
+<tr>
+<td>n_owned</td>
+<td>4</td>
+<td>表示当前记录拥有的记录数</td>
+</tr>
+<tr>
+<td>heap_no</td>
+<td>13</td>
+<td>表示当前记录在记录堆的位置信息</td>
+</tr>
+<tr>
+<td>record_type</td>
+<td>3</td>
+<td>表示当前记录的类型，0表示普通记录，1表示B+树非叶子节点记录，2表示最小记录，3表示最大记录</td>
+</tr>
+<tr>
+<td>next_record</td>
+<td>16</td>
+<td>表示下一条记录的相对位置</td>
+</tr>
+</tbody></table>
+<h2 id="User-Records-amp-Free-Space"><a href="#User-Records-amp-Free-Space" class="headerlink" title="User Records &amp; Free Space"></a>User Records &amp; Free Space</h2><p>这部分就是每页存储数据的地方。</p>
+<p>已经存储数据行的部分，叫做 User Records，还没使用的部分，叫做 Free Space。结合最开始的页示意图，很容易看懂。</p>
+<h2 id="Page-Directory"><a href="#Page-Directory" class="headerlink" title="Page  Directory"></a>Page  Directory</h2><p>一页有 16 KB 的大小，可以放很多很多行数据（具体能放多少条，跟每行数据有多少个字段相关）。</p>
+<p>链表的搜索效率的 O(n)，如果数据量很大，那么查询速度会非常慢。因此 InnoDB 又提出了 <code>页目录</code>（Page Directory）的概念，将搜索效率提高到 O(logn)。</p>
+<p>逻辑是这样的：</p>
+<ol>
+<li>链表需要按照主键的大小排序（如果没有主键，就使用 <code>Unique</code> 键，再没有就生成一个隐藏键 <code>DB_ROW_ID</code>）</li>
+<li>链表每几个节点分一个组，把每组最后的链表节点的地址，记录在 Page Directory 里（相当于记录在一个数组里）</li>
+</ol>
+<p>这样就能通过二分检索数组，将搜索效率提高到 O(logn) 了。下图是示意图，最左侧就是 Page Directory：</p>
+<p><img src="/assets/%E9%A1%B5%E7%9B%AE%E5%BD%95.jpg" alt="页目录"></p>
+<p>补充几个细节：</p>
+<ol>
+<li>头信息中的 <code>n_owned</code> 字段，代表分组后本组有多少行数据，只有每组最后的一个链表节点有这个数据。</li>
+<li>每一组最多 8 行数据（最小记录只有自己 1 行，最大记录允许 1-8 行，其他组 4-8 行）。</li>
+</ol>
+<p>二分法查找主键的过程不写了。</p>
+<hr>
+<h1 id="表空间-amp-组-amp-区"><a href="#表空间-amp-组-amp-区" class="headerlink" title="表空间 &amp; 组 &amp; 区"></a>表空间 &amp; 组 &amp; 区</h1><p>这部分的概念非常多，但是感觉偏向具体实现，对理解 InnoDB 帮助没有那么大，因此简略写写就过了。</p>
+<h2 id="表空间"><a href="#表空间" class="headerlink" title="表空间"></a>表空间</h2><p>表空间是 InnoDB 中最大的概念，最大可以 64TB（因为页号最大 2^32，单页 16KB，总共最多 64TB）。</p>
+<p>有很多种表空间，比如系统表空间、独立表空间、临时表空间等。在如今的 MySQL 版本中，表数据基本都存储在独立表空间当中（为每一个表建立一个独立表空间）。</p>
+<h2 id="组"><a href="#组" class="headerlink" title="组"></a>组</h2><p>表空间由组构成，每个组 256MB（2^14 页）。</p>
+<p>表空间的第一个组，头三个页是固定的，其他组的头两个页是固定的。</p>
+<p>第一个组的前三个页面分别是 <code>FSP_HDR</code> 页、<code>IBUF_BITMAP</code> 页，<code>INODE</code> 页：</p>
+<ul>
+<li><code>FSP_HDR</code> 页：这是整个表空间的第一个页，记录了整个表空间的信息，以及本组的区信息（区的概念下面说）</li>
+<li><code>IBUF_BITMAP</code> 页：本组关于 <code>INSERT BUFFER</code> 的信息（这个后面的文章说）</li>
+<li><code>INODE</code> 页：本组的段信息（段的概念下面说）</li>
+</ul>
+<p>其他组的前两个页面分别是 <code>XDES</code> 页、<code>IBUF_BITMAP</code> 页：</p>
+<ul>
+<li><code>XDES</code> 页：本组的区信息</li>
+<li><code>IBUF_BITMAP</code> 页：本组关于 <code>INSERT BUFFER</code> 的信息</li>
+</ul>
+<p>我感觉这些都不是很重要，只需要知道每个组会把一些统计信息单独抽出几个页出来，放在最前面。</p>
+<h2 id="区"><a href="#区" class="headerlink" title="区"></a>区</h2><p>由于组还是太大了，管理页不方便，因此还有区（extent）的概念，一个区 1MB（64 页）。</p>
+<p>引入区的概念，主要还是增加读写速度。InnoDB 的数据是以链表的形式存储的，链表可以东存一块，西存一块。但是对于存储系统来说，随机读写的速度要远低于顺序读写，如果内存是连续的，读写速度会大幅提升。因此如果把数据存到连续的磁盘区域，能提高很多速度。</p>
+<p>因此 InnoDB 一次申请一个区的磁盘空间（1 MB，64 个页），浪费一点空间，但是消除很多随机读写，提高性能。但是如果数据量很小，直接申请一个区的空间显得很浪费，因此有碎片区的概念，不同的表都可以使用同一个碎片区，新插入数据先使用碎片区的页，超过 32 页之后再单独创建区。</p>
+<h2 id="段"><a href="#段" class="headerlink" title="段"></a>段</h2><p>上面所说的都是物理空间，有固定的大小，段（Segment）是逻辑上的空间，没有固定大小。段由一些零散的页面以及一些固定的区构成。</p>
+<p>接下来要说的内容是下一篇文章的主题，就是 InnoDB 是怎么存储索引的。每个索引在 InnoDB 中都是一棵 B+ 树，按照索引值的大小排序，因此可以达到 O(logn) 的查询效率。这棵二叉树的叶子节点（最下面一层）和非叶子节点，数据结构是不相同的，查询逻辑也是不相同的，因此把这两部分存储在不同的区域。</p>
+<p>存放叶子节点的存储区域，被称为一个段，存放非叶子节点的存储区域，被称为另一个段。也就是说每个索引在存储时，默认会出现两个段，这两个段使用不同的存储区域。</p>
+]]></content>
+      <tags>
+        <tag>Weekly Post</tag>
       </tags>
   </entry>
   <entry>
@@ -1756,156 +2153,6 @@
       </tags>
   </entry>
   <entry>
-    <title>三次握手与四次挥手</title>
-    <url>/2020/12/27/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%8E%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/</url>
-    <content><![CDATA[<br>
-
-<p>十二月的第四周，来完整学习 TCP 的三次握手和四次挥手。</p>
-<p>本来学习完 Redis 后想先学 MySQL 的，但 MySQL 的学习曲线比想象的陡。工作时用到了 Wireshark，配合掘金小册《<a href="https://juejin.cn/book/6844733788681928712" target="_blank" rel="noopener">深入理解 TCP 协议：从原理到实战</a>》重学了一遍 TCP/IP 协议（这本书写得是真的好），这周先学习 TCP 建立连接与释放连接。</p>
-<p>本文的配图基本都来源自《<a href="https://juejin.cn/book/6844733788681928712" target="_blank" rel="noopener">深入理解 TCP 协议：从原理到实战</a>》。</p>
-<hr>
-<h1 id="抓包工具-Wireshark"><a href="#抓包工具-Wireshark" class="headerlink" title="抓包工具 Wireshark"></a>抓包工具 Wireshark</h1><p>首先介绍一下 Wireshark，这是一个开源的网络数据包分析软件（抓包工具）。</p>
-<p>工作中需要抓包分析，使用了 Fiddler 和 Wireshark 两款软件。</p>
-<ul>
-<li><p>Fiddler 是一个用于 HTTP 调试的抓包工具，它能捕获 HTTP 和 HTTPS 请求。</p>
-<p>Fiddler 的工作原理是代理。Fiddler 在启动时会自动设置好代理地址，客户端发送 HTTP 请求时，会首先发送给代理（Fiddler），再由代理转发送达服务端，反之也是如此。</p>
-</li>
-<li><p>Wireshark 是一个用于抓取一切网络数据包的工具，它抓取的是 0101 的二进制比特流，并基于七层网络协议解析成 IP、TCP、UDP、HTTP 等各种网络协议。由于开源，众多代码贡献者基本让 Wireshark 支持所有的网络协议。</p>
-<p>Wireshark 的工作原理是绑定网关，所有网络请求都要流经网关，也就都被 Wireshark 捕获到。</p>
-</li>
-</ul>
-<p>我们今天只学习功能更强大的 Wireshark。</p>
-<p>Wireshark 的界面如下图所示：</p>
-<p><img src="/assets/Wireshark%E7%95%8C%E9%9D%A2.jpg" alt="Wireshark界面"></p>
-<p>上半部分是所有网络数据包（包含时间、发送方 IP 地址、接收方 IP 地址、网络协议），下半部分是单个网络数据包的具体内容（点击哪个就展示哪个），它按照七层网络协议展示。</p>
-<p>我们今天基本只会看运输层（TCP 所在的那一层），下图是 Wireshark 中查看网络层和运输层的界面。</p>
-<p><img src="/assets/wireshark%E7%BD%91%E7%BB%9C%E5%B1%82%E5%92%8C%E8%BF%90%E8%BE%93%E5%B1%82.jpg" alt="wireshark网络层和运输层"></p>
-<p>网络层提供 IP 地址，运输层提供端口号，源 IP、源端口、目标 IP、目标端口构成了 TCP 连接的「四元组」。</p>
-<br>
-
-<p>我们以访问百度为例，进行一次抓包：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl -v www.baidu.com</span><br></pre></td></tr></table></figure>
-
-<p>该访问的抓包文件可以在 github 下载：<a href="https://github.com/arthur-zhang/tcp_ebook/blob/master/tcp_header/curl_baidu.pcapng" target="_blank" rel="noopener">curl_baidu.pcapng</a></p>
-<hr>
-<p>首先把 TCP 报文首部示意图贴出来，这是 TCP 协议的基石，我们接下来会反复看它。</p>
-<p><img src="/assets/TCP%E5%A4%B4%E9%83%A8.jpg" alt="TCP头部"></p>
-<h1 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h1><p>三次握手在 Wireshark 中是这样的：</p>
-<p><img src="/assets/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png" alt="三次握手"></p>
-<p>本地（192.168.31.240）向百度服务器（14.215.177.38）发送建立 TCP 连接的请求，百度服务器回复本地，本地再回复百度服务器，这三次请求被称为三次握手。</p>
-<br>
-
-<p>以第一次握手为例，讲解 TCP 报文包含什么信息：</p>
-<p><img src="/assets/TCP%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B.jpg" alt="TCP第一次握手"></p>
-<h2 id="源端口号（Source-Port）、目标端口号（Destination-Port）"><a href="#源端口号（Source-Port）、目标端口号（Destination-Port）" class="headerlink" title="源端口号（Source Port）、目标端口号（Destination Port）"></a>源端口号（Source Port）、目标端口号（Destination Port）</h2><p>源端口号是 61024，这就是我们本机的端口号</p>
-<p>目标端口号是 80，这是百度服务器的端口号（HTTP 的默认端口号）</p>
-<p>每个端口号占 2 字节（16 bit），因此端口号最大也只有 65535，熟知的端口号有：</p>
-<ul>
-<li>80：HTTP</li>
-<li>443：HTTPS</li>
-<li>22：SSH</li>
-</ul>
-<h2 id="序列号（Sequence-Number）"><a href="#序列号（Sequence-Number）" class="headerlink" title="序列号（Sequence Number）"></a>序列号（Sequence Number）</h2><p>序列号是一个 32 位的无符号整数，达到 2^32 - 1 后循环到 0。</p>
-<p>序列号是用来排序的，排发送 TCP 包的顺序。因为网络层（IP 层）不保证包的顺序，因此发送方依次发送 1、2、3、4 四个 TCP 包，接收方接到时可能是 2、4、3、1。为了解决网络包乱序、重复的问题，TCP 头部引入序列号的概念。</p>
-<p>序列号是按照报文段的长度累加的（不算头部的长度），比如发送方发送某个 TCP 包的序列号是 10，该包的报文长度是 78，那么发送方下一次发送时，序列号就是 10 + 78 = 88。</p>
-<p><img src="/assets/TCP%E5%BA%8F%E5%88%97%E5%8F%B7.jpg" alt="TCP序列号"></p>
-<p>三次握手的首次握手，初始的序列号（ISN）不是从 0 开始的，也不是某个固定的数字，而是随时间而变化。将 ISN 设置成固定值会有两个问题：</p>
-<ol>
-<li>安全问题，如果知道了连接的 ISN，很容易伪造一个 RST 包，将连接强制关闭。如果采用动态 ISN，伪造一个在对方窗口内的序列号就会相对困难。</li>
-<li>开启 SO_REUSEADDR 以后端口允许重用，这样收到一个包，并不知道是新连接还是因为网络原因姗姗来迟的旧连接。</li>
-</ol>
-<p>三次握手发送序列号的过程如下图所示（第二次握手拆成两步）。</p>
-<p><img src="/assets/TCP%E5%BA%8F%E5%88%97%E5%8F%B7%E5%8F%91%E9%80%81.jpg" alt="TCP序列号发送"></p>
-<p>还有一个有关序列号的细节，那就是 SYN 报文（SYN 是 TCP flags，在后文有写）不携带数据，但是它占用一个序号，下次发送数据序列号要加一，但是 ACK 报文不会占用序列号。这个细节可以从这个角度来理解：消耗序列号的 TCP 报文段，一定需要对方确认，SYN 报文需要 ACK 报文确认，但是 ACK 报文并不需要。如果消耗序列号的 TCP 报文段没有收到确认，会一直重传（有重试次数上限）。</p>
-<h2 id="确认号（Acknowledgment-Number）"><a href="#确认号（Acknowledgment-Number）" class="headerlink" title="确认号（Acknowledgment Number）"></a>确认号（Acknowledgment Number）</h2><p>TCP 使用确认号（Acknowledgment number, ACK）来告知对方下一个期望接收的序列号，小于此确认号的所有字节都已经收到。</p>
-<p><img src="/assets/TCP%E7%A1%AE%E8%AE%A4%E5%8F%B7.jpg" alt="TCP确认号"></p>
-<p>不是所有包都需要确认，例如 ACK 包就不需要（不然就死循环了）。</p>
-<h2 id="TCP-Flags"><a href="#TCP-Flags" class="headerlink" title="TCP Flags"></a>TCP Flags</h2><p>TCP 有很多标记，比如三次握手就使用了 SYN 和 ACK 标记。</p>
-<p>TCP Flags 是一个 8 bit 的 bitmap，每位代表一个状态，0 代表关闭，1 代表开启。</p>
-<p>如图是第一次握手时，TCP Flags 部分的示意图，只有 SYN 标记置 1，其他标记都是 0。</p>
-<p><img src="/assets/TCPFlags.jpg" alt="TCP Flags"></p>
-<p>TCP 三次握手使用到了两个标记，SYN 和 ACK。SYN（Synchronize Sequence Numbers）代表同步序列号的意思，也就是要发起连接了；ACK（Acknowledge）代表确认。</p>
-<p>常用的 TCP 标记的意义如下：</p>
-<ul>
-<li>SYN（Synchronize）：用于发起连接数据包同步双方的初始序列号</li>
-<li>ACK（Acknowledge）：确认数据包</li>
-<li>RST（Reset）：这个标记用来强制断开连接，通常是之前建立的连接已经不在了、包不合法、或者实在无能为力处理</li>
-<li>FIN（Finish）：通知对方我发完了所有数据，准备断开连接，后面我不会再发数据包给你了。</li>
-<li>PSH（Push）：告知对方这些数据包收到以后应该马上交给上层应用，不能缓存起来</li>
-</ul>
-<h2 id="窗口大小（Window-Size）"><a href="#窗口大小（Window-Size）" class="headerlink" title="窗口大小（Window Size）"></a>窗口大小（Window Size）</h2><p>TCP 使用滑动窗口的概念进行流量控制，如果发送端发送 TCP 包很快，接收端处理不过来，接收端就会先将 TCP 包缓存起来。接收方发送 ACK 响应时，会告诉发送方下一次自己能接收多少数据，这个值就是<strong>窗口大小</strong>。</p>
-<p>窗口大小占 16 bit，最大能代表 65535 个字节（64 KB），这个值在 TCP 协议创建时很大，但如今就显得很小了。为了解决这个问题，TCP 引入了<code>窗口缩放</code>的概念，最多能够放大 2^14 倍。如下图所示，缩放因子为 7，则真正的窗口大小为 1050 * 128 = 134400。</p>
-<p><img src="/assets/TCP%E7%AA%97%E5%8F%A3%E7%BC%A9%E6%94%BE.jpg" alt="TCP窗口缩放"></p>
-<p>窗口缩放因子在三次握手时指定，在 TCP 头部信息的可选项中指定（可选项下面就会说）。</p>
-<p>如果 Wireshark 没有抓到首次握手，也就不知道窗口缩放因子，是不知道真正的窗口缩放值是多少的。</p>
-<h2 id="可选项"><a href="#可选项" class="headerlink" title="可选项"></a>可选项</h2><p><img src="/assets/TCP%E5%8F%AF%E9%80%89%E9%A1%B9.jpg" alt="TCP可选项"></p>
-<p>可选项的格式如下图所示：</p>
-<p><img src="/assets/TCP%E5%8F%AF%E9%80%89%E9%A1%B9%E6%A0%BC%E5%BC%8F.jpg" alt="TCP可选项格式"></p>
-<p>以窗口缩放因子 Window scale 为例，kind=3，length=3，value=6</p>
-<p><img src="/assets/TCP%E5%8F%AF%E9%80%89%E9%A1%B9%E7%A4%BA%E4%BE%8B.jpg" alt="TCP可选项示例"></p>
-<p>常用的选项有以下几个：</p>
-<ul>
-<li>MSS：最大段大小选项，是 TCP 允许的从对方接收的最大报文段</li>
-<li>SACK：选择确认选项</li>
-<li>Window Scale：窗口缩放选项</li>
-</ul>
-<br>
-
-<p>至此我们看完了 TCP 头部字段，接下来快速理顺一遍三次握手。</p>
-<p><img src="/assets/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.jpg" alt="三次握手"></p>
-<p>第一次握手：客户端给服务端发一个 TCP 报文，将 TCP Flags 中 SYN 标志置 1，并指明客户端的初始化序列号 ISN。</p>
-<p>第二次握手：服务端给客户端发一个 TCP 报文，将 TCP Flags 中 SYN 标志置 1，指定服务端的初始化序列号 ISN，并将 TCP Flags 中 ACK 标志也置 1，确认序列号设置成第一次握手传来的客户端 ISN + 1，表示接收到第一次握手。</p>
-<p>第三次握手：客户端给服务端发一个 TCP 报文，将 TCP Flags 中 ACK 标志置 1，确认序列号设置成第二次握手传来的服务端 ISN + 1，表示接收到第二次握手。</p>
-<p>有一篇拓展阅读：《<a href="https://www.zhihu.com/question/271701044/answer/398114686" target="_blank" rel="noopener">关于三次握手和四次挥手，面试官想听到怎样的回答？</a>》。</p>
-<hr>
-<h1 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h1><p>TCP 建立连接需要三次，但是断开连接需要四次，这是 TCP 的<code>半关闭</code>造成的。半关闭是指，不能发送，但还可以接收，保证自己不再发送 TCP 包，但是不确定对方是否也是，因此还可以一直接收对方的 TCP 包。</p>
-<p>鉴于三次握手已经把 TCP 头部信息说明得比较清楚了，这里写四次挥手就简单过一下。</p>
-<p><img src="/assets/%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.jpg" alt="四次挥手"></p>
-<p>第一次挥手：客户端给服务端发送一个 TCP 包，指定 TCP Flags 中的 FIN 标志为 1，该包消耗一个序列号。在此之后，客户端将不能给服务端发送 TCP 包（FIN 包重发不算）。</p>
-<p>第二次挥手：服务端给客户端发送一个 TCP 包，指定 TCP Flags 中的 ACK 标志为 1，确认号是接收第一次挥手的 FIN 包的序列号 + 1。</p>
-<p>服务端继续发送还没发送完的 TCP 包，发送完之后再第三次挥手。</p>
-<p>第三次挥手：服务端给客户端发送一个 TCP 包，指定 TCP Flags 中的 FIN 标志为 1，该包消耗一个序列号。在此之后，服务端将不能给客户端发送 TCP 包（FIN 包重发不算）。</p>
-<p>第四次挥手：客户端给服务端发送一个 TCP 包，指定 TCP Flags 中的 ACK 标志为 1，确认号是接收第三次挥手的 FIN 包的序列号 + 1。客户端等待 2 个 MSL 后关闭。</p>
-<br>
-
-<p>接下来回答几个细节问题：</p>
-<h2 id="四次而不是三次"><a href="#四次而不是三次" class="headerlink" title="四次而不是三次"></a>四次而不是三次</h2><p>为什么一定需要四次握手，三次不行吗？</p>
-<p>如果把四次缩减成三次，那就是把第二次挥手和第三次挥手合并（第一次、第四次是不能砍掉的），也就是服务端得知客户端要断开连接时，发送一个 TCP 包，同时携带 ACK（确认收到第一次挥手）和 FIN（告知服务端也要关闭了）信息。</p>
-<p>但是服务端不一定立即就能发送 FIN 包，因为服务端可能还有 TCP 包没发送完。服务端要一直等到自己发送完了所有的 TCP 包，才能发送 FIN 包，如果把第二次和第三次挥手合并，就会导致 ACK（确认收到第一次挥手）可能发送得特别迟。从客户端角度观察就是，我这边发送了 FIN 包申请断开连接，结果迟迟没有收到回复，那只好不停地重发。</p>
-<p>因此把四次挥手缩减成三次也不是不行，但是会有不停重发的代价，没有必要。</p>
-<p>顺便提一下，建立连接时只需要三次握手，是因为服务端刚刚收到 SYN 包时，并没有任何还没发送的信息需要发送，因此不需要先确认收到，再申请建立连接。</p>
-<h2 id="FIN-也需要占用一个序列号"><a href="#FIN-也需要占用一个序列号" class="headerlink" title="FIN 也需要占用一个序列号"></a>FIN 也需要占用一个序列号</h2><p>除了 ACK 之外，其他 TCP 包都需要占用序列号。</p>
-<p>对于 FIN 而言，这是因为 FIN 也是需要确认的。如果 FIN 不占用序列号，客户端先发送了一个 TCP 包，再发送一个申请关闭连接的 FIN 包，那么接到 ACK 回复时，客户端并不知道这是确认哪一个 TCP 包的，有可能是确认最后发送消息的那个 TCP 包，也可能是确认 FIN 包的。</p>
-<p>需要得到回复的 TCP 包，都需要占用序列号。</p>
-<h2 id="标记-FIN-时其实也标记了-ACK"><a href="#标记-FIN-时其实也标记了-ACK" class="headerlink" title="标记 FIN 时其实也标记了 ACK"></a>标记 FIN 时其实也标记了 ACK</h2><p>第一次挥手和第三次挥手，发送的是 FIN 包，即 TCP Flags 中的 FIN 标志置为 1。</p>
-<p>但如果用 wireshark 抓包的话，会发现在标记 FIN 为 1 时，也将 ACK 置为了 1：</p>
-<p><img src="/assets/FIN%E5%92%8CACK%E5%90%8C%E6%97%B6%E6%A0%87%E8%AE%B0.jpg" alt="FIN和ACK同时标记"></p>
-<p>查阅资料后发现：RFC793 明确规定，除了第一个握手报文 SYN 除外，其它所有报文必须将 ACK = 1。</p>
-<p>因为 TCP 是通过确认机制，来保证消息可靠传输的。只有当 ACK = 1 时，TCP 头部的确认号才有效。但是这块区域是固定的，是省不掉一定会有的，空着也是空着，不如一直使用，每一次 TCP 报文都携带确认信息。</p>
-<h2 id="等待-2-个-MSL"><a href="#等待-2-个-MSL" class="headerlink" title="等待 2 个 MSL"></a>等待 2 个 MSL</h2><p>MSL（Max Segment Lifetime）报文最大存活时间，是指 TCP 报文在网络中最大的生存时间。</p>
-<p>这个概念还跟网络层（IP 层）有点关系，比如网络包从一个路由器到另一个，兜兜转转，一直都到不了目的地，为了避免资源浪费，引入了 TTL 和 MSL 的概念，总之代表的含义是一个报文最久能在网络中待多久。</p>
-<p>换个角度看待这个概念：如果发送了一个网络包，那么过了一个 MSL 的时间之后，网络中必然不存在这个包，要不然已到达目的地，要不然就被消灭了。</p>
-<p>第四次握手之后，客户端会等待 2 个 MSL 的时间，在这段时间之内客户端处于 TIME_WAIT 状态，还可以接收服务端发送来的信息，但是超过这个时间之后，连接就彻底断开了，再也不处理任何发送来的 TCP 包了。</p>
-<p>等待 2 个 MSL 的时间有两个原因：</p>
-<ol>
-<li><p>以防第四次挥手 ACK 包没发送成功</p>
-<p>如果客户端第四次挥手发送的 ACK 包没有发送成功，多等 2 个 MSL 的时间还能抢救一下：</p>
-<p><img src="/assets/MSL%E9%87%8D%E4%BC%A0%E4%BD%9C%E7%94%A8.jpg" alt="MSL重传作用"></p>
-</li>
-<li><p>避免两次连接串了</p>
-<p>如果没有多等 2 个 MSL 的过程，可能使两次连接的时间相隔很近，第二次连接接收到了第一次连接的 TCP 包。</p>
-<p><img src="/assets/MSL%E4%B8%A4%E6%AC%A1%E8%BF%9E%E6%8E%A5%E4%B8%B2%E6%89%B0.jpg" alt="MSL两次连接串扰"></p>
-</li>
-</ol>
-<hr>
-<p>这篇文章就总结到这里。</p>
-<p>写的过程中一直觉得自己写得不好，概括能力和表达能力都不行，还是学习来源《<a href="https://juejin.cn/book/6844733788681928712" target="_blank" rel="noopener">深入理解 TCP 协议：从原理到实战</a>》厉害，强烈推荐，写得真好。</p>
-]]></content>
-      <tags>
-        <tag>Weekly Post</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>WebFlux 中使用 Swagger</title>
     <url>/2020/07/27/webflux-%E4%B8%AD%E4%BD%BF%E7%94%A8-swagger/</url>
     <content><![CDATA[<br>
@@ -2215,6 +2462,156 @@
 ]]></content>
       <tags>
         <tag>Random Post</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>三次握手与四次挥手</title>
+    <url>/2020/12/27/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%8E%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/</url>
+    <content><![CDATA[<br>
+
+<p>十二月的第四周，来完整学习 TCP 的三次握手和四次挥手。</p>
+<p>本来学习完 Redis 后想先学 MySQL 的，但 MySQL 的学习曲线比想象的陡。工作时用到了 Wireshark，配合掘金小册《<a href="https://juejin.cn/book/6844733788681928712" target="_blank" rel="noopener">深入理解 TCP 协议：从原理到实战</a>》重学了一遍 TCP/IP 协议（这本书写得是真的好），这周先学习 TCP 建立连接与释放连接。</p>
+<p>本文的配图基本都来源自《<a href="https://juejin.cn/book/6844733788681928712" target="_blank" rel="noopener">深入理解 TCP 协议：从原理到实战</a>》。</p>
+<hr>
+<h1 id="抓包工具-Wireshark"><a href="#抓包工具-Wireshark" class="headerlink" title="抓包工具 Wireshark"></a>抓包工具 Wireshark</h1><p>首先介绍一下 Wireshark，这是一个开源的网络数据包分析软件（抓包工具）。</p>
+<p>工作中需要抓包分析，使用了 Fiddler 和 Wireshark 两款软件。</p>
+<ul>
+<li><p>Fiddler 是一个用于 HTTP 调试的抓包工具，它能捕获 HTTP 和 HTTPS 请求。</p>
+<p>Fiddler 的工作原理是代理。Fiddler 在启动时会自动设置好代理地址，客户端发送 HTTP 请求时，会首先发送给代理（Fiddler），再由代理转发送达服务端，反之也是如此。</p>
+</li>
+<li><p>Wireshark 是一个用于抓取一切网络数据包的工具，它抓取的是 0101 的二进制比特流，并基于七层网络协议解析成 IP、TCP、UDP、HTTP 等各种网络协议。由于开源，众多代码贡献者基本让 Wireshark 支持所有的网络协议。</p>
+<p>Wireshark 的工作原理是绑定网关，所有网络请求都要流经网关，也就都被 Wireshark 捕获到。</p>
+</li>
+</ul>
+<p>我们今天只学习功能更强大的 Wireshark。</p>
+<p>Wireshark 的界面如下图所示：</p>
+<p><img src="/assets/Wireshark%E7%95%8C%E9%9D%A2.jpg" alt="Wireshark界面"></p>
+<p>上半部分是所有网络数据包（包含时间、发送方 IP 地址、接收方 IP 地址、网络协议），下半部分是单个网络数据包的具体内容（点击哪个就展示哪个），它按照七层网络协议展示。</p>
+<p>我们今天基本只会看运输层（TCP 所在的那一层），下图是 Wireshark 中查看网络层和运输层的界面。</p>
+<p><img src="/assets/wireshark%E7%BD%91%E7%BB%9C%E5%B1%82%E5%92%8C%E8%BF%90%E8%BE%93%E5%B1%82.jpg" alt="wireshark网络层和运输层"></p>
+<p>网络层提供 IP 地址，运输层提供端口号，源 IP、源端口、目标 IP、目标端口构成了 TCP 连接的「四元组」。</p>
+<br>
+
+<p>我们以访问百度为例，进行一次抓包：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl -v www.baidu.com</span><br></pre></td></tr></table></figure>
+
+<p>该访问的抓包文件可以在 github 下载：<a href="https://github.com/arthur-zhang/tcp_ebook/blob/master/tcp_header/curl_baidu.pcapng" target="_blank" rel="noopener">curl_baidu.pcapng</a></p>
+<hr>
+<p>首先把 TCP 报文首部示意图贴出来，这是 TCP 协议的基石，我们接下来会反复看它。</p>
+<p><img src="/assets/TCP%E5%A4%B4%E9%83%A8.jpg" alt="TCP头部"></p>
+<h1 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h1><p>三次握手在 Wireshark 中是这样的：</p>
+<p><img src="/assets/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png" alt="三次握手"></p>
+<p>本地（192.168.31.240）向百度服务器（14.215.177.38）发送建立 TCP 连接的请求，百度服务器回复本地，本地再回复百度服务器，这三次请求被称为三次握手。</p>
+<br>
+
+<p>以第一次握手为例，讲解 TCP 报文包含什么信息：</p>
+<p><img src="/assets/TCP%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B.jpg" alt="TCP第一次握手"></p>
+<h2 id="源端口号（Source-Port）、目标端口号（Destination-Port）"><a href="#源端口号（Source-Port）、目标端口号（Destination-Port）" class="headerlink" title="源端口号（Source Port）、目标端口号（Destination Port）"></a>源端口号（Source Port）、目标端口号（Destination Port）</h2><p>源端口号是 61024，这就是我们本机的端口号</p>
+<p>目标端口号是 80，这是百度服务器的端口号（HTTP 的默认端口号）</p>
+<p>每个端口号占 2 字节（16 bit），因此端口号最大也只有 65535，熟知的端口号有：</p>
+<ul>
+<li>80：HTTP</li>
+<li>443：HTTPS</li>
+<li>22：SSH</li>
+</ul>
+<h2 id="序列号（Sequence-Number）"><a href="#序列号（Sequence-Number）" class="headerlink" title="序列号（Sequence Number）"></a>序列号（Sequence Number）</h2><p>序列号是一个 32 位的无符号整数，达到 2^32 - 1 后循环到 0。</p>
+<p>序列号是用来排序的，排发送 TCP 包的顺序。因为网络层（IP 层）不保证包的顺序，因此发送方依次发送 1、2、3、4 四个 TCP 包，接收方接到时可能是 2、4、3、1。为了解决网络包乱序、重复的问题，TCP 头部引入序列号的概念。</p>
+<p>序列号是按照报文段的长度累加的（不算头部的长度），比如发送方发送某个 TCP 包的序列号是 10，该包的报文长度是 78，那么发送方下一次发送时，序列号就是 10 + 78 = 88。</p>
+<p><img src="/assets/TCP%E5%BA%8F%E5%88%97%E5%8F%B7.jpg" alt="TCP序列号"></p>
+<p>三次握手的首次握手，初始的序列号（ISN）不是从 0 开始的，也不是某个固定的数字，而是随时间而变化。将 ISN 设置成固定值会有两个问题：</p>
+<ol>
+<li>安全问题，如果知道了连接的 ISN，很容易伪造一个 RST 包，将连接强制关闭。如果采用动态 ISN，伪造一个在对方窗口内的序列号就会相对困难。</li>
+<li>开启 SO_REUSEADDR 以后端口允许重用，这样收到一个包，并不知道是新连接还是因为网络原因姗姗来迟的旧连接。</li>
+</ol>
+<p>三次握手发送序列号的过程如下图所示（第二次握手拆成两步）。</p>
+<p><img src="/assets/TCP%E5%BA%8F%E5%88%97%E5%8F%B7%E5%8F%91%E9%80%81.jpg" alt="TCP序列号发送"></p>
+<p>还有一个有关序列号的细节，那就是 SYN 报文（SYN 是 TCP flags，在后文有写）不携带数据，但是它占用一个序号，下次发送数据序列号要加一，但是 ACK 报文不会占用序列号。这个细节可以从这个角度来理解：消耗序列号的 TCP 报文段，一定需要对方确认，SYN 报文需要 ACK 报文确认，但是 ACK 报文并不需要。如果消耗序列号的 TCP 报文段没有收到确认，会一直重传（有重试次数上限）。</p>
+<h2 id="确认号（Acknowledgment-Number）"><a href="#确认号（Acknowledgment-Number）" class="headerlink" title="确认号（Acknowledgment Number）"></a>确认号（Acknowledgment Number）</h2><p>TCP 使用确认号（Acknowledgment number, ACK）来告知对方下一个期望接收的序列号，小于此确认号的所有字节都已经收到。</p>
+<p><img src="/assets/TCP%E7%A1%AE%E8%AE%A4%E5%8F%B7.jpg" alt="TCP确认号"></p>
+<p>不是所有包都需要确认，例如 ACK 包就不需要（不然就死循环了）。</p>
+<h2 id="TCP-Flags"><a href="#TCP-Flags" class="headerlink" title="TCP Flags"></a>TCP Flags</h2><p>TCP 有很多标记，比如三次握手就使用了 SYN 和 ACK 标记。</p>
+<p>TCP Flags 是一个 8 bit 的 bitmap，每位代表一个状态，0 代表关闭，1 代表开启。</p>
+<p>如图是第一次握手时，TCP Flags 部分的示意图，只有 SYN 标记置 1，其他标记都是 0。</p>
+<p><img src="/assets/TCPFlags.jpg" alt="TCP Flags"></p>
+<p>TCP 三次握手使用到了两个标记，SYN 和 ACK。SYN（Synchronize Sequence Numbers）代表同步序列号的意思，也就是要发起连接了；ACK（Acknowledge）代表确认。</p>
+<p>常用的 TCP 标记的意义如下：</p>
+<ul>
+<li>SYN（Synchronize）：用于发起连接数据包同步双方的初始序列号</li>
+<li>ACK（Acknowledge）：确认数据包</li>
+<li>RST（Reset）：这个标记用来强制断开连接，通常是之前建立的连接已经不在了、包不合法、或者实在无能为力处理</li>
+<li>FIN（Finish）：通知对方我发完了所有数据，准备断开连接，后面我不会再发数据包给你了。</li>
+<li>PSH（Push）：告知对方这些数据包收到以后应该马上交给上层应用，不能缓存起来</li>
+</ul>
+<h2 id="窗口大小（Window-Size）"><a href="#窗口大小（Window-Size）" class="headerlink" title="窗口大小（Window Size）"></a>窗口大小（Window Size）</h2><p>TCP 使用滑动窗口的概念进行流量控制，如果发送端发送 TCP 包很快，接收端处理不过来，接收端就会先将 TCP 包缓存起来。接收方发送 ACK 响应时，会告诉发送方下一次自己能接收多少数据，这个值就是<strong>窗口大小</strong>。</p>
+<p>窗口大小占 16 bit，最大能代表 65535 个字节（64 KB），这个值在 TCP 协议创建时很大，但如今就显得很小了。为了解决这个问题，TCP 引入了<code>窗口缩放</code>的概念，最多能够放大 2^14 倍。如下图所示，缩放因子为 7，则真正的窗口大小为 1050 * 128 = 134400。</p>
+<p><img src="/assets/TCP%E7%AA%97%E5%8F%A3%E7%BC%A9%E6%94%BE.jpg" alt="TCP窗口缩放"></p>
+<p>窗口缩放因子在三次握手时指定，在 TCP 头部信息的可选项中指定（可选项下面就会说）。</p>
+<p>如果 Wireshark 没有抓到首次握手，也就不知道窗口缩放因子，是不知道真正的窗口缩放值是多少的。</p>
+<h2 id="可选项"><a href="#可选项" class="headerlink" title="可选项"></a>可选项</h2><p><img src="/assets/TCP%E5%8F%AF%E9%80%89%E9%A1%B9.jpg" alt="TCP可选项"></p>
+<p>可选项的格式如下图所示：</p>
+<p><img src="/assets/TCP%E5%8F%AF%E9%80%89%E9%A1%B9%E6%A0%BC%E5%BC%8F.jpg" alt="TCP可选项格式"></p>
+<p>以窗口缩放因子 Window scale 为例，kind=3，length=3，value=6</p>
+<p><img src="/assets/TCP%E5%8F%AF%E9%80%89%E9%A1%B9%E7%A4%BA%E4%BE%8B.jpg" alt="TCP可选项示例"></p>
+<p>常用的选项有以下几个：</p>
+<ul>
+<li>MSS：最大段大小选项，是 TCP 允许的从对方接收的最大报文段</li>
+<li>SACK：选择确认选项</li>
+<li>Window Scale：窗口缩放选项</li>
+</ul>
+<br>
+
+<p>至此我们看完了 TCP 头部字段，接下来快速理顺一遍三次握手。</p>
+<p><img src="/assets/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.jpg" alt="三次握手"></p>
+<p>第一次握手：客户端给服务端发一个 TCP 报文，将 TCP Flags 中 SYN 标志置 1，并指明客户端的初始化序列号 ISN。</p>
+<p>第二次握手：服务端给客户端发一个 TCP 报文，将 TCP Flags 中 SYN 标志置 1，指定服务端的初始化序列号 ISN，并将 TCP Flags 中 ACK 标志也置 1，确认序列号设置成第一次握手传来的客户端 ISN + 1，表示接收到第一次握手。</p>
+<p>第三次握手：客户端给服务端发一个 TCP 报文，将 TCP Flags 中 ACK 标志置 1，确认序列号设置成第二次握手传来的服务端 ISN + 1，表示接收到第二次握手。</p>
+<p>有一篇拓展阅读：《<a href="https://www.zhihu.com/question/271701044/answer/398114686" target="_blank" rel="noopener">关于三次握手和四次挥手，面试官想听到怎样的回答？</a>》。</p>
+<hr>
+<h1 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h1><p>TCP 建立连接需要三次，但是断开连接需要四次，这是 TCP 的<code>半关闭</code>造成的。半关闭是指，不能发送，但还可以接收，保证自己不再发送 TCP 包，但是不确定对方是否也是，因此还可以一直接收对方的 TCP 包。</p>
+<p>鉴于三次握手已经把 TCP 头部信息说明得比较清楚了，这里写四次挥手就简单过一下。</p>
+<p><img src="/assets/%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.jpg" alt="四次挥手"></p>
+<p>第一次挥手：客户端给服务端发送一个 TCP 包，指定 TCP Flags 中的 FIN 标志为 1，该包消耗一个序列号。在此之后，客户端将不能给服务端发送 TCP 包（FIN 包重发不算）。</p>
+<p>第二次挥手：服务端给客户端发送一个 TCP 包，指定 TCP Flags 中的 ACK 标志为 1，确认号是接收第一次挥手的 FIN 包的序列号 + 1。</p>
+<p>服务端继续发送还没发送完的 TCP 包，发送完之后再第三次挥手。</p>
+<p>第三次挥手：服务端给客户端发送一个 TCP 包，指定 TCP Flags 中的 FIN 标志为 1，该包消耗一个序列号。在此之后，服务端将不能给客户端发送 TCP 包（FIN 包重发不算）。</p>
+<p>第四次挥手：客户端给服务端发送一个 TCP 包，指定 TCP Flags 中的 ACK 标志为 1，确认号是接收第三次挥手的 FIN 包的序列号 + 1。客户端等待 2 个 MSL 后关闭。</p>
+<br>
+
+<p>接下来回答几个细节问题：</p>
+<h2 id="四次而不是三次"><a href="#四次而不是三次" class="headerlink" title="四次而不是三次"></a>四次而不是三次</h2><p>为什么一定需要四次握手，三次不行吗？</p>
+<p>如果把四次缩减成三次，那就是把第二次挥手和第三次挥手合并（第一次、第四次是不能砍掉的），也就是服务端得知客户端要断开连接时，发送一个 TCP 包，同时携带 ACK（确认收到第一次挥手）和 FIN（告知服务端也要关闭了）信息。</p>
+<p>但是服务端不一定立即就能发送 FIN 包，因为服务端可能还有 TCP 包没发送完。服务端要一直等到自己发送完了所有的 TCP 包，才能发送 FIN 包，如果把第二次和第三次挥手合并，就会导致 ACK（确认收到第一次挥手）可能发送得特别迟。从客户端角度观察就是，我这边发送了 FIN 包申请断开连接，结果迟迟没有收到回复，那只好不停地重发。</p>
+<p>因此把四次挥手缩减成三次也不是不行，但是会有不停重发的代价，没有必要。</p>
+<p>顺便提一下，建立连接时只需要三次握手，是因为服务端刚刚收到 SYN 包时，并没有任何还没发送的信息需要发送，因此不需要先确认收到，再申请建立连接。</p>
+<h2 id="FIN-也需要占用一个序列号"><a href="#FIN-也需要占用一个序列号" class="headerlink" title="FIN 也需要占用一个序列号"></a>FIN 也需要占用一个序列号</h2><p>除了 ACK 之外，其他 TCP 包都需要占用序列号。</p>
+<p>对于 FIN 而言，这是因为 FIN 也是需要确认的。如果 FIN 不占用序列号，客户端先发送了一个 TCP 包，再发送一个申请关闭连接的 FIN 包，那么接到 ACK 回复时，客户端并不知道这是确认哪一个 TCP 包的，有可能是确认最后发送消息的那个 TCP 包，也可能是确认 FIN 包的。</p>
+<p>需要得到回复的 TCP 包，都需要占用序列号。</p>
+<h2 id="标记-FIN-时其实也标记了-ACK"><a href="#标记-FIN-时其实也标记了-ACK" class="headerlink" title="标记 FIN 时其实也标记了 ACK"></a>标记 FIN 时其实也标记了 ACK</h2><p>第一次挥手和第三次挥手，发送的是 FIN 包，即 TCP Flags 中的 FIN 标志置为 1。</p>
+<p>但如果用 wireshark 抓包的话，会发现在标记 FIN 为 1 时，也将 ACK 置为了 1：</p>
+<p><img src="/assets/FIN%E5%92%8CACK%E5%90%8C%E6%97%B6%E6%A0%87%E8%AE%B0.jpg" alt="FIN和ACK同时标记"></p>
+<p>查阅资料后发现：RFC793 明确规定，除了第一个握手报文 SYN 除外，其它所有报文必须将 ACK = 1。</p>
+<p>因为 TCP 是通过确认机制，来保证消息可靠传输的。只有当 ACK = 1 时，TCP 头部的确认号才有效。但是这块区域是固定的，是省不掉一定会有的，空着也是空着，不如一直使用，每一次 TCP 报文都携带确认信息。</p>
+<h2 id="等待-2-个-MSL"><a href="#等待-2-个-MSL" class="headerlink" title="等待 2 个 MSL"></a>等待 2 个 MSL</h2><p>MSL（Max Segment Lifetime）报文最大存活时间，是指 TCP 报文在网络中最大的生存时间。</p>
+<p>这个概念还跟网络层（IP 层）有点关系，比如网络包从一个路由器到另一个，兜兜转转，一直都到不了目的地，为了避免资源浪费，引入了 TTL 和 MSL 的概念，总之代表的含义是一个报文最久能在网络中待多久。</p>
+<p>换个角度看待这个概念：如果发送了一个网络包，那么过了一个 MSL 的时间之后，网络中必然不存在这个包，要不然已到达目的地，要不然就被消灭了。</p>
+<p>第四次握手之后，客户端会等待 2 个 MSL 的时间，在这段时间之内客户端处于 TIME_WAIT 状态，还可以接收服务端发送来的信息，但是超过这个时间之后，连接就彻底断开了，再也不处理任何发送来的 TCP 包了。</p>
+<p>等待 2 个 MSL 的时间有两个原因：</p>
+<ol>
+<li><p>以防第四次挥手 ACK 包没发送成功</p>
+<p>如果客户端第四次挥手发送的 ACK 包没有发送成功，多等 2 个 MSL 的时间还能抢救一下：</p>
+<p><img src="/assets/MSL%E9%87%8D%E4%BC%A0%E4%BD%9C%E7%94%A8.jpg" alt="MSL重传作用"></p>
+</li>
+<li><p>避免两次连接串了</p>
+<p>如果没有多等 2 个 MSL 的过程，可能使两次连接的时间相隔很近，第二次连接接收到了第一次连接的 TCP 包。</p>
+<p><img src="/assets/MSL%E4%B8%A4%E6%AC%A1%E8%BF%9E%E6%8E%A5%E4%B8%B2%E6%89%B0.jpg" alt="MSL两次连接串扰"></p>
+</li>
+</ol>
+<hr>
+<p>这篇文章就总结到这里。</p>
+<p>写的过程中一直觉得自己写得不好，概括能力和表达能力都不行，还是学习来源《<a href="https://juejin.cn/book/6844733788681928712" target="_blank" rel="noopener">深入理解 TCP 协议：从原理到实战</a>》厉害，强烈推荐，写得真好。</p>
+]]></content>
+      <tags>
+        <tag>Weekly Post</tag>
       </tags>
   </entry>
   <entry>
@@ -4018,6 +4415,189 @@
       </tags>
   </entry>
   <entry>
+    <title>对象的大小</title>
+    <url>/2020/03/08/%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%A4%A7%E5%B0%8F/</url>
+    <content><![CDATA[<br>
+
+<p>一晃都三月了，过了一个很古早的冬天呐。</p>
+<p>冬眠回来，三月的第二周，来看 Java 对象的内存设计，这部分的学习是为之后学习 synchronized 关键字铺路的。本来想在学习锁时顺便提一嘴写完它，结果发现这坑有点大，还是要单独学。</p>
+<br>
+
+<p>我们这周学习的目的，是搞清楚存储在内存中的对象，它具体是如何存储的，存储时都需要存哪些信息，以及存这些信息的意义是什么。</p>
+<p>比如看下面这段代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List list = <span class="keyword">new</span> ArrayList;</span><br><span class="line">list.add(<span class="string">"hello, world!"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>上面这两行代码当中的 <code>list</code> 对象是如何存储起来的。</p>
+<hr>
+<p>要学习对象是怎么存储在内存当中的，就要从很原始的地方说起，先学习 JVM 的内存结构。</p>
+<p>这一块我是真的很欠缺，只知道一点基础的概念，我只把本次要用到的知识写在这里，其他的知识我还要慢慢学。有关 JVM 的内存结构，我学习的起点是<a href="https://www.bilibili.com/video/av62009886" target="_blank" rel="noopener">《【java】jvm内存模型全面解析》</a>视频，很推荐一看。</p>
+<p>JVM 在运行 Java 程序时，会管理一块内存区域，这一片区域被称为<code>运行时数据区域</code>，从结构上可以分为五个部分，分别是：</p>
+<ul>
+<li><code>Java 虚拟机栈</code>：线程私有，存储局部变量等</li>
+<li><code>本地方法栈</code>：线程私有，存储本地方法的变量等</li>
+<li><code>程序计数器</code>：线程私有，存储字节码的地址（程序执行到第几行了）</li>
+<li><code>堆</code>：线程共享，存储几乎所有对象</li>
+<li><code>方法区</code>：线程共享，存储类的结构信息（字段、构造方法等等）</li>
+</ul>
+<p>（下图来源自<a href="https://cyc2018.github.io/CS-Notes/#/notes/Java%20%E8%99%9A%E6%8B%9F%E6%9C%BA" target="_blank" rel="noopener">《CYC - Java 虚拟机 - 运行时数据区域》</a>，其内容整理非常值得反复阅读)</p>
+<p><img src="/assets/JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84.png" alt="JVM内存结构"></p>
+<p>我们今天要说的，只是<code>栈</code>和<code>堆</code>（栈指的是 Java 虚拟机栈）。非常浅薄地讲，<code>栈</code>存放的是局部变量以及对象的地址，<code>堆</code>存放的是对象的实体。（看书发现，栈中存放的并不一定是对象地址，但这是最常见的寻找堆对象的方式）</p>
+<p>简单制作了一张图，描述了代码、栈、堆之间的关系。</p>
+<p><img src="/assets/JVM%E5%86%85%E5%AD%98%E5%AD%98%E5%82%A8%E5%AF%B9%E8%B1%A1.jpg" alt="JVM内存存储对象"></p>
+<br>
+
+<h2 id="Tips"><a href="#Tips" class="headerlink" title="Tips"></a>Tips</h2><p>内存结构和内存模型并不是一个概念：</p>
+<p>当我们说内存结构时，通常是指<code>JVM 内存结构</code>，这是真实存在的，指的是上文介绍的 Java 虚拟机栈、堆、本地方法栈等等那五部分构成的 JVM 运行时数据区域，这是在<code>结构</code>上把 JVM 的内存分成了多个部分。</p>
+<p>当我们说内存模型时，通常是指<code>Java 内存模型</code>，这是虚拟存在的，指的是面对并发时 Java 是如何实现内存访问一致的，牵扯到了主内存和工作内存等知识，这是在<code>模型</code>和概念上，屏蔽各种硬件和操作系统的内存访问差异，来实现并发内存一致性。</p>
+<br>
+
+<hr>
+<p>简单说完了对象存放的位置，那么接下来就要进入这周学习的重点了：如何计算对象的大小。这个问题实际上可以拆成两个问题：</p>
+<ol>
+<li>对象由哪些部分组成？</li>
+<li>每部分各占多少字节？</li>
+</ol>
+<p>在这两个问题的基础上，自然会问出第三个问题：</p>
+<ol start="3">
+<li>组成对象的这些基础部分，各自是做什么的？</li>
+</ol>
+<p>PS：在看书的时候，发现自己所学习对象大小的这部分知识，实际上是 HotSpot 虚拟机的实现，而并非所有 Java 虚拟机的实现，但是目前基本上所有的 Java 程序都跑在 HostSpot 虚拟机上面。</p>
+<br>
+
+<p>所有对象都可以笼统地切分成两部分：<code>对象头</code>（Header）和<code>对象内容</code>（Instance Data）。</p>
+<p>举一个实际的例子：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于上面这个 Person 类，它实例化出来的对象同样具有对象头和对象内容两部分，<code>name</code> 和 <code>age</code> 都是对象的内部变量，属于对象内容，而对象头是其余一些辅助信息。</p>
+<br>
+
+<p>我绘制了一张图，画出了在最常见情况下（64 位虚拟机开启指针压缩），对象在内存中的结构，后文都是在解释这个结构的具体信息。</p>
+<p><img src="/assets/%E5%AF%B9%E8%B1%A1%E5%A4%B4.jpg" alt="对象头"></p>
+<h1 id="对象内容"><a href="#对象内容" class="headerlink" title="对象内容"></a>对象内容</h1><p>对象内容准确地讲应该叫做实例数据（Instance Data），比较简单，因此我们先讲完。</p>
+<p>正如之前提到的 Person 对象的例子，对象内的属性（包括基本数据类型 <code>int age</code> 和引用的另一个对象 <code>String name</code>），这些属性所占的内容大小，就是对象内容的大小。在该例子中，int 类型的 <code>age</code> 占 4 个字节（即 32 位），引用另一个对象时，存储的是对象的地址，地址是一个 int 类型的指针，因此 String 类型的 <code>name</code> 存储在 Person 对象中也占 4 个字节（即 32 位），两个属性加起来一共占 8 个字节。</p>
+<p>因此计算对象内容的大小，实际上就是分两部分，基本数据类型一类，占内容大小加起来，引用别的对象占一类，引用一个就是 4 字节（int 的大小），引用 N 个对象就占 N*4 个字节。</p>
+<p>下面列举了 8 种基本数据类型的大小。</p>
+<table>
+<thead>
+<tr>
+<th>基本数据类型</th>
+<th>大小（字节）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>byte</td>
+<td>1</td>
+</tr>
+<tr>
+<td>char</td>
+<td>2（表示一个 UTF-16be 编码单元，<a href="https://colobu.com/2019/01/04/how-many-charactors-in-a-java-string/" target="_blank" rel="noopener">生僻字用两个char</a>）</td>
+</tr>
+<tr>
+<td>short</td>
+<td>2</td>
+</tr>
+<tr>
+<td>int</td>
+<td>4</td>
+</tr>
+<tr>
+<td>flote</td>
+<td>4</td>
+</tr>
+<tr>
+<td>long</td>
+<td>8</td>
+</tr>
+<tr>
+<td>double</td>
+<td>8</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>通常是1</td>
+</tr>
+</tbody></table>
+<p>此外还要注意的一点是，如果 A 类继承自 B 类，那么计算 A 类的对象内容大小时，继承来的 B 类的属性也是要算在内的。比如计算 ArrayList 对象大小的时候，它的父类 AbstractList 中的属性，也是要计算在内的。</p>
+<br>
+
+<h1 id="对象头"><a href="#对象头" class="headerlink" title="对象头"></a>对象头</h1><p>对象头（Header）比较复杂，它包含着对象的“冗余信息”，这些信息或实现并发锁，或帮助垃圾分类，或包含类的信息。</p>
+<p>从整体上看，对象头包含三部分的信息，分别是</p>
+<ul>
+<li>标记字段</li>
+<li>地址</li>
+<li>数组长度</li>
+</ul>
+<h2 id="标记字段"><a href="#标记字段" class="headerlink" title="标记字段"></a>标记字段</h2><p>标记字段（Mark Word）是对象头中最复杂的内容，需要对照上面绘制的图来看。</p>
+<p>由于内存空间寸土寸金，在希望对象能够记录更多信息的同时，还要尽可能地压缩空间，在这种背景之下，32 位虚拟机的对象标记字段长 4 字节，64 位虚拟机的对象标记字段长 8 字节（现在基本都是 64 位了吧），并且都有着动态定义的数据结构，以便在极小的空间内存储尽量多的数据。32 位和 64 位的存储长度不同，仅仅是因为地址指针长度引起的变化，在存储的内容类型方面没有区别。</p>
+<p>（具体的标记字段信息可见文末的备注）</p>
+<p>以我当下的理解，标记字段主要实现了三个事情：</p>
+<ol>
+<li>对并发情况下的 synchronized 支持</li>
+<li>GC 垃圾回收</li>
+<li>保存 hashcode</li>
+</ol>
+<p>标记字段共有五种状态，分别是对应于 synchronized 的四种状态（无锁、偏向锁、轻量级锁和重量级锁），以及一种 GC 状态，这五种状态通过 2 位标志位实现（无锁和偏向锁的标志位相同）。</p>
+<p>因此，了解标记字段的具体信息，实际上就是在了解 synchronized 锁和垃圾回收的原理。这两部分都有点难，本文暂时不讨论了，有关 synchronized 的信息可以参考这篇文章<a href="https://www.itqiankun.com/article/bias-lightweight-synchronized-lock" target="_blank" rel="noopener">《彻底搞懂 Java 中的偏向锁，轻量级锁，重量级锁》</a>。</p>
+<h2 id="地址信息"><a href="#地址信息" class="headerlink" title="地址信息"></a>地址信息</h2><p>对象头中有一部分是地址信息，它实际上是一个类型指针，指向了该对象类型的地址。</p>
+<p>例如 person 对象的对象头中的地址信息，指向了 Person 类的地址（类在方法区）。</p>
+<p>在这种设计下，可以通过对象找到类，比如在 main() 方法中实例化一个 Person 对象 person，在内存中寻址的过程为：</p>
+<ol>
+<li>main() 方法的 Java 栈中记录着 person 对象的地址，</li>
+<li>根据这个地址在堆中找到了 person 对象，</li>
+<li>person 对象的头部又记录着 Person 类的地址，根据这个地址在方法区中找到了 Person 类。</li>
+</ol>
+<p>（实际上，在对象的头部中保留类的地址信息，通过对象找到类的位置，这种设计是 HotSpot 虚拟机的设计，也有别的虚拟机不这么设计，对象头中并不包含类的地址，不通过对象找类。）</p>
+<p>地址信息的大小并不是固定的，这跟系统位数有关，32 位的虚拟机，指针是 32 位长，地址信息只需要 32 （即 4 字节），但是对于 64 位的虚拟机，指针是 64 位长，因此地址信息也需要扩增到 64 位（即 8 字节）。</p>
+<p>32 位的虚拟机，理论上只能寻址到 4 GB 的内存空间（2^32 byte = 4 GB），而 64 位的虚拟机能寻址到更多地址。这样的提升是有代价的，一方面内存占用量变大了，原来只需要 4 个字节存储一个地址，现在需要 8 个字节了（如果不需要比 4GB 更多的内存，用这么大的空间是没有意义的），另一方面寻址时操作位数更长的指针，主内存和各级缓存移动数据时，占用的带宽也会增加。</p>
+<p>Java 虚拟机为了处理这个问题，提出了<strong>指针压缩</strong>。</p>
+<p>指针压缩的简易原理是这样的：32 位的指针，当然只能找到 4 GB 个内存位置，如果我有一块更大的内存区域，比如 10 GB，32 位的指针就不能指向这 10 GB 中的所有位置，但实际上并不需要找到这块内存中的所有位置，它只需要找到要操作的开始位置就可以了。<a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/heap-sizing.html" target="_blank" rel="noopener">这意味着 32 位的指针可以引用 40 亿个对象，而不是 40 亿个字节。</a>Java 对象的大小如果一定是 8 字节的整数倍（这个后文有讲），那么就可以使原来只能寻址 4 GB 的内存扩大 8 倍，到 32 GB 的内存。</p>
+<p>因此对于分配内存低于 4 GB 的虚拟机，默认开启指针压缩，指针大小就是 32 位长，对于分配内存在 4 - 32 GB 之间的虚拟机，可以开启指针压缩算法，使指针大小依旧维持在 32 位长，但是对于更大的内存，无法开启指针压缩，指针大小必须是 64 位长。（因此分配内存并不是越大越好，32 GB 处会有一个门槛）</p>
+<p>指针压缩并非毫无缺陷，这毕竟是多出来的算法，会增加 JVM 的计算量。</p>
+<p>总结：对象头中的地址信息大小，跟系统位数以及是否开启指针压缩有关，<code>32 位系统</code>、<code>开启了指针压缩的 64 位系统</code>的地址信息长 4 字节，<code>普通 64 位系统</code>的地址信息长 8 字节。</p>
+<h2 id="数组大小"><a href="#数组大小" class="headerlink" title="数组大小"></a>数组大小</h2><p>数组大小并不是必须的，数组才有，非数组没有。</p>
+<p>因为数组是 new 出来的，需要在堆上分配内存，在这个意义上讲，数组就是对象的一种。数组的长度是需要记录下来的，长度为 4 字节。</p>
+<p>int 也是 4 字节，这就很容易让人联想在一起。Java 中 int 是有符号整型数，是有负值的，int 的最大值是 2^31 - 1，用二进制表示为 01111111111111111111111111111111。数组的理论最大长度，也应该是 int 的最大值。</p>
+<p>实际的使用中可能会小一点。例如 ArrayList 内部维护的数组，它的最大长度是 <code>Integer.MAX_VALUE - 8</code>，注释称这是因为虚拟机的限制。又例如 HashMap 内部维护的数组，它的最大程度是 <code>1 &lt;&lt; 30</code>，这是 1 位运算之后能获得到的最大值（二进制为 01000000000000000000000000000000）。</p>
+<br>
+
+<h1 id="（还有一点需要提及）"><a href="#（还有一点需要提及）" class="headerlink" title="（还有一点需要提及）"></a>（还有一点需要提及）</h1><p>在计算完对象头和对象内容的大小之后，二者加起来并不一定是最终占内存的大小，还要考虑内存对齐的问题。</p>
+<p>所有对象的字节大小，必须是 8 的整数倍，如果对象头+对象内容算出来是 15 字节，那么最终对象大小为 16 字节，如果是 20 字节，那么最终对象大小是 24 字节，总之如果不满 8 的整数倍，都填充到 8 的整数倍，填充的部分叫做<code>对齐填充</code>（Padding），实际上就是占位符。</p>
+<p>对齐填充的原因在于，HotSpot 虚拟机的自动内存管理系统，要求对象的起始地址必须是 8 字节的整数倍（这样寻址更高效，而且实现了指针压缩），因此对象的大小也就必须是 8 字节的整数倍。</p>
+<br>
+
+<h1 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h1><p>在博文<a href="http://blog.kail.xyz/post/2018-08-01/java/java-object-header_and_lock.html" target="_blank" rel="noopener">《Java Object Header 和 锁》</a>中找到了三种情况（32 位虚拟机、64 位虚拟机、64 位虚拟机开启指针压缩）下，对象头的具体存储内容，这部分内容比较难找到，备注如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">32位</span><br><span class="line">|----------------------------------------------------------------------------------------|--------------------|</span><br><span class="line">|                                    Object Header (64 bits)                             |        State       |</span><br><span class="line">|-------------------------------------------------------|--------------------------------|--------------------|</span><br><span class="line">|                  Mark Word (32 bits)                  |      Klass Word (32 bits)      |                    |</span><br><span class="line">|-------------------------------------------------------|--------------------------------|--------------------|</span><br><span class="line">| identity_hashcode:25 | age:4 | biased_lock:1 | lock:2 |      OOP to metadata object    |       Normal       |</span><br><span class="line">|-------------------------------------------------------|--------------------------------|--------------------|</span><br><span class="line">|  thread:23 | epoch:2 | age:4 | biased_lock:1 | lock:2 |      OOP to metadata object    |       Biased       |</span><br><span class="line">|-------------------------------------------------------|--------------------------------|--------------------|</span><br><span class="line">|               ptr_to_lock_record:30          | lock:2 |      OOP to metadata object    | Lightweight Locked |</span><br><span class="line">|-------------------------------------------------------|--------------------------------|--------------------|</span><br><span class="line">|               ptr_to_heavyweight_monitor:30  | lock:2 |      OOP to metadata object    | Heavyweight Locked |</span><br><span class="line">|-------------------------------------------------------|--------------------------------|--------------------|</span><br><span class="line">|                                              | lock:2 |      OOP to metadata object    |    Marked for GC   |</span><br><span class="line">|-------------------------------------------------------|--------------------------------|--------------------|</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">64位</span><br><span class="line">|------------------------------------------------------------------------------------------------------------|--------------------|</span><br><span class="line">|                                            Object Header (128 bits)                                        |        State       |</span><br><span class="line">|------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                                  Mark Word (64 bits)                         |    Klass Word (64 bits)     |                    |</span><br><span class="line">|------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">| unused:25 | identity_hashcode:31 | unused:1 | age:4 | biased_lock:1 | lock:2 |    OOP to metadata object   |       Normal       |</span><br><span class="line">|------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">| thread:54 |       epoch:2        | unused:1 | age:4 | biased_lock:1 | lock:2 |    OOP to metadata object   |       Biased       |</span><br><span class="line">|------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                       ptr_to_lock_record:62                         | lock:2 |    OOP to metadata object   | Lightweight Locked |</span><br><span class="line">|------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                     ptr_to_heavyweight_monitor:62                   | lock:2 |    OOP to metadata object   | Heavyweight Locked |</span><br><span class="line">|------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                                                                     | lock:2 |    OOP to metadata object   |    Marked for GC   |</span><br><span class="line">|------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">64位（开启指针压缩）</span><br><span class="line">|--------------------------------------------------------------------------------------------------------------|--------------------|</span><br><span class="line">|                                            Object Header (96 bits)                                           |        State       |</span><br><span class="line">|--------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                                  Mark Word (64 bits)                           |    Klass Word (32 bits)     |                    |</span><br><span class="line">|--------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">| unused:25 | identity_hashcode:31 | cms_free:1 | age:4 | biased_lock:1 | lock:2 |    OOP to metadata object   |       Normal       |</span><br><span class="line">|--------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">| thread:54 |       epoch:2        | cms_free:1 | age:4 | biased_lock:1 | lock:2 |    OOP to metadata object   |       Biased       |</span><br><span class="line">|--------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                         ptr_to_lock_record                            | lock:2 |    OOP to metadata object   | Lightweight Locked |</span><br><span class="line">|--------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                     ptr_to_heavyweight_monitor                        | lock:2 |    OOP to metadata object   | Heavyweight Locked |</span><br><span class="line">|--------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                                                                       | lock:2 |    OOP to metadata object   |    Marked for GC   |</span><br><span class="line">|--------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<hr>
+<p>最后用一个例子检验上文中的内容，计算一个 HashMap 对象的大小。</p>
+<p>HashMap 类不是数组，在 64 位开启指针压缩的情况下，对象头只包括 8 字节的标记字段和 4 字节的地址指针，总共 12 字节。</p>
+<p>HashMap 类中分别有下列属性：</p>
+<ul>
+<li>entrySet （对象）</li>
+<li>hashSeed （int）</li>
+<li>loadFactor （float）</li>
+<li>modCount （int）</li>
+<li>size （int）</li>
+<li>table （数组，当对象处理）</li>
+<li>threshold （int）</li>
+</ul>
+<p>检查 HashMap 的所有父类，在 AbstractMap 中发现了两个新的属性：</p>
+<ul>
+<li>keySet （对象）</li>
+<li>values （对象）</li>
+</ul>
+<p>算下来一共是 9 个属性，每个属性很巧都是 4 字节，一共是 9×4 = 36 字节，因此 HashMap 的对象内容为 36 字节。</p>
+<p>HashMap 对象的对象头 12 字节 + 对象内容 36 字节总共是 48 字节，是 8 字节的倍数，无需对齐填充。</p>
+<p>因此一个 HashMap 对象的大小是 48 字节。</p>
+]]></content>
+      <tags>
+        <tag>Weekly Post</tag>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>单例模式</title>
     <url>/2020/04/14/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</url>
     <content><![CDATA[<br>
@@ -4205,189 +4785,6 @@
 ]]></content>
       <tags>
         <tag>Random Post</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>对象的大小</title>
-    <url>/2020/03/08/%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%A4%A7%E5%B0%8F/</url>
-    <content><![CDATA[<br>
-
-<p>一晃都三月了，过了一个很古早的冬天呐。</p>
-<p>冬眠回来，三月的第二周，来看 Java 对象的内存设计，这部分的学习是为之后学习 synchronized 关键字铺路的。本来想在学习锁时顺便提一嘴写完它，结果发现这坑有点大，还是要单独学。</p>
-<br>
-
-<p>我们这周学习的目的，是搞清楚存储在内存中的对象，它具体是如何存储的，存储时都需要存哪些信息，以及存这些信息的意义是什么。</p>
-<p>比如看下面这段代码：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List list = <span class="keyword">new</span> ArrayList;</span><br><span class="line">list.add(<span class="string">"hello, world!"</span>);</span><br></pre></td></tr></table></figure>
-
-<p>上面这两行代码当中的 <code>list</code> 对象是如何存储起来的。</p>
-<hr>
-<p>要学习对象是怎么存储在内存当中的，就要从很原始的地方说起，先学习 JVM 的内存结构。</p>
-<p>这一块我是真的很欠缺，只知道一点基础的概念，我只把本次要用到的知识写在这里，其他的知识我还要慢慢学。有关 JVM 的内存结构，我学习的起点是<a href="https://www.bilibili.com/video/av62009886" target="_blank" rel="noopener">《【java】jvm内存模型全面解析》</a>视频，很推荐一看。</p>
-<p>JVM 在运行 Java 程序时，会管理一块内存区域，这一片区域被称为<code>运行时数据区域</code>，从结构上可以分为五个部分，分别是：</p>
-<ul>
-<li><code>Java 虚拟机栈</code>：线程私有，存储局部变量等</li>
-<li><code>本地方法栈</code>：线程私有，存储本地方法的变量等</li>
-<li><code>程序计数器</code>：线程私有，存储字节码的地址（程序执行到第几行了）</li>
-<li><code>堆</code>：线程共享，存储几乎所有对象</li>
-<li><code>方法区</code>：线程共享，存储类的结构信息（字段、构造方法等等）</li>
-</ul>
-<p>（下图来源自<a href="https://cyc2018.github.io/CS-Notes/#/notes/Java%20%E8%99%9A%E6%8B%9F%E6%9C%BA" target="_blank" rel="noopener">《CYC - Java 虚拟机 - 运行时数据区域》</a>，其内容整理非常值得反复阅读)</p>
-<p><img src="/assets/JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84.png" alt="JVM内存结构"></p>
-<p>我们今天要说的，只是<code>栈</code>和<code>堆</code>（栈指的是 Java 虚拟机栈）。非常浅薄地讲，<code>栈</code>存放的是局部变量以及对象的地址，<code>堆</code>存放的是对象的实体。（看书发现，栈中存放的并不一定是对象地址，但这是最常见的寻找堆对象的方式）</p>
-<p>简单制作了一张图，描述了代码、栈、堆之间的关系。</p>
-<p><img src="/assets/JVM%E5%86%85%E5%AD%98%E5%AD%98%E5%82%A8%E5%AF%B9%E8%B1%A1.jpg" alt="JVM内存存储对象"></p>
-<br>
-
-<h2 id="Tips"><a href="#Tips" class="headerlink" title="Tips"></a>Tips</h2><p>内存结构和内存模型并不是一个概念：</p>
-<p>当我们说内存结构时，通常是指<code>JVM 内存结构</code>，这是真实存在的，指的是上文介绍的 Java 虚拟机栈、堆、本地方法栈等等那五部分构成的 JVM 运行时数据区域，这是在<code>结构</code>上把 JVM 的内存分成了多个部分。</p>
-<p>当我们说内存模型时，通常是指<code>Java 内存模型</code>，这是虚拟存在的，指的是面对并发时 Java 是如何实现内存访问一致的，牵扯到了主内存和工作内存等知识，这是在<code>模型</code>和概念上，屏蔽各种硬件和操作系统的内存访问差异，来实现并发内存一致性。</p>
-<br>
-
-<hr>
-<p>简单说完了对象存放的位置，那么接下来就要进入这周学习的重点了：如何计算对象的大小。这个问题实际上可以拆成两个问题：</p>
-<ol>
-<li>对象由哪些部分组成？</li>
-<li>每部分各占多少字节？</li>
-</ol>
-<p>在这两个问题的基础上，自然会问出第三个问题：</p>
-<ol start="3">
-<li>组成对象的这些基础部分，各自是做什么的？</li>
-</ol>
-<p>PS：在看书的时候，发现自己所学习对象大小的这部分知识，实际上是 HotSpot 虚拟机的实现，而并非所有 Java 虚拟机的实现，但是目前基本上所有的 Java 程序都跑在 HostSpot 虚拟机上面。</p>
-<br>
-
-<p>所有对象都可以笼统地切分成两部分：<code>对象头</code>（Header）和<code>对象内容</code>（Instance Data）。</p>
-<p>举一个实际的例子：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>对于上面这个 Person 类，它实例化出来的对象同样具有对象头和对象内容两部分，<code>name</code> 和 <code>age</code> 都是对象的内部变量，属于对象内容，而对象头是其余一些辅助信息。</p>
-<br>
-
-<p>我绘制了一张图，画出了在最常见情况下（64 位虚拟机开启指针压缩），对象在内存中的结构，后文都是在解释这个结构的具体信息。</p>
-<p><img src="/assets/%E5%AF%B9%E8%B1%A1%E5%A4%B4.jpg" alt="对象头"></p>
-<h1 id="对象内容"><a href="#对象内容" class="headerlink" title="对象内容"></a>对象内容</h1><p>对象内容准确地讲应该叫做实例数据（Instance Data），比较简单，因此我们先讲完。</p>
-<p>正如之前提到的 Person 对象的例子，对象内的属性（包括基本数据类型 <code>int age</code> 和引用的另一个对象 <code>String name</code>），这些属性所占的内容大小，就是对象内容的大小。在该例子中，int 类型的 <code>age</code> 占 4 个字节（即 32 位），引用另一个对象时，存储的是对象的地址，地址是一个 int 类型的指针，因此 String 类型的 <code>name</code> 存储在 Person 对象中也占 4 个字节（即 32 位），两个属性加起来一共占 8 个字节。</p>
-<p>因此计算对象内容的大小，实际上就是分两部分，基本数据类型一类，占内容大小加起来，引用别的对象占一类，引用一个就是 4 字节（int 的大小），引用 N 个对象就占 N*4 个字节。</p>
-<p>下面列举了 8 种基本数据类型的大小。</p>
-<table>
-<thead>
-<tr>
-<th>基本数据类型</th>
-<th>大小（字节）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>byte</td>
-<td>1</td>
-</tr>
-<tr>
-<td>char</td>
-<td>2（表示一个 UTF-16be 编码单元，<a href="https://colobu.com/2019/01/04/how-many-charactors-in-a-java-string/" target="_blank" rel="noopener">生僻字用两个char</a>）</td>
-</tr>
-<tr>
-<td>short</td>
-<td>2</td>
-</tr>
-<tr>
-<td>int</td>
-<td>4</td>
-</tr>
-<tr>
-<td>flote</td>
-<td>4</td>
-</tr>
-<tr>
-<td>long</td>
-<td>8</td>
-</tr>
-<tr>
-<td>double</td>
-<td>8</td>
-</tr>
-<tr>
-<td>boolean</td>
-<td>通常是1</td>
-</tr>
-</tbody></table>
-<p>此外还要注意的一点是，如果 A 类继承自 B 类，那么计算 A 类的对象内容大小时，继承来的 B 类的属性也是要算在内的。比如计算 ArrayList 对象大小的时候，它的父类 AbstractList 中的属性，也是要计算在内的。</p>
-<br>
-
-<h1 id="对象头"><a href="#对象头" class="headerlink" title="对象头"></a>对象头</h1><p>对象头（Header）比较复杂，它包含着对象的“冗余信息”，这些信息或实现并发锁，或帮助垃圾分类，或包含类的信息。</p>
-<p>从整体上看，对象头包含三部分的信息，分别是</p>
-<ul>
-<li>标记字段</li>
-<li>地址</li>
-<li>数组长度</li>
-</ul>
-<h2 id="标记字段"><a href="#标记字段" class="headerlink" title="标记字段"></a>标记字段</h2><p>标记字段（Mark Word）是对象头中最复杂的内容，需要对照上面绘制的图来看。</p>
-<p>由于内存空间寸土寸金，在希望对象能够记录更多信息的同时，还要尽可能地压缩空间，在这种背景之下，32 位虚拟机的对象标记字段长 4 字节，64 位虚拟机的对象标记字段长 8 字节（现在基本都是 64 位了吧），并且都有着动态定义的数据结构，以便在极小的空间内存储尽量多的数据。32 位和 64 位的存储长度不同，仅仅是因为地址指针长度引起的变化，在存储的内容类型方面没有区别。</p>
-<p>（具体的标记字段信息可见文末的备注）</p>
-<p>以我当下的理解，标记字段主要实现了三个事情：</p>
-<ol>
-<li>对并发情况下的 synchronized 支持</li>
-<li>GC 垃圾回收</li>
-<li>保存 hashcode</li>
-</ol>
-<p>标记字段共有五种状态，分别是对应于 synchronized 的四种状态（无锁、偏向锁、轻量级锁和重量级锁），以及一种 GC 状态，这五种状态通过 2 位标志位实现（无锁和偏向锁的标志位相同）。</p>
-<p>因此，了解标记字段的具体信息，实际上就是在了解 synchronized 锁和垃圾回收的原理。这两部分都有点难，本文暂时不讨论了，有关 synchronized 的信息可以参考这篇文章<a href="https://www.itqiankun.com/article/bias-lightweight-synchronized-lock" target="_blank" rel="noopener">《彻底搞懂 Java 中的偏向锁，轻量级锁，重量级锁》</a>。</p>
-<h2 id="地址信息"><a href="#地址信息" class="headerlink" title="地址信息"></a>地址信息</h2><p>对象头中有一部分是地址信息，它实际上是一个类型指针，指向了该对象类型的地址。</p>
-<p>例如 person 对象的对象头中的地址信息，指向了 Person 类的地址（类在方法区）。</p>
-<p>在这种设计下，可以通过对象找到类，比如在 main() 方法中实例化一个 Person 对象 person，在内存中寻址的过程为：</p>
-<ol>
-<li>main() 方法的 Java 栈中记录着 person 对象的地址，</li>
-<li>根据这个地址在堆中找到了 person 对象，</li>
-<li>person 对象的头部又记录着 Person 类的地址，根据这个地址在方法区中找到了 Person 类。</li>
-</ol>
-<p>（实际上，在对象的头部中保留类的地址信息，通过对象找到类的位置，这种设计是 HotSpot 虚拟机的设计，也有别的虚拟机不这么设计，对象头中并不包含类的地址，不通过对象找类。）</p>
-<p>地址信息的大小并不是固定的，这跟系统位数有关，32 位的虚拟机，指针是 32 位长，地址信息只需要 32 （即 4 字节），但是对于 64 位的虚拟机，指针是 64 位长，因此地址信息也需要扩增到 64 位（即 8 字节）。</p>
-<p>32 位的虚拟机，理论上只能寻址到 4 GB 的内存空间（2^32 byte = 4 GB），而 64 位的虚拟机能寻址到更多地址。这样的提升是有代价的，一方面内存占用量变大了，原来只需要 4 个字节存储一个地址，现在需要 8 个字节了（如果不需要比 4GB 更多的内存，用这么大的空间是没有意义的），另一方面寻址时操作位数更长的指针，主内存和各级缓存移动数据时，占用的带宽也会增加。</p>
-<p>Java 虚拟机为了处理这个问题，提出了<strong>指针压缩</strong>。</p>
-<p>指针压缩的简易原理是这样的：32 位的指针，当然只能找到 4 GB 个内存位置，如果我有一块更大的内存区域，比如 10 GB，32 位的指针就不能指向这 10 GB 中的所有位置，但实际上并不需要找到这块内存中的所有位置，它只需要找到要操作的开始位置就可以了。<a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/heap-sizing.html" target="_blank" rel="noopener">这意味着 32 位的指针可以引用 40 亿个对象，而不是 40 亿个字节。</a>Java 对象的大小如果一定是 8 字节的整数倍（这个后文有讲），那么就可以使原来只能寻址 4 GB 的内存扩大 8 倍，到 32 GB 的内存。</p>
-<p>因此对于分配内存低于 4 GB 的虚拟机，默认开启指针压缩，指针大小就是 32 位长，对于分配内存在 4 - 32 GB 之间的虚拟机，可以开启指针压缩算法，使指针大小依旧维持在 32 位长，但是对于更大的内存，无法开启指针压缩，指针大小必须是 64 位长。（因此分配内存并不是越大越好，32 GB 处会有一个门槛）</p>
-<p>指针压缩并非毫无缺陷，这毕竟是多出来的算法，会增加 JVM 的计算量。</p>
-<p>总结：对象头中的地址信息大小，跟系统位数以及是否开启指针压缩有关，<code>32 位系统</code>、<code>开启了指针压缩的 64 位系统</code>的地址信息长 4 字节，<code>普通 64 位系统</code>的地址信息长 8 字节。</p>
-<h2 id="数组大小"><a href="#数组大小" class="headerlink" title="数组大小"></a>数组大小</h2><p>数组大小并不是必须的，数组才有，非数组没有。</p>
-<p>因为数组是 new 出来的，需要在堆上分配内存，在这个意义上讲，数组就是对象的一种。数组的长度是需要记录下来的，长度为 4 字节。</p>
-<p>int 也是 4 字节，这就很容易让人联想在一起。Java 中 int 是有符号整型数，是有负值的，int 的最大值是 2^31 - 1，用二进制表示为 01111111111111111111111111111111。数组的理论最大长度，也应该是 int 的最大值。</p>
-<p>实际的使用中可能会小一点。例如 ArrayList 内部维护的数组，它的最大长度是 <code>Integer.MAX_VALUE - 8</code>，注释称这是因为虚拟机的限制。又例如 HashMap 内部维护的数组，它的最大程度是 <code>1 &lt;&lt; 30</code>，这是 1 位运算之后能获得到的最大值（二进制为 01000000000000000000000000000000）。</p>
-<br>
-
-<h1 id="（还有一点需要提及）"><a href="#（还有一点需要提及）" class="headerlink" title="（还有一点需要提及）"></a>（还有一点需要提及）</h1><p>在计算完对象头和对象内容的大小之后，二者加起来并不一定是最终占内存的大小，还要考虑内存对齐的问题。</p>
-<p>所有对象的字节大小，必须是 8 的整数倍，如果对象头+对象内容算出来是 15 字节，那么最终对象大小为 16 字节，如果是 20 字节，那么最终对象大小是 24 字节，总之如果不满 8 的整数倍，都填充到 8 的整数倍，填充的部分叫做<code>对齐填充</code>（Padding），实际上就是占位符。</p>
-<p>对齐填充的原因在于，HotSpot 虚拟机的自动内存管理系统，要求对象的起始地址必须是 8 字节的整数倍（这样寻址更高效，而且实现了指针压缩），因此对象的大小也就必须是 8 字节的整数倍。</p>
-<br>
-
-<h1 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h1><p>在博文<a href="http://blog.kail.xyz/post/2018-08-01/java/java-object-header_and_lock.html" target="_blank" rel="noopener">《Java Object Header 和 锁》</a>中找到了三种情况（32 位虚拟机、64 位虚拟机、64 位虚拟机开启指针压缩）下，对象头的具体存储内容，这部分内容比较难找到，备注如下：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">32位</span><br><span class="line">|----------------------------------------------------------------------------------------|--------------------|</span><br><span class="line">|                                    Object Header (64 bits)                             |        State       |</span><br><span class="line">|-------------------------------------------------------|--------------------------------|--------------------|</span><br><span class="line">|                  Mark Word (32 bits)                  |      Klass Word (32 bits)      |                    |</span><br><span class="line">|-------------------------------------------------------|--------------------------------|--------------------|</span><br><span class="line">| identity_hashcode:25 | age:4 | biased_lock:1 | lock:2 |      OOP to metadata object    |       Normal       |</span><br><span class="line">|-------------------------------------------------------|--------------------------------|--------------------|</span><br><span class="line">|  thread:23 | epoch:2 | age:4 | biased_lock:1 | lock:2 |      OOP to metadata object    |       Biased       |</span><br><span class="line">|-------------------------------------------------------|--------------------------------|--------------------|</span><br><span class="line">|               ptr_to_lock_record:30          | lock:2 |      OOP to metadata object    | Lightweight Locked |</span><br><span class="line">|-------------------------------------------------------|--------------------------------|--------------------|</span><br><span class="line">|               ptr_to_heavyweight_monitor:30  | lock:2 |      OOP to metadata object    | Heavyweight Locked |</span><br><span class="line">|-------------------------------------------------------|--------------------------------|--------------------|</span><br><span class="line">|                                              | lock:2 |      OOP to metadata object    |    Marked for GC   |</span><br><span class="line">|-------------------------------------------------------|--------------------------------|--------------------|</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">64位</span><br><span class="line">|------------------------------------------------------------------------------------------------------------|--------------------|</span><br><span class="line">|                                            Object Header (128 bits)                                        |        State       |</span><br><span class="line">|------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                                  Mark Word (64 bits)                         |    Klass Word (64 bits)     |                    |</span><br><span class="line">|------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">| unused:25 | identity_hashcode:31 | unused:1 | age:4 | biased_lock:1 | lock:2 |    OOP to metadata object   |       Normal       |</span><br><span class="line">|------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">| thread:54 |       epoch:2        | unused:1 | age:4 | biased_lock:1 | lock:2 |    OOP to metadata object   |       Biased       |</span><br><span class="line">|------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                       ptr_to_lock_record:62                         | lock:2 |    OOP to metadata object   | Lightweight Locked |</span><br><span class="line">|------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                     ptr_to_heavyweight_monitor:62                   | lock:2 |    OOP to metadata object   | Heavyweight Locked |</span><br><span class="line">|------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                                                                     | lock:2 |    OOP to metadata object   |    Marked for GC   |</span><br><span class="line">|------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">64位（开启指针压缩）</span><br><span class="line">|--------------------------------------------------------------------------------------------------------------|--------------------|</span><br><span class="line">|                                            Object Header (96 bits)                                           |        State       |</span><br><span class="line">|--------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                                  Mark Word (64 bits)                           |    Klass Word (32 bits)     |                    |</span><br><span class="line">|--------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">| unused:25 | identity_hashcode:31 | cms_free:1 | age:4 | biased_lock:1 | lock:2 |    OOP to metadata object   |       Normal       |</span><br><span class="line">|--------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">| thread:54 |       epoch:2        | cms_free:1 | age:4 | biased_lock:1 | lock:2 |    OOP to metadata object   |       Biased       |</span><br><span class="line">|--------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                         ptr_to_lock_record                            | lock:2 |    OOP to metadata object   | Lightweight Locked |</span><br><span class="line">|--------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                     ptr_to_heavyweight_monitor                        | lock:2 |    OOP to metadata object   | Heavyweight Locked |</span><br><span class="line">|--------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br><span class="line">|                                                                       | lock:2 |    OOP to metadata object   |    Marked for GC   |</span><br><span class="line">|--------------------------------------------------------------------------------|-----------------------------|--------------------|</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<hr>
-<p>最后用一个例子检验上文中的内容，计算一个 HashMap 对象的大小。</p>
-<p>HashMap 类不是数组，在 64 位开启指针压缩的情况下，对象头只包括 8 字节的标记字段和 4 字节的地址指针，总共 12 字节。</p>
-<p>HashMap 类中分别有下列属性：</p>
-<ul>
-<li>entrySet （对象）</li>
-<li>hashSeed （int）</li>
-<li>loadFactor （float）</li>
-<li>modCount （int）</li>
-<li>size （int）</li>
-<li>table （数组，当对象处理）</li>
-<li>threshold （int）</li>
-</ul>
-<p>检查 HashMap 的所有父类，在 AbstractMap 中发现了两个新的属性：</p>
-<ul>
-<li>keySet （对象）</li>
-<li>values （对象）</li>
-</ul>
-<p>算下来一共是 9 个属性，每个属性很巧都是 4 字节，一共是 9×4 = 36 字节，因此 HashMap 的对象内容为 36 字节。</p>
-<p>HashMap 对象的对象头 12 字节 + 对象内容 36 字节总共是 48 字节，是 8 字节的倍数，无需对齐填充。</p>
-<p>因此一个 HashMap 对象的大小是 48 字节。</p>
-]]></content>
-      <tags>
-        <tag>Weekly Post</tag>
-        <tag>java</tag>
       </tags>
   </entry>
   <entry>
