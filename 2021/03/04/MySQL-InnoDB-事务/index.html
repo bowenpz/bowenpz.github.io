@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="三月的第一周，来学习 MySQL 的事务，包含事务、事务的隔离级别、redo 日志、undo 日志、MVCC 这些内容。 本周的学习来源还还还是《MySQL 是怎样运行的：从根儿上理解 MySQL》（写得太好了www）。  事务事务（数据库事务的简称），是指一系列数据库操作组成的一个逻辑单元（也就是一个整体），这个逻辑单元符合四条特性：原子性（Atomicity）、隔离性（Isolation）">
+<meta name="keywords" content="Weekly Post">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL InnoDB 事务">
+<meta property="og:url" content="http://hellopz.netlify.com/2021/03/04/MySQL-InnoDB-事务/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="三月的第一周，来学习 MySQL 的事务，包含事务、事务的隔离级别、redo 日志、undo 日志、MVCC 这些内容。 本周的学习来源还还还是《MySQL 是怎样运行的：从根儿上理解 MySQL》（写得太好了www）。  事务事务（数据库事务的简称），是指一系列数据库操作组成的一个逻辑单元（也就是一个整体），这个逻辑单元符合四条特性：原子性（Atomicity）、隔离性（Isolation）">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/InnoDB%E4%BF%9D%E5%AD%98%E6%95%B0%E6%8D%AEmermaid.png">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/compact%E8%A1%8C%E6%A0%BC%E5%BC%8F.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/InnoDB%E8%A1%8C%E9%9A%90%E8%97%8F%E5%AD%97%E6%AE%B5.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/undo%E7%89%88%E6%9C%AC%E9%93%BE.jpg">
+<meta property="og:updated_time" content="2021-03-05T14:08:41.465Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL InnoDB 事务">
+<meta name="twitter:description" content="三月的第一周，来学习 MySQL 的事务，包含事务、事务的隔离级别、redo 日志、undo 日志、MVCC 这些内容。 本周的学习来源还还还是《MySQL 是怎样运行的：从根儿上理解 MySQL》（写得太好了www）。  事务事务（数据库事务的简称），是指一系列数据库操作组成的一个逻辑单元（也就是一个整体），这个逻辑单元符合四条特性：原子性（Atomicity）、隔离性（Isolation）">
+<meta name="twitter:image" content="http://hellopz.netlify.com/assets/InnoDB%E4%BF%9D%E5%AD%98%E6%95%B0%E6%8D%AEmermaid.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>MySQL InnoDB 事务</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/Weekly-Post/">Weekly Post</a></li>
+         
+          <li><a href="/tags/Random-Post/">Random Post</a></li>
+         
+          <li><a href="/tags/tips/">Tips</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2021/02/04/MySQL-InnoDB-索引/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2021/03/04/MySQL-InnoDB-事务/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2021/03/04/MySQL-InnoDB-事务/&text=MySQL InnoDB 事务"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2021/03/04/MySQL-InnoDB-事务/&is_video=false&description=MySQL InnoDB 事务"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#事务"><span class="toc-number">1.</span> <span class="toc-text">事务</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#提交事务的方式"><span class="toc-number">1.1.</span> <span class="toc-text">提交事务的方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事务的隔离级别"><span class="toc-number">1.2.</span> <span class="toc-text">事务的隔离级别</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#事务持久化：redo-日志"><span class="toc-number">2.</span> <span class="toc-text">事务持久化：redo 日志</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#补知识"><span class="toc-number">2.1.</span> <span class="toc-text">补知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redo-日志的作用"><span class="toc-number">2.2.</span> <span class="toc-text">redo 日志的作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redo-日志的保存过程"><span class="toc-number">2.3.</span> <span class="toc-text">redo 日志的保存过程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#事务回滚：undo-日志"><span class="toc-number">3.</span> <span class="toc-text">事务回滚：undo 日志</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undo-日志的作用"><span class="toc-number">3.1.</span> <span class="toc-text">undo 日志的作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undo-日志的类型"><span class="toc-number">3.2.</span> <span class="toc-text">undo 日志的类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undo-日志的工作逻辑"><span class="toc-number">3.3.</span> <span class="toc-text">undo 日志的工作逻辑</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#InnoDB-实现事务的隔离级别"><span class="toc-number">4.</span> <span class="toc-text">InnoDB 实现事务的隔离级别</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        MySQL InnoDB 事务
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2021-03-04T03:42:48.000Z" itemprop="datePublished">2021-03-04</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Weekly-Post/">Weekly Post</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>三月的第一周，来学习 MySQL 的事务，包含事务、事务的隔离级别、redo 日志、undo 日志、MVCC 这些内容。</p>
+<p>本周的学习来源还还还是《<a href="https://juejin.cn/book/6844733769996304392" target="_blank" rel="noopener">MySQL 是怎样运行的：从根儿上理解 MySQL</a>》（写得太好了www）。</p>
+<hr>
+<h1 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h1><p>事务（数据库事务的简称），是指一系列数据库操作组成的一个逻辑单元（也就是一个整体），这个逻辑单元符合四条特性：原子性（Atomicity）、隔离性（Isolation）、一致性（Consistency）和持久性（Durability）（英文首字母缩写为 <code>ACID</code>）。</p>
+<p>下面四条 SQL 语句就属于一个事务：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">account</span> <span class="keyword">SET</span> balance = balance - <span class="number">10</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">account</span> <span class="keyword">SET</span> balance = balance + <span class="number">10</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="提交事务的方式"><a href="#提交事务的方式" class="headerlink" title="提交事务的方式"></a>提交事务的方式</h2><ul>
+<li><p>手动提交</p>
+<p>通过 <code>BEGIN</code> 手动开始一个事务，中间输入一些数据库操作，再通过 <code>COMMIT</code> 手动提交一个事务（就像上面那四条 SQL 一样），此外中途还可以通过 <code>ROLLBACK</code> 回滚事务（撤回事务里的全部操作）。</p>
+<p>还可以通过 <code>START TRANSACTION</code> 开启一个事务，它跟 <code>BEGIN</code> 的作用是相同的，但是 <code>START TRANSACTION</code> 语句后边能跟随几个修饰符，相当于增强版的 <code>BEGIN</code>。</p>
+</li>
+<li><p>自动提交</p>
+<p>默认情况下，MySQL 的每一条语句都是一个独立的事务，这是 MySQL 的系统变量 <code>autocommit</code> 设置的（默认 <code>ON</code>）。</p>
+</li>
+<li><p>隐式提交</p>
+<p>如果通过 <code>BEGIN</code> 或 <code>START TRANSACTION</code> 开启一个事务，即使不输入 <code>COMMIT</code> 手动提交，在一些情况下也会隐式提交事务，例如 <code>ALTER USER</code>、<code>CREATE USER</code>、<code>SET PASSWORD</code>、<code>START SLAVE</code>、<code>FLUSH</code> 等等。</p>
+</li>
+</ul>
+<h2 id="事务的隔离级别"><a href="#事务的隔离级别" class="headerlink" title="事务的隔离级别"></a>事务的隔离级别</h2><p>两个事务有可能同时执行，比如事务 A 执行到一半，事务 B 开始执行，如果它们操作了同一条数据，就会造成一些意想不到的情况。</p>
+<p>有四种因为事务并发执行带来的意想不到的情况（以下将事务 A 简写成 A，事务 B 简写成 B）：</p>
+<ul>
+<li>脏写：A 修改了 B 修改过（未提交）的数据（这是非常严重的行为，在所有情况下都应该避免）</li>
+<li>脏读：A 读到了 B 修改过（未提交）的数据</li>
+<li>不可重复读：A 读到了 B 修改过（已提交）的数据，即每次都能读到已提交事务的最新值</li>
+<li>幻读：A 读到了 B 修改过（已提交）的数据，且这些数据原来不存在，是新查出来的</li>
+</ul>
+<p>为了避免这些情况，事务有四种隔离级别，详见下表：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>未提交读<br>（READ UNCOMMITTED）</th>
+<th>已提交读<br>（READ COMMITTED）</th>
+<th>可重复读<br>（REPEATABLE READ）</th>
+<th>可串行化<br>（SERIALIZABLE）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>脏写</td>
+<td>不可能发生</td>
+<td>不可能发生</td>
+<td>不可能发生</td>
+<td>不可能发生</td>
+</tr>
+<tr>
+<td>脏读</td>
+<td></td>
+<td>不可能发生</td>
+<td>不可能发生</td>
+<td>不可能发生</td>
+</tr>
+<tr>
+<td>不可重复读</td>
+<td></td>
+<td></td>
+<td>不可能发生</td>
+<td>不可能发生</td>
+</tr>
+<tr>
+<td>幻读</td>
+<td></td>
+<td></td>
+<td></td>
+<td>不可能发生</td>
+</tr>
+</tbody></table>
+<p>InnoDB 是怎么实现这四种隔离级别的，要等到最后才能讲到。</p>
+<br>
+
+<p>顺便一提，不是所有 MySQL 存储引擎都支持事务，InnoDB 支持事务，而 MyISAM 就不支持。不支持的存储引擎也不会报错，<code>BEGIN</code>、<code>ROLLBACK</code> 之类的操作也都是可以执行的，只不过没有效果。</p>
+<p>有关事务的概念，可以参考《<a href="https://www.liaoxuefeng.com/wiki/1177760294764384/1179611198786848" target="_blank" rel="noopener">廖雪峰博客 - 事务</a>》，整理得很干练。</p>
+<hr>
+<h1 id="事务持久化：redo-日志"><a href="#事务持久化：redo-日志" class="headerlink" title="事务持久化：redo 日志"></a>事务持久化：redo 日志</h1><h2 id="补知识"><a href="#补知识" class="headerlink" title="补知识"></a>补知识</h2><p>数据库最终存储在磁盘当中，但 InnoDB 使用 <code>Buffer Pool</code>（缓存池）暂存磁盘中的数据。<code>Buffer Pool</code> 实际上就是一块内存空间，默认 128MB。</p>
+<p>InnoDB 读取数据，从磁盘中拷贝到 <code>Buffer Pool</code> 里，以后就可以直接从 <code>Buffer Pool</code> 中查询这些数据。</p>
+<p>InnoDB 修改数据，先在 <code>Buffer Pool</code> 中修改（修改完的部分被叫做“脏页”），后台线程不断地把脏页写回磁盘，这个过程是异步的。</p>
+<p>使用 <code>Buffer Pool</code> 的原因是磁盘太慢了，尤其是随机读写更是慢，如果查询一条数据就去磁盘搜索，或者更新一条数据就去磁盘保存，阻塞的时间太长了。为了避免这种情况，InnoDB 根据局部性原理引入缓存的概念，把用过的数据缓存在 <code>Buffer Pool</code> 中。</p>
+<p><code>Buffer Pool</code> 的数据结构类似于 LinkedHashMap，由多个 LRU 双向链表构成，并通过哈希查找缓存页。</p>
+<h2 id="redo-日志的作用"><a href="#redo-日志的作用" class="headerlink" title="redo 日志的作用"></a>redo 日志的作用</h2><p>InnoDB 的增删查改操作都是先操作 <code>Buffer Pool</code>，再由后台线程异步保存进磁盘，这是为了避免磁盘 IO 带来的龟速。但是数据不保存到磁盘里，如果服务器突然宕机，那么还没保存的 <code>Buffer Pool</code> 脏页数据就会丢失，事务的持久性就无法实现。</p>
+<p>数据一定要保存进磁盘里，才能保证事务的持久性，那就想个办法，让磁盘保存得快一点。</p>
+<p>redo 日志（redo log）记录了数据库做了哪些操作，比如记录了<code>将第 0 号表空间的 100 号页面的偏移量为 1000 处的值更新为 2</code> 这个行为。数据库执行一条操作，redo 日志就记录一条操作，如果宕机了，根据 redo 日志把之前的操作重做一遍就可以了。</p>
+<p>【保存 redo 日志进数据库】比【保存数据进数据库】快很多，有两方面的原因：</p>
+<ol>
+<li>InnoDB 以页为单位保存进磁盘，如果直接保存数据，即使改一个字节也要保存一页 16 KB 的数据，但是保存 redo 日志可以少很多（后面提）。</li>
+<li>redo 日志是顺序写入磁盘的，磁盘的顺序读写比随机读写快多了。</li>
+</ol>
+<h2 id="redo-日志的保存过程"><a href="#redo-日志的保存过程" class="headerlink" title="redo 日志的保存过程"></a>redo 日志的保存过程</h2><p>为了避免数据写入磁盘太慢，InnoDB 引入了 <code>Buffer Pool</code> 的概念，将修改的页先缓存下来。</p>
+<p>同理，为了避免 redo 日志写入磁盘太慢，InnoDB 引入了 <code>redo log buffer</code> 的概念（简称 <code>log buffer</code>），将 redo 日志先缓存下来（不用担心，事务提交时会确保写入磁盘的）。</p>
+<p><img src="/assets/InnoDB%E4%BF%9D%E5%AD%98%E6%95%B0%E6%8D%AEmermaid.png" alt="InnoDB保存数据mermaid"></p>
+<p>InnoDB 修改的数据，可能会出现在上图的 <code>Buffer Pool</code>、<code>log buffer</code>、<code>磁盘 - 数据库部分</code>、<code>磁盘 - redo 日志部分</code>里。</p>
+<p>简单想通两个逻辑：</p>
+<ul>
+<li>如果 redo 日志已经保存进磁盘了，那么缓存就可以删除了（在 <code>log buffer</code> 中删除）。</li>
+<li>如果真正的数据已经保存进磁盘了，那么 redo 日志就可以删除了（缓存和磁盘里都可以删除）。</li>
+</ul>
+<p>对应这两种情况，InnoDB 提出两个 <code>LSN</code>（log sequence number），方便清理存储空间：</p>
+<ul>
+<li>flushed_to_disk_lsn：redo 日志已经刷入到磁盘的字节数</li>
+<li>checkpoint_lsn：真正的数据已经写入磁盘，对应的 redo 日志的字节数</li>
+</ul>
+<br>
+
+<p>redo 日志从 <code>log buffer</code> 刷入到磁盘的时机如下：</p>
+<ul>
+<li><code>log buffer</code> 内存不足（启动参数默认 16KB）</li>
+<li>事务提交</li>
+<li>后台线程一直刷入磁盘</li>
+<li>正常关闭服务器</li>
+<li>磁盘空间不够用，做 checkpoint</li>
+<li>……</li>
+</ul>
+<p>为了保证事务的持久性，每次提交事务都要将 redo 日志保存到磁盘里，实际上磁盘 IO 还是很慢的。如果对持久性需求不强烈，可以修改系统变量 <code>innodb_flush_log_at_trx_commit</code>，事务提交时不刷入磁盘（数据库挂了，操作系统没挂，还是可以恢复的）。</p>
+<br>
+
+<p>（本来我是想画一下 redo 日志的数据结构，以及数据是怎么保存进 buffer 又保存进磁盘的，但是我太懒了hhh，就抛一个链接吧《<a href="https://juejin.cn/book/6844733769996304392/section/6844733770063626253" target="_blank" rel="noopener">MySQL 是怎样运行的：从根儿上理解 MySQL - redo日志</a>》）</p>
+<hr>
+<h1 id="事务回滚：undo-日志"><a href="#事务回滚：undo-日志" class="headerlink" title="事务回滚：undo 日志"></a>事务回滚：undo 日志</h1><h2 id="undo-日志的作用"><a href="#undo-日志的作用" class="headerlink" title="undo 日志的作用"></a>undo 日志的作用</h2><p>事务回滚指的是，放弃所有修改，使数据库状态恢复到事务开启之前的时刻，就好像事务从来没发生过一样。</p>
+<p>InnoDB 实现事务回滚的方式是，把操作反过来执行一遍：事务执行插入操作，回滚时就执行删除操作，事务执行修改操作，回滚时就把数据修改回来。也就是说，实际上 InnoDB 执行的不是撤销操作，而是反向操作，最终效果等同于撤销，好像什么都没执行过一样。</p>
+<p>这些反向操作，InnoDB 记录下来，称作 undo 日志（undo log），在事务回滚的时候，就执行 undo 日志的内容。</p>
+<h2 id="undo-日志的类型"><a href="#undo-日志的类型" class="headerlink" title="undo 日志的类型"></a>undo 日志的类型</h2><p>总体有三类 undo 日志，分别对应着 INSERT 操作、UPDATE 操作、DELETE 操作（查询没有 undo 日志，因为查询不用回滚）：</p>
+<ol>
+<li><p>INSERT 操作</p>
+<p>数据库插入数据，undo 日志就记录一条删除操作，类型为 <code>TRX_UNDO_INSERT_REC</code>，这条日志记录了插入数据的主键。</p>
+</li>
+<li><p>DELETE 操作</p>
+<p>数据库删除数据，undo 日志就记录一条插入操作，类型为 <code>TRX_UNDO_DEL_MARK_REC</code>，这条日志记录了删除数据的所有信息。</p>
+</li>
+<li><p>UPDATE 操作</p>
+<p>UPDATE 分为两种，分别是更新主键和不更新主键：</p>
+<ol>
+<li>更新主键的话，由于聚簇索引的调整比较复杂，因此实际的操作是先删除再插入，最终达到更新的效果。这样会生成两条 undo 日志，先生成 DELETE 操作对应的日志，再生成 INSERT 操作对应的日志。</li>
+<li>不更新主键，原地更新就可以了，undo 日志记录一条更新回去的操作，类型为 <code>TRX_UNDO_UPD_EXIST_REC</code>，这条日志记录了更新数据的主键信息，和需要更新的字段原来的信息。</li>
+</ol>
+</li>
+</ol>
+<p>注意一下，undo 日志实际上记录了很多信息，不仅仅包含反向修改数据的信息，还包含比如地址、日志类型、undo 编号等等信息。</p>
+<h2 id="undo-日志的工作逻辑"><a href="#undo-日志的工作逻辑" class="headerlink" title="undo 日志的工作逻辑"></a>undo 日志的工作逻辑</h2><p>要回忆一条很久远的知识，最初学习 InnoDB 数据结构时，我画了一张 Compact 行格式的图，这是聚簇索引的叶子节点：</p>
+<p><img src="/assets/compact%E8%A1%8C%E6%A0%BC%E5%BC%8F.jpg" alt="compact行格式"></p>
+<p>数据库中的每一条数据，最终在磁盘中会被存储成这个样子。</p>
+<p>当时我们忽略了事务 ID 和回滚指针这两个字段，现在就能用得上了。</p>
+<ul>
+<li><p>事务 ID（DB_TRX_ID）</p>
+<p>事务 ID 是一个全局字段，数据库在内存中维护一个全局变量，每次需要为某个事务分配一个事务 ID 时，就会把该变量当做事务 ID 分配给该事务，并把该变量自增 1。</p>
+</li>
+<li><p>回滚指针（DB_ROLL_PTR）</p>
+<p>这个字段是一个指针，指向它对应的 undo 日志的地址。</p>
+<p>也就是说，如果要回滚这条数据，可以通过这个字段找到 undo 日志，从而实现回滚（实际上设计得更精妙）。</p>
+<p>下图是《<a href="https://juejin.cn/book/6844733769996304392" target="_blank" rel="noopener">MySQL 是怎样运行的：从根儿上理解 MySQL</a>》画的示意图：</p>
+<p><img src="/assets/InnoDB%E8%A1%8C%E9%9A%90%E8%97%8F%E5%AD%97%E6%AE%B5.jpg" alt="InnoDB行隐藏字段"></p>
+<p>实际上，undo 日志内部还有一个 <code>roll_pointer</code> 属性，它指向更早的 undo 日志。</p>
+<p>比如这两句 SQL：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> t_user(user_id, <span class="keyword">name</span>, age) <span class="keyword">VALUES</span> (<span class="number">1</span>, <span class="string">"张三"</span>, <span class="number">18</span>);</span><br><span class="line"><span class="keyword">UPDATE</span> t_user <span class="keyword">SET</span> <span class="keyword">name</span> = <span class="string">"李四"</span> <span class="keyword">WHERE</span> user_id = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>首先插入一条数据（生成一条 INSERT 操作的 undo 日志），然后更改这条数据（生成一条 UPDATE 操作的 undo 日志）。</p>
+<p>第二条语句生成的 undo 日志，内部有一个 <code>roll_pointer</code> 属性，它指向第一条语句生成的 undo 日志。</p>
+<p>再举一个例子，下图是《<a href="https://juejin.cn/book/6844733769996304392" target="_blank" rel="noopener">MySQL 是怎样运行的：从根儿上理解 MySQL</a>》画的示意图：</p>
+<p><img src="/assets/undo%E7%89%88%E6%9C%AC%E9%93%BE.jpg" alt="undo版本链"></p>
+</li>
+</ul>
+<hr>
+<h1 id="InnoDB-实现事务的隔离级别"><a href="#InnoDB-实现事务的隔离级别" class="headerlink" title="InnoDB 实现事务的隔离级别"></a>InnoDB 实现事务的隔离级别</h1><p>MySQL 有 4 种事务的隔离级别，分别拦住了四种由于事务并发造成的异常情况，详见下表：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>未提交读<br>（READ UNCOMMITTED）</th>
+<th>已提交读<br>（READ COMMITTED）</th>
+<th>可重复读<br>（REPEATABLE READ）</th>
+<th>可串行化<br>（SERIALIZABLE）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>脏写</td>
+<td>不可能发生</td>
+<td>不可能发生</td>
+<td>不可能发生</td>
+<td>不可能发生</td>
+</tr>
+<tr>
+<td>脏读</td>
+<td></td>
+<td>不可能发生</td>
+<td>不可能发生</td>
+<td>不可能发生</td>
+</tr>
+<tr>
+<td>不可重复读</td>
+<td></td>
+<td></td>
+<td>不可能发生</td>
+<td>不可能发生</td>
+</tr>
+<tr>
+<td>幻读</td>
+<td></td>
+<td></td>
+<td></td>
+<td>不可能发生</td>
+</tr>
+</tbody></table>
+<p>这四种隔离级别，InnoDB 基本是通过 undo 日志的版本链实现的，具体实现如下：</p>
+<ol>
+<li><p>未提交读（READ UNCOMMITTED）</p>
+<p>允许读到其他事务未提交的数据，因此随便读，不用管事务。</p>
+</li>
+<li><p>已提交读（READ COMMITTED）</p>
+<p>允许读到已提交事务的数据，因此读数据之前要判断一下事务 ID，如果是已提交的事务就可以读，如果是未提交的事务，就要根据 undo 版本链一路往前找，直到找到提交的事务。</p>
+<p>实际上，这部分的实现更复杂一些，需要引入 ReadView 的概念（有点像快照），具体移步《<a href="https://juejin.cn/book/6844733769996304392/section/6844733770071801870" target="_blank" rel="noopener">MySQL 是怎样运行的：从根儿上理解 MySQL - 事务隔离级别和MVCC</a>》。</p>
+</li>
+<li><p>可重复读（REPEATABLE READ）</p>
+<p>可重复读和已提交读，基本是相同的，只不过生成 ReadView 的时机不一样。</p>
+<ul>
+<li>已提交读：每次读取数据之前，都生成一个 ReadView</li>
+<li>可重复读：第一次读取数据之前，生成一个 ReadView</li>
+</ul>
+</li>
+<li><p>可串行化</p>
+<p>这种隔离级别最为严苛，直接上锁。</p>
+</li>
+</ol>
+<p>MySQL 默认的事务隔离级别是可重复读（REPEATABLE READ）。</p>
+<hr>
+<p>这周就写到这里。</p>
+<p>InnoDB 系列暂时就到这里了，如果以后要学习 MySQL 集群和分片相关的知识，再写新的内容。</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2021 pz
+  </div>
+  <div class="footer-right">
+    <img src="/images/govPolice.png">
+    <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44030502006101">粤公网安备 44030502006101号</a>
+    <a>&nbsp;</a>
+    <a href="http://beian.miit.gov.cn">粤ICP备2020090003号</a>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+
