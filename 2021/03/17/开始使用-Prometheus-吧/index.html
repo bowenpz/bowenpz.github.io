@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="来整理一下 Prometheus 相关知识。 由于某些契机，我所在的项目通过 Prometheus 进行监控，已经使用了半年时间，未来监控的覆盖面也越来越大。我跟同为程序员的朋友约饭时，两次听到他们有监控的需求，甚至直接表示想使用 Prometheus，因此我来整理一下我学习到的 Prometheus 内容。 本篇文章主要包括：  Prometheus 的使用场景 Prometheus 的基础">
+<meta name="keywords" content="Random Post">
+<meta property="og:type" content="article">
+<meta property="og:title" content="开始使用 Prometheus 吧">
+<meta property="og:url" content="http://hellopz.netlify.com/2021/03/17/开始使用-Prometheus-吧/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="来整理一下 Prometheus 相关知识。 由于某些契机，我所在的项目通过 Prometheus 进行监控，已经使用了半年时间，未来监控的覆盖面也越来越大。我跟同为程序员的朋友约饭时，两次听到他们有监控的需求，甚至直接表示想使用 Prometheus，因此我来整理一下我学习到的 Prometheus 内容。 本篇文章主要包括：  Prometheus 的使用场景 Prometheus 的基础">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E6%97%B6%E5%BA%8F%E6%95%B0%E6%8D%AE%E5%BA%93.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/Prometheus%E7%9B%91%E6%8E%A7%E7%95%8C%E9%9D%A2.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/Prometheus%E6%A0%BC%E5%BC%8F.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E7%9B%91%E6%8E%A7%E7%A4%BA%E6%84%8F%E5%9B%BE1.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E7%9B%91%E6%8E%A7%E7%A4%BA%E6%84%8F%E5%9B%BE2.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E7%9B%91%E6%8E%A7%E7%A4%BA%E6%84%8F%E5%9B%BE3.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E7%9B%91%E6%8E%A7%E7%A4%BA%E6%84%8F%E5%9B%BE4.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E7%9B%91%E6%8E%A7%E7%A4%BA%E6%84%8F%E5%9B%BE5.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E7%9B%91%E6%8E%A7%E7%A4%BA%E6%84%8F%E5%9B%BE6.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/rate%E5%87%BD%E6%95%B0%E7%9A%84%E4%BD%9C%E7%94%A8.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E7%9B%91%E6%8E%A7%E7%A4%BA%E6%84%8F%E5%9B%BE7.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E7%9B%91%E6%8E%A7%E7%A4%BA%E6%84%8F%E5%9B%BE8.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/Grafana_dashboard.png">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E5%BF%AB%E9%80%9F%E9%85%8D%E7%BD%AEGrafana.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/Grafana%E6%A0%87%E7%AD%BE.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E5%A2%9E%E5%8A%A0%E5%85%A8%E5%B1%80%E6%A0%87%E7%AD%BE%E9%85%8D%E7%BD%AE.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/%E5%85%B3%E8%81%94%E4%B8%8A%E5%85%A8%E5%B1%80%E6%A0%87%E7%AD%BE%E9%85%8D%E7%BD%AE.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/actuator%E6%9A%B4%E9%9C%B2%E7%BB%99Prometheus%E9%87%87%E9%9B%86%E6%95%B0%E6%8D%AE.jpg">
+<meta property="og:updated_time" content="2021-03-17T08:11:58.960Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="开始使用 Prometheus 吧">
+<meta name="twitter:description" content="来整理一下 Prometheus 相关知识。 由于某些契机，我所在的项目通过 Prometheus 进行监控，已经使用了半年时间，未来监控的覆盖面也越来越大。我跟同为程序员的朋友约饭时，两次听到他们有监控的需求，甚至直接表示想使用 Prometheus，因此我来整理一下我学习到的 Prometheus 内容。 本篇文章主要包括：  Prometheus 的使用场景 Prometheus 的基础">
+<meta name="twitter:image" content="http://hellopz.netlify.com/assets/%E6%97%B6%E5%BA%8F%E6%95%B0%E6%8D%AE%E5%BA%93.jpg">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>开始使用 Prometheus 吧</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/Weekly-Post/">Weekly Post</a></li>
+         
+          <li><a href="/tags/Random-Post/">Random Post</a></li>
+         
+          <li><a href="/tags/tips/">Tips</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2021/03/04/MySQL-InnoDB-事务/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2021/03/17/开始使用-Prometheus-吧/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2021/03/17/开始使用-Prometheus-吧/&text=开始使用 Prometheus 吧"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2021/03/17/开始使用-Prometheus-吧/&is_video=false&description=开始使用 Prometheus 吧"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Prometheus-的使用场景"><span class="toc-number">1.</span> <span class="toc-text">Prometheus 的使用场景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Prometheus-的基础知识"><span class="toc-number">2.</span> <span class="toc-text">Prometheus 的基础知识</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Prometheus-的查询语句"><span class="toc-number">3.</span> <span class="toc-text">Prometheus 的查询语句</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#简单查询"><span class="toc-number">3.1.</span> <span class="toc-text">简单查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聚合查询"><span class="toc-number">3.2.</span> <span class="toc-text">聚合查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内置函数"><span class="toc-number">3.3.</span> <span class="toc-text">内置函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他查询"><span class="toc-number">3.4.</span> <span class="toc-text">其他查询</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Grafana"><span class="toc-number">4.</span> <span class="toc-text">Grafana</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Java-怎么使用-Prometheus-监控"><span class="toc-number">5.</span> <span class="toc-text">Java 怎么使用 Prometheus 监控</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        开始使用 Prometheus 吧
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2021-03-17T08:11:48.000Z" itemprop="datePublished">2021-03-17</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Random-Post/">Random Post</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>来整理一下 Prometheus 相关知识。</p>
+<p>由于某些契机，我所在的项目通过 Prometheus 进行监控，已经使用了半年时间，未来监控的覆盖面也越来越大。我跟同为程序员的朋友约饭时，两次听到他们有监控的需求，甚至直接表示想使用 Prometheus，因此我来整理一下我学习到的 Prometheus 内容。</p>
+<p>本篇文章主要包括：</p>
+<ul>
+<li>Prometheus 的使用场景</li>
+<li>Prometheus 的基础知识</li>
+<li>Prometheus 的查询语句</li>
+<li>怎么通过 Grafana 展示 Prometheus 数据</li>
+<li>Java 怎么使用 Prometheus 监控</li>
+</ul>
+<hr>
+<h1 id="Prometheus-的使用场景"><a href="#Prometheus-的使用场景" class="headerlink" title="Prometheus 的使用场景"></a>Prometheus 的使用场景</h1><p>尽管 Prometheus 真的很好用，但是在使用之前，你还是应该认真思考自己的需求：自己究竟想监控什么？</p>
+<p>目前市面上有三大类监控方向：日志、链路追踪、数值指标。</p>
+<table>
+<thead>
+<tr>
+<th>监控方向</th>
+<th>关注内容</th>
+<th>代表性工具</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>日志监控</td>
+<td>采集和查询日志，排查特定异常请求</td>
+<td>ELK</td>
+</tr>
+<tr>
+<td>链路追踪监控</td>
+<td>一个请求进来，经过了哪些微服务，操作了哪些数据库，在每个节点耗费多少时间，在哪里发生了异常</td>
+<td>SkyWalking</td>
+</tr>
+<tr>
+<td>数值监控</td>
+<td>各种数值指标，比如 CPU 和内存的占用、服务并发量、系统 QPS 等</td>
+<td>Prometheus</td>
+</tr>
+</tbody></table>
+<br>
+
+<p>下面罗列了一些监控需求，方便对号入座：</p>
+<table>
+<thead>
+<tr>
+<th>需求</th>
+<th>是否应该使用 Prometheus</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>采集日志，查询日志</td>
+<td>×（去看日志监控）</td>
+</tr>
+<tr>
+<td>排查特定异常请求</td>
+<td>×（去看日志监控）</td>
+</tr>
+<tr>
+<td>一个请求经过很多微服务，各个节点耗费多长时间</td>
+<td>×（去看链路追踪监控）</td>
+</tr>
+<tr>
+<td>一个请求经过很多微服务，在哪里抛出了异常</td>
+<td>×（去看链路追踪监控）</td>
+</tr>
+<tr>
+<td>一个请求多次操作数据库，每次 IO 耗费多长时间</td>
+<td>×（去看链路追踪监控）</td>
+</tr>
+<tr>
+<td>CPU、内存、垃圾回收等指标是否正常</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>在高峰期时，所有接口的调用量有多少</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>高并发场景下，寻找可能的性能瓶颈</td>
+<td>✓</td>
+</tr>
+</tbody></table>
+<br>
+
+<p>我平常在使用 Prometheus 的场景如下：</p>
+<ul>
+<li>日常监控，观察 CPU、内存、垃圾回收时间、线程状态、异常日志数量等是否正常</li>
+<li>日常监控，观察接口调用数量，HTTP 请求时间是否正常</li>
+<li>新服务上线，持续观察各种指标是否正常，接口请求量有多少（可以判断使用人数有多少）</li>
+<li>压测时，观察并发量有多少，异常具体有哪些类型，各自抛出多少次</li>
+<li>发生线上事故时，观察当时 CPU、内存、线程数、接口调用数、HTTP 最大请求时间、数据库 ops、数据库请求耗时，分析可能的问题原因</li>
+</ul>
+<p>再推荐两篇博文，用于思考监控：《<a href="https://www.javadoop.com/post/apm" target="_blank" rel="noopener">APM 介绍与实现</a>》、《<a href="http://code2life.top/2020/02/25/0051-prometheus-in-action-thinking/" target="_blank" rel="noopener">Prometheus监控告警——总结与思考</a>》。</p>
+<hr>
+<h1 id="Prometheus-的基础知识"><a href="#Prometheus-的基础知识" class="headerlink" title="Prometheus 的基础知识"></a>Prometheus 的基础知识</h1><p>（有关 Prometheus 的历史和江湖地位自行谷歌，不提了）</p>
+<p>简单地说，Prometheus 就是一个时序数据库，每隔一段时间收集一次数据，连起来就是一段时间的监控数据。</p>
+<p><img src="/assets/%E6%97%B6%E5%BA%8F%E6%95%B0%E6%8D%AE%E5%BA%93.jpg" alt="时序数据库"></p>
+<p>我们举一个例子：</p>
+<p>你是一个超市老板，店里卖两种水果（苹果、香蕉）和一种饮料（可乐），源源不断有客人来买。你有一本账本，每分钟都会记录一次销售额，记录如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">8:00 销售额（类目：水果 商品：苹果） 10元</span><br><span class="line">8:00 销售额（类目：水果 商品：香蕉） 0元</span><br><span class="line">8:00 销售额（类目：饮料 商品：可乐） 6元</span><br><span class="line"></span><br><span class="line">8:01 销售额（类目：水果 商品：苹果） 10元</span><br><span class="line">8:01 销售额（类目：水果 商品：香蕉） 3元</span><br><span class="line">8:01 销售额（类目：饮料 商品：可乐） 6元</span><br><span class="line"></span><br><span class="line">8:02 销售额（类目：水果 商品：苹果） 10元</span><br><span class="line">8:02 销售额（类目：水果 商品：香蕉） 3元</span><br><span class="line">8:02 销售额（类目：饮料 商品：可乐） 12元</span><br><span class="line"></span><br><span class="line">8:03 销售额（类目：水果 商品：苹果） 15元</span><br><span class="line">8:03 销售额（类目：水果 商品：香蕉） 3元</span><br><span class="line">8:03 销售额（类目：饮料 商品：可乐） 18元</span><br><span class="line">……</span><br></pre></td></tr></table></figure>
+
+<p>你想知道在 8:00 到 8:03 之间，苹果卖了多少钱，你把账本的数一对：10元 -&gt; 10元 -&gt; 10元 -&gt; 15元。</p>
+<p>你又想知道在 8:00 到 8:03 之间，总共赚了多少钱，你简单运算后得出了结果：16元 -&gt; 19元 -&gt; 25元 -&gt; 36元。</p>
+<p>Prometheus 的监控原理就是这样，它每隔一段时间收集一次监控数据，想看哪段时间的监控数据，查出来再连起来就可以了，下图是 Prometheus 的真实图表截图：</p>
+<p><img src="/assets/Prometheus%E7%9B%91%E6%8E%A7%E7%95%8C%E9%9D%A2.jpg" alt="Prometheus监控界面"></p>
+<p>Prometheus 采集的数据，需要遵循一定的格式：<code>指标名{标签1, 标签2...}</code>。</p>
+<p>还是举例来说：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sales_amount_total&#123;category=&quot;drinks&quot;, goods=&quot;CocaCola&quot;&#125; 15</span><br><span class="line">sales_amount_total&#123;category=&quot;fruits&quot;, goods=&quot;apple&quot;&#125; 3</span><br><span class="line">sales_amount_total&#123;category=&quot;fruits&quot;, goods=&quot;banana&quot;&#125; 18</span><br></pre></td></tr></table></figure>
+
+<p><img src="/assets/Prometheus%E6%A0%BC%E5%BC%8F.jpg" alt="Prometheus格式"></p>
+<p>（value 样本值实际上是 float64 浮点数类型，我们这里为了方便，只显示成整型数。）</p>
+<p>这种格式要记住（实际上也很简单不是吗），我们之后查询时会经常用到它。</p>
+<p>有关这部分，推荐阅读《<a href="https://www.prometheus.wang/promql/what-is-prometheus-metrics-and-labels.html" target="_blank" rel="noopener">理解时间序列</a>》和《<a href="https://www.cnblogs.com/vovlie/p/7709312.html" target="_blank" rel="noopener">剖析Prometheus的内部存储机制</a>》。</p>
+<hr>
+<h1 id="Prometheus-的查询语句"><a href="#Prometheus-的查询语句" class="headerlink" title="Prometheus 的查询语句"></a>Prometheus 的查询语句</h1><p>Prometheus 有自己的查询语言，叫做 PromQL，语法简单但是内容比较杂，我按照自己的日常使用归类介绍一下。</p>
+<p>我们继续使用超市卖水果和饮料的例子，一共有三条曲线：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sales_amount_total&#123;category=&quot;drinks&quot;, goods=&quot;CocaCola&quot;&#125;</span><br><span class="line">sales_amount_total&#123;category=&quot;fruits&quot;, goods=&quot;apple&quot;&#125;</span><br><span class="line">sales_amount_total&#123;category=&quot;fruits&quot;, goods=&quot;banana&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="简单查询"><a href="#简单查询" class="headerlink" title="简单查询"></a>简单查询</h2><ol>
+<li><p>最简单的查询语句，就是直接查询 metric name 指标名称，<code>sales_amount_total</code>，能够查到三条曲线：</p>
+<p><img src="/assets/%E7%9B%91%E6%8E%A7%E7%A4%BA%E6%84%8F%E5%9B%BE1.jpg" alt="监控示意图1"></p>
+</li>
+<li><p>在查询指标名的基础上，还可以再指明 label 标签，比如查询水果类目的监控信息，<code>sales_amount_total{category=&quot;fruits&quot;}</code>，能够查到两条曲线：</p>
+<p><img src="/assets/%E7%9B%91%E6%8E%A7%E7%A4%BA%E6%84%8F%E5%9B%BE2.jpg" alt="监控示意图2"></p>
+</li>
+<li><p>查询 label 标签时除了等于，还可以不等于<code>!=</code>、正则匹配<code>=~</code>、正则不匹配<code>!~</code>：</p>
+<p><img src="/assets/%E7%9B%91%E6%8E%A7%E7%A4%BA%E6%84%8F%E5%9B%BE3.jpg" alt="监控示意图3"></p>
+</li>
+</ol>
+<h2 id="聚合查询"><a href="#聚合查询" class="headerlink" title="聚合查询"></a>聚合查询</h2><ol>
+<li><p>聚合查询指的是，把原来的多条查询曲线，合并成一条（或几条），比如使用 <code>sum(...)</code> 求和：</p>
+<p><img src="/assets/%E7%9B%91%E6%8E%A7%E7%A4%BA%E6%84%8F%E5%9B%BE4.jpg" alt="监控示意图4"></p>
+<p>上图就是把类目为水果的两条曲线（苹果和香蕉）合并成一条。</p>
+</li>
+<li><p>除了求和，我平常使用比较多的还有计数 <code>count(...)</code>、最大值 <code>max(...)</code>、前N个 <code>topk(n, ...)</code>，其中前N个这个聚合查询稍有不同，要注意一下。</p>
+<p><img src="/assets/%E7%9B%91%E6%8E%A7%E7%A4%BA%E6%84%8F%E5%9B%BE5.jpg" alt="监控示意图5"></p>
+</li>
+<li><p>聚合查询还支持分类功能，比如按类目 category 进行求和，就能够看到两条曲线：水果的销售总额和饮料的销售总额：</p>
+<p><img src="/assets/%E7%9B%91%E6%8E%A7%E7%A4%BA%E6%84%8F%E5%9B%BE6.jpg" alt="监控示意图6"></p>
+<p><code>by(...)</code> 支持多重分类，比如 <code>by(label1, label2, label3)</code>，我这里 label 标签有限，就不展示啦。</p>
+<p>还有一种不太常见的用法是 <code>without(...)</code>，它是指除了这几个标签之外，其他的都分类。比如 <code>sum(sales_amount_total)by(category)</code> 和 <code>sum(sales_amount_total)without(goods)</code> 的查询效果是相同的（毕竟我们只有两个标签嘛）。</p>
+</li>
+</ol>
+<h2 id="内置函数"><a href="#内置函数" class="headerlink" title="内置函数"></a>内置函数</h2><p>PromQL 内置了几个函数，我平常使用最多的是 <code>rate(...)</code> 函数和 <code>increase(...)</code> 函数，它们都代表增长的作用，前者是增长率，后者是增长量。</p>
+<p>为什么这两个函数使用比较多呢，因为当数据量变大之后，数据变化会非常不明显。下图是某 6 小时内，我监控的一个服务的接口调用量，左边是接口调用量曲线，右边是接口调用量增长率曲线：</p>
+<p><img src="/assets/rate%E5%87%BD%E6%95%B0%E7%9A%84%E4%BD%9C%E7%94%A8.jpg" alt="rate函数的作用"></p>
+<p>使用 <code>rate(...)</code> 函数和 <code>increase(...)</code> 函数时，用法稍有不同，要指定统计的时间间隔：</p>
+<p><img src="/assets/%E7%9B%91%E6%8E%A7%E7%A4%BA%E6%84%8F%E5%9B%BE7.jpg" alt="监控示意图7"></p>
+<p><code>rate(...[1m])</code> 中的方括号 <code>[1m]</code> 就是在指定时间范围，再给出几个例子：<code>[10m]</code>（最近十分钟）、<code>[1h]</code>（最近一小时）、<code>[1d]</code>（最近一天）、<code>[1w]</code>（最近一月）。</p>
+<p>有两条需要注意的地方：</p>
+<ol>
+<li><p>内置函数只能对 Prometheus 的存储内容（也就是向量，前面没有提到）进行处理，不能对聚合结果进行处理。</p>
+<p>比如我想查询，所有所有接口的总调用增长率是多少，不可以先求和再求增长率，而是要先求出增长率之后再求和：</p>
+<ul>
+<li><code>rate( sum(http_server_requests_seconds_count)[1m] )</code> 错误</li>
+<li><code>sum( rate(http_server_requests_seconds_count[1m]) )</code> 正确</li>
+</ul>
+</li>
+<li><p>实际上我并不知道 <code>rate(...)</code> 函数和 <code>increase(...)</code> 函数的算法……因此我不知道查询出来的数值，具体代表了什么含义。但是平常看一看相对趋势，分析什么时候是业务高峰期，还是可以的。</p>
+</li>
+</ol>
+<h2 id="其他查询"><a href="#其他查询" class="headerlink" title="其他查询"></a>其他查询</h2><ol>
+<li><p>PromQL 支持数学运算，加减乘除取余求幂（+ - * / % ^）都是支持的，比如 <code>sales_amount_total + 10</code></p>
+</li>
+<li><p>不知道怎么描述，直接看图吧，如图查出来的是数值大于 50 的部分</p>
+<p><img src="/assets/%E7%9B%91%E6%8E%A7%E7%A4%BA%E6%84%8F%E5%9B%BE8.jpg" alt="监控示意图8"></p>
+</li>
+<li><p>过来人的忠告：PromQL 不复杂，但是很繁琐，需要漫长的学习过程，多练多试才能掌握。</p>
+</li>
+</ol>
+<hr>
+<h1 id="Grafana"><a href="#Grafana" class="headerlink" title="Grafana"></a>Grafana</h1><p>Grafana 是一个可视化工具，把 Prometheus 存储的内容以好看的形式展示出来。</p>
+<p><img src="/assets/Grafana_dashboard.png" alt="Grafana_dashboard"></p>
+<p>跟 Prometheus 自带的可视化图表相比，我觉得 Grafana 主要有这么几点好处：</p>
+<ol>
+<li>好看（符合恶俗的 RGB 审美hhh），而且图表类型多（比如有饼图、热点图、仪表盘图等）</li>
+<li>可以同时展示多图表，对比多图表时很方便，并且可以保存下来</li>
+<li>写 PromQL 时能够联想词</li>
+</ol>
+<p>配置 Grafana 很简单（但是需要一个个配，很繁琐），通常的配置过程如下图所示（看不清可以在新标签中打开图片）：</p>
+<p><img src="/assets/%E5%BF%AB%E9%80%9F%E9%85%8D%E7%BD%AEGrafana.jpg" alt="快速配置Grafana"></p>
+<p>具体的配置教程网上很多，自己体验半个小时也就理解的七七八八了，这些我就不写了。我在这里只写一块内容：如何配置共用的搜索标签。</p>
+<p><img src="/assets/Grafana%E6%A0%87%E7%AD%BE.jpg" alt="Grafana标签"></p>
+<p>如图，红框中的内容是公共查询标签，比如我们指定 Application 为 Service1，那么下面的所有查询，都是 Service1 的监控图表。</p>
+<p>配置主要分两步，第一步增加全局标签配置，第二步为每个 PromQL 查询关联上全局标签配置。</p>
+<ol>
+<li><p>增加全局标签配置</p>
+<p><img src="/assets/%E5%A2%9E%E5%8A%A0%E5%85%A8%E5%B1%80%E6%A0%87%E7%AD%BE%E9%85%8D%E7%BD%AE.jpg" alt="增加全局标签配置"></p>
+<p><code>label_values(application)</code> 还可以写得更确切一点，例如取 <code>http_server_requests_seconds_count</code> 指标中实例为 XXX 的 <code>application</code> 可以这么写：<code>label_values(http_server_requests_seconds_count{instance=&quot;XXX&quot;}, application)</code></p>
+</li>
+<li><p>为每个 PromQL 查询关联上全局标签配置</p>
+<p><img src="/assets/%E5%85%B3%E8%81%94%E4%B8%8A%E5%85%A8%E5%B1%80%E6%A0%87%E7%AD%BE%E9%85%8D%E7%BD%AE.jpg" alt="关联上全局标签配置"></p>
+<p>如果想配置成同时勾选多个标签，那么 <code>=</code> 要换成正则匹配 <code>=~</code>，例如 <code>{application=~&quot;$application&quot;}</code>。</p>
+</li>
+</ol>
+<hr>
+<h1 id="Java-怎么使用-Prometheus-监控"><a href="#Java-怎么使用-Prometheus-监控" class="headerlink" title="Java 怎么使用 Prometheus 监控"></a>Java 怎么使用 Prometheus 监控</h1><p>在本文前面提过，Prometheus 本质上是一个时序数据库，每隔一段时间收集一次数据。</p>
+<p>这里更明确地指出来，Prometheus 是自己收集数据的，配置间隔时间一秒，那 Prometheus 就一秒采集一次监控数据，配置间隔时间一小时，那 Prometheus 就一小时采集一次监控数据。被采集的服务，需要暴露出来一个接口，供 Prometheus 自行采集数据。</p>
+<p>简洁地说，Prometheus 基于 PULL 模式采集数据，被监控的服务提供一个采集接口，供 Prometheus 采集。</p>
+<br>
+
+<p>如果是 Java 程序想被监控，那么它要暴露一个供 Prometheus 采集的接口。这个工作已经有前人做好了，就是 Micrometer（实际上它也是 Spring Boot 2 的 actuator 具体实现）。</p>
+<p>我们只需要做两步工作：</p>
+<ol>
+<li><p>Maven 中引入 Micrometer（因为要符合 Prometheus 的数据格式）</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.micrometer<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>micrometer-registry-prometheus<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>application.yml</code> 文件配置一下，暴露接口给 Prometheus（默认的接口暴露地址是 <code>/actuator/prometheus</code>）</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">management:</span></span><br><span class="line"><span class="attr">  endpoints:</span></span><br><span class="line"><span class="attr">    web:</span></span><br><span class="line"><span class="attr">      exposure:</span></span><br><span class="line"><span class="attr">        include:</span> <span class="string">prometheus</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>更详细的配置过程可以参考腾讯云的文档《<a href="https://cloud.tencent.com/document/product/248/49086" target="_blank" rel="noopener">Spring Boot 接入 Prometheus</a>》。</p>
+<br>
+
+<p>配置好之后，调用 <code>/actuator/prometheus</code> 就能看到默认的采集数据：</p>
+<p><img src="/assets/actuator%E6%9A%B4%E9%9C%B2%E7%BB%99Prometheus%E9%87%87%E9%9B%86%E6%95%B0%E6%8D%AE.jpg" alt="actuator暴露给Prometheus采集数据"></p>
+<p>Micrometer 默认会采集一些监控指标，包括以下内容：</p>
+<ul>
+<li>CPU</li>
+<li>内存</li>
+<li>JVM 缓冲区</li>
+<li>线程</li>
+<li>垃圾回收</li>
+<li>运行时</li>
+<li>类加载</li>
+<li>日志数量</li>
+<li>http 请求接口数量和时间</li>
+<li>Spring Integration（这是啥？）</li>
+</ul>
+<p>如果在此之外你还想监控更多的东西，就要自己写代码了。代码非常简单，基本一两行就可以写完。</p>
+<p>Prometheus 一共有四种类型的数据，分别是 <code>Counter</code>、<code>Gauge</code>、<code>Histogram</code>、<code>Summary</code>，其中也就前两种常用（这块应该在上文提及，但是我觉得不重要，就略过了）。</p>
+<ul>
+<li><p><code>Counter</code> 是只增不减的数据类型（比如记录日志数量、接口调用次数）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> MeterRegistry meterRegistry;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">collect</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//                    监控指标名（用.分隔）  标签（按照 key1, value1, key2, value2... 的顺序）</span></span><br><span class="line">    meterRegistry.counter(<span class="string">"metric.xxx.xxx"</span>,   <span class="string">"label1"</span>, <span class="string">"xxx"</span>, <span class="string">"label2"</span>, <span class="string">"xxx"</span>             ).increment();</span><br><span class="line">    <span class="comment">// 这样暴露给 Prometheus 的格式是：</span></span><br><span class="line">    <span class="comment">// metric_xxx_xxx&#123;label1="xxx",label2="xxx"&#125; 1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>Gauge</code> 是瞬时数据类型（比如 CPU 和内存的实时指标）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> MeterRegistry meterRegistry;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">collect</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//                  监控指标名（用.分隔）  标签（按照 key1, value1, key2, value2... 的顺序）  关联的Number对象</span></span><br><span class="line">    meterRegistry.gauge(<span class="string">"metric.xxx.xxx"</span>,   Tags.of(<span class="string">"label1"</span>, <span class="string">"xxx"</span>, <span class="string">"label2"</span>, <span class="string">"xxx"</span>),      <span class="keyword">new</span> AtomicInteger(<span class="number">0</span>));</span><br><span class="line">    <span class="comment">// 这样暴露给 Prometheus 的格式是：</span></span><br><span class="line">    <span class="comment">// metric_xxx_xxx&#123;label1="xxx",label2="xxx"&#125; 1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>gauge 的逻辑稍有不同，它实际上是关联了一个 <code>Number</code> 对象，每当这个对象发生了修改，Prometheus 调用接口都能看到：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// metric.xxx.xxx 指标关联上一个 AtomicInteger 类型的数字 i</span></span><br><span class="line">AtomicInteger i = meterRegistry.gauge(<span class="string">"metric.xxx.xxx"</span>, <span class="keyword">new</span> AtomicInteger(<span class="number">0</span>));</span><br><span class="line"><span class="comment">// 此时 Prometheus 调用接口可见：</span></span><br><span class="line"><span class="comment">// metric_xxx_xxx&#123;&#125; 0</span></span><br><span class="line"></span><br><span class="line">i.set(<span class="number">1</span>);</span><br><span class="line"><span class="comment">// 此时 Prometheus 调用接口可见：</span></span><br><span class="line"><span class="comment">// metric_xxx_xxx&#123;&#125; 1</span></span><br><span class="line"></span><br><span class="line">i.set(<span class="number">2</span>);</span><br><span class="line"><span class="comment">// 此时 Prometheus 调用接口可见：</span></span><br><span class="line"><span class="comment">// metric_xxx_xxx&#123;&#125; 2</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>具体使用都很简单，试一下就清楚了。</p>
+<p>就写到这里吧。</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2021 pz
+  </div>
+  <div class="footer-right">
+    <img src="/images/govPolice.png">
+    <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44030502006101">粤公网安备 44030502006101号</a>
+    <a>&nbsp;</a>
+    <a href="http://beian.miit.gov.cn">粤ICP备2020090003号</a>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+
