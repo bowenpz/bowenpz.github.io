@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="四月的第一周，来学习 JVM 垃圾回收。 本文主要学习自《深入理解 Java 虚拟机》（百读不厌），在细节问题上参考了许多博客。 美团技术团队在《Java 中 9 种常见的 CMS GC 问题分析与解决》中这么解释 GC：  GC 本身有三种语义，需要根据具体场景带入不同的语义：  Garbage Collection：垃圾收集技术，名词。 Garbage Collector：垃圾收集器，名词">
+<meta name="keywords" content="Weekly Post">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GC">
+<meta property="og:url" content="http://hellopz.netlify.com/2021/04/02/GC/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="四月的第一周，来学习 JVM 垃圾回收。 本文主要学习自《深入理解 Java 虚拟机》（百读不厌），在细节问题上参考了许多博客。 美团技术团队在《Java 中 9 种常见的 CMS GC 问题分析与解决》中这么解释 GC：  GC 本身有三种语义，需要根据具体场景带入不同的语义：  Garbage Collection：垃圾收集技术，名词。 Garbage Collector：垃圾收集器，名词">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/JDK%E6%96%B9%E6%B3%95%E5%8C%BA%E5%8F%98%E6%9B%B4.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/SerialGC.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/SerialOldGC.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/ParNewGC.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/ParallelScavengeGC.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/ParallelOldGC.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/CMSGC.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/G1%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/G1GC.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/ShenandoahGC.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/ZGC%E6%9F%93%E8%89%B2%E6%8C%87%E9%92%88.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/ZGC%E8%BF%87%E7%A8%8B.jpg">
+<meta property="og:updated_time" content="2021-04-06T08:04:58.833Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GC">
+<meta name="twitter:description" content="四月的第一周，来学习 JVM 垃圾回收。 本文主要学习自《深入理解 Java 虚拟机》（百读不厌），在细节问题上参考了许多博客。 美团技术团队在《Java 中 9 种常见的 CMS GC 问题分析与解决》中这么解释 GC：  GC 本身有三种语义，需要根据具体场景带入不同的语义：  Garbage Collection：垃圾收集技术，名词。 Garbage Collector：垃圾收集器，名词">
+<meta name="twitter:image" content="http://hellopz.netlify.com/assets/JDK%E6%96%B9%E6%B3%95%E5%8C%BA%E5%8F%98%E6%9B%B4.jpg">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>GC</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/Weekly-Post/">Weekly Post</a></li>
+         
+          <li><a href="/tags/Random-Post/">Random Post</a></li>
+         
+          <li><a href="/tags/tips/">Tips</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2021/03/17/开始使用-Prometheus-吧/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2021/04/02/GC/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2021/04/02/GC/&text=GC"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2021/04/02/GC/&is_video=false&description=GC"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JVM-内存结构"><span class="toc-number">1.</span> <span class="toc-text">JVM 内存结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#识别垃圾算法"><span class="toc-number">2.</span> <span class="toc-text">识别垃圾算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#引用计数算法"><span class="toc-number">2.1.</span> <span class="toc-text">引用计数算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可达性分析算法"><span class="toc-number">2.2.</span> <span class="toc-text">可达性分析算法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#垃圾收集算法"><span class="toc-number">3.</span> <span class="toc-text">垃圾收集算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#标记-清除算法（Mark-Sweep）"><span class="toc-number">3.1.</span> <span class="toc-text">标记-清除算法（Mark-Sweep）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#复制算法（Copying）"><span class="toc-number">3.2.</span> <span class="toc-text">复制算法（Copying）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#标记-整理算法（Mark-Compact）"><span class="toc-number">3.3.</span> <span class="toc-text">标记-整理算法（Mark-Compact）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分代收集理论"><span class="toc-number">3.4.</span> <span class="toc-text">分代收集理论</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Serial"><span class="toc-number">4.</span> <span class="toc-text">Serial</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Serial-Old"><span class="toc-number">5.</span> <span class="toc-text">Serial Old</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ParNew"><span class="toc-number">6.</span> <span class="toc-text">ParNew</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Parallel-Scavenge"><span class="toc-number">7.</span> <span class="toc-text">Parallel Scavenge</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Parallel-Old"><span class="toc-number">8.</span> <span class="toc-text">Parallel Old</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CMS"><span class="toc-number">9.</span> <span class="toc-text">CMS</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#G1"><span class="toc-number">10.</span> <span class="toc-text">G1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Shenandoah"><span class="toc-number">11.</span> <span class="toc-text">Shenandoah</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ZGC"><span class="toc-number">12.</span> <span class="toc-text">ZGC</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        GC
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2021-04-01T16:59:03.000Z" itemprop="datePublished">2021-04-02</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Weekly-Post/">Weekly Post</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>四月的第一周，来学习 JVM 垃圾回收。</p>
+<p>本文主要学习自《深入理解 Java 虚拟机》（百读不厌），在细节问题上参考了许多博客。</p>
+<p>美团技术团队在《<a href="https://tech.meituan.com/2020/11/12/java-9-cms-gc.html" target="_blank" rel="noopener">Java 中 9 种常见的 CMS GC 问题分析与解决</a>》中这么解释 GC：</p>
+<blockquote>
+<p>GC 本身有三种语义，需要根据具体场景带入不同的语义：</p>
+<ul>
+<li><strong>Garbage Collection</strong>：垃圾收集技术，名词。</li>
+<li><strong>Garbage Collector</strong>：垃圾收集器，名词。</li>
+<li><strong>Garbage Collecting</strong>：垃圾收集动作，动词。</li>
+</ul>
+</blockquote>
+<hr>
+<h1 id="JVM-内存结构"><a href="#JVM-内存结构" class="headerlink" title="JVM 内存结构"></a>JVM 内存结构</h1><p>JVM 的运行时数据区域（Run-Time Data Areas）被普遍称为 JVM 内存结构。</p>
+<p>JVM 内存结构的概念有点乱，因为 JVM 官方规范有套笼统的概念，下面不同厂商有各自的实现（以 HotSpot 为大哥），加之操作系统和硬件本来门槛就高，概念交织起来就混乱了起来。</p>
+<br>
+
+<p>JVM 规范定义了 6 种内存区域（详见《<a href="https://docs.oracle.com/javase/specs/jvms/se16/html/jvms-2.html#jvms-2.5" target="_blank" rel="noopener">2.5 Run-Time Data Areas</a>》），分别如下：</p>
+<ol>
+<li><code>The pc Register</code> 程序计数器<ul>
+<li>pc 是 Program Counter，指程序计数器</li>
+<li>它相当于字节码的行号指示器，用来选取下一条需要执行的字节码指令</li>
+<li>线程私有</li>
+</ul>
+</li>
+<li><code>Java Virtual Machine Stacks</code> Java 虚拟机栈<ul>
+<li>线程私有，在线程创建的时候同时创建（生命周期与线程相同）</li>
+<li>每个方法被执行的时候，Java 虚拟机栈同步创建一个栈帧（A Java Virtual Machine stack stores frames）</li>
+<li>栈帧内包括局部变量表、操作数栈、动态连接和方法返回地址等</li>
+</ul>
+</li>
+<li><code>Native Method Stacks</code> 本地方法栈<ul>
+<li>跟 Java 虚拟机栈几乎相同，只不过它是为本地（native）方法服务</li>
+</ul>
+</li>
+<li><code>Heap</code> 堆<ul>
+<li>存储对象和数组（……memory for all class instances and arrays is allocated）</li>
+<li>虚拟机启动时创建</li>
+<li>存储内容通过 GC 回收，不能手动显式回收</li>
+<li>线程共享</li>
+</ul>
+</li>
+<li><code>Method Area</code> 方法区<ul>
+<li>虚拟机启动时创建</li>
+<li>它相当于传统语言中，存储编译后的代码的区域，或者相当于操作系统线程中的代码段（text segment）</li>
+<li>它存储虚拟机加载的类的结构信息、常量、静态变量、即时编译器编译后的代码缓存等</li>
+<li>线程共享</li>
+</ul>
+</li>
+<li><code>Run-Time Constant Pool</code> 运行时常量池<ul>
+<li>方法区的一部分</li>
+<li>Class 文件中的常量池表（Constant Pool Table）在加载后就存储在这里</li>
+</ul>
+</li>
+</ol>
+<br>
+
+<p>HotSpot 对以上规范进行了实现，其中方法区的实现有一点混乱。</p>
+<ol>
+<li><p>JDK 1.6 及之前，HotSpot VM 使用永久代（Permanent Generation, PermGen）作为方法区的实现，由于 HotSpot VM 的统治地位，很多人将永久代和方法区混为一谈，实际上其他虚拟机都没有永久代（例如 JRockit、IBM J9）。</p>
+<p>HotSpot VM 使用永久代的原因是，方法区也需要内存管理，为了便于 GC，他们索性把方法区和堆区连续在一起分布内存（使用连续的物理内存，但内存空间是隔离的），方法区和堆区的老年代在内存上是连续的，可以共同进行 GC（无论方法区和堆区的老年代谁满了，都会触发 GC，一起回收内存），这样就不用单独为方法区编写 GC 代码。</p>
+<p>HotSpot VM 使用永久代作为方法区的实现，遇到了一些问题：</p>
+<ul>
+<li>更容易发生内存溢出，即 OOM（因为在虚拟机启动时会设置永久代的内存上限，而不是动态申请内存）</li>
+<li>与堆区的老年代绑定，更容易造成 Full GC</li>
+<li>Oracle 收购 BEA 获得 JRockit 的所有权，在移植优秀功能时，由于两者对方法区的实现差异，合并受阻</li>
+</ul>
+</li>
+<li><p>JDK 1.7 时，HotSpot VM 开始搬迁永久代（但是只搬迁了一部分）:</p>
+<ul>
+<li>字符串常量池（String Table）转移到了堆</li>
+<li>字面量（Interned Strings）转移到了堆</li>
+<li>类的静态变量（Class Statics）转移到了堆</li>
+<li>符号引用（Symbols）转移到了本地内存（Native Heap）</li>
+</ul>
+</li>
+<li><p>JDK 1.8 时，HotSpot 彻底抛弃永久代，把永久代剩下的内容转移到本地内存中，称之为元空间（MetaSpace）。</p>
+<p>本地内存是操作系统级别的内存空间，是 JVM 在运行期间动态申请的。</p>
+</li>
+</ol>
+<p>下图是《<a href="https://www.cnblogs.com/misterchaos/p/memory-management-in-jvm.html" target="_blank" rel="noopener">从 Java 虚拟机规范看 HotSpot 虚拟机的内存结构和变迁</a>》中的配图：</p>
+<p><img src="/assets/JDK%E6%96%B9%E6%B3%95%E5%8C%BA%E5%8F%98%E6%9B%B4.jpg" alt="JDK方法区变更"></p>
+<p>有关 JVM 内存结构的设计，还可以参考文章《<a href="https://www.zhihu.com/question/438698030/answer/1670533755" target="_blank" rel="noopener">native memory 和 native heap 及 GC heap 有什么关系？</a>》。</p>
+<br>
+
+<p>在 JVM 内存结构中，<code>程序计数器</code>、<code>Java 虚拟机栈</code>、<code>本地方法栈</code>都是线程私有空间，内存在线程结束时直接回收，而<code>堆</code>、<code>方法区</code>是线程共享的，需要垃圾收集器进行回收内存。</p>
+<p>其中<code>方法区</code>收集条件相当苛刻（实际上，方法区已加载的内容很难不再使用），而且 JVM 规范也指出<code>方法区</code>可以不进行垃圾回收（当然会有内存泄漏的问题，但问题不大），以下 GC 相关内容指的都是对<code>堆</code>区的内存回收。</p>
+<hr>
+<h1 id="识别垃圾算法"><a href="#识别垃圾算法" class="headerlink" title="识别垃圾算法"></a>识别垃圾算法</h1><p>回收垃圾的第一步，是判定内存中哪些是垃圾。</p>
+<h2 id="引用计数算法"><a href="#引用计数算法" class="headerlink" title="引用计数算法"></a>引用计数算法</h2><p>在对象中添加一个引用计数器：</p>
+<ul>
+<li>每当有一个地方引用它时，计数器值就加一</li>
+<li>当引用失效时，计数器值就减一</li>
+</ul>
+<p>任何时刻计数器值为零的对象就是不可能在被使用的。</p>
+<p>引用计数算法是一种简单而原始的垃圾判定算法，但现在主流的 JVM 垃圾收集器都没有采用这种算法，原因在于：</p>
+<ul>
+<li>需要通过 Recycler 算法解决循环引用问题（对象 A 引用 对象 B，B 同时也引用 A，但是它们都不再被使用），这种算法通过图论解决问题，代码较复杂（可参考《<a href="https://www.jianshu.com/p/4d59698030f1" target="_blank" rel="noopener">Recycler 算法——环状引用计数算法的一种实现</a>》）。</li>
+<li>多线程情况下，同步计数器很耗费资源</li>
+</ul>
+<h2 id="可达性分析算法"><a href="#可达性分析算法" class="headerlink" title="可达性分析算法"></a>可达性分析算法</h2><p>通过一系列称为 <code>GC Roots</code> 的根对象作为起始节点集，从这些节点开始，根据引用关系向下搜索，可以被搜索到的对象即为可达对象。在连通图之外的对象，或者用图论的话来说，从 <code>GC Roots</code> 到这个对象不可达时，那么这个对象就是不可能再被使用的，是可以被回收的垃圾对象。</p>
+<p>这种算法是找所有<strong>存活</strong>的对象，剩下没找到的都是<strong>死亡</strong>的对象。现在主流的垃圾收集器都使用这种算法判定垃圾。</p>
+<p><code>GC Roots</code>，也就是 tracing GC 的起点，是一组必须活跃的引用，它们包括：</p>
+<ul>
+<li>JVM 栈和本地方法栈引用的所有对象</li>
+<li>方法区中的常量和静态变量</li>
+<li>所有被 synchronized 同步的对象</li>
+<li>JVM 内部的引用，如基本数据类型对应的 Class 对象</li>
+<li>跨代引用的对象（引入了卡表 Card Table 的概念，参考《<a href="https://segmentfault.com/a/1190000004682407" target="_blank" rel="noopener">JVM 的 Card Table 数据结构</a>》）</li>
+</ul>
+<hr>
+<h1 id="垃圾收集算法"><a href="#垃圾收集算法" class="headerlink" title="垃圾收集算法"></a>垃圾收集算法</h1><h2 id="标记-清除算法（Mark-Sweep）"><a href="#标记-清除算法（Mark-Sweep）" class="headerlink" title="标记-清除算法（Mark-Sweep）"></a>标记-清除算法（Mark-Sweep）</h2><p>垃圾回收分两个阶段，第一阶段标记存活的对象，第二阶段遍历所有对象，回收所有没被标记的对象。</p>
+<p>标记-清除算法的问题有：</p>
+<ul>
+<li>清除后会产生大量不连续的内存碎片（以至于之后可能无法分配大内存）</li>
+<li>执行效率不稳定，标记和清除的两个过程的执行效率都随对象数量增长而降低</li>
+</ul>
+<h2 id="复制算法（Copying）"><a href="#复制算法（Copying）" class="headerlink" title="复制算法（Copying）"></a>复制算法（Copying）</h2><p>将内存空间分成两半，同一时间只使用其中一半。需要垃圾回收时，将存活的对象复制到另一半内存中，原本使用的半区可以全部回收。</p>
+<p>复制算法的最大问题在于浪费内存空间，同一时间只能使用一半内存。</p>
+<p>弱分代假说（Weak Generational Hypothesis）认为，绝大多数对象都是“朝生夕死”的，存活很短时间后就会死亡变成垃圾。IBM 曾研究发现，新生代中的对象有 98% 熬不过第一轮垃圾收集（仅参考价值）。根据这一假说，业界将原来一分为二地利用内存，变成一分为三，分为一块较大的 Eden 空间和两块较小的 Survivor 空间（HotSpot 设置比例为 8:1:1），同一时间只使用 Eden 空间和一块 Survivor 空间，垃圾回收时将存活对象复制到另一块 Survivor，循环往复，这样内存空间利用率能得到提高。</p>
+<h2 id="标记-整理算法（Mark-Compact）"><a href="#标记-整理算法（Mark-Compact）" class="headerlink" title="标记-整理算法（Mark-Compact）"></a>标记-整理算法（Mark-Compact）</h2><p>垃圾回收分两个阶段，第一阶段标记存活的对象，第二阶段将存活对象都向空间一端移动，然后直接清理掉边界以外的内存。</p>
+<p>当存活对象很多时，标记-整理算法将花费大量的时间拷贝对象（尤其是对于大对象），同时更新对象引用要 stop the world，造成用户线程停止工作（现在的低延时 GC 通过读屏障基本解决了这个问题）。</p>
+<h2 id="分代收集理论"><a href="#分代收集理论" class="headerlink" title="分代收集理论"></a>分代收集理论</h2><p>分代收集理论并不是垃圾回收算法，但几乎所有垃圾收集器都基于这种理论设计，很值得提出来学习。</p>
+<p>分代收集理论基于两个分代解说：</p>
+<ol>
+<li>弱分代假说（Weak Generation Hypothesis）：绝大多数对象都是朝生夕灭的。</li>
+<li>强分代假说（Strong Generation Hypothesis）：熬过越多次垃圾收集过程的对象就越难以消亡</li>
+</ol>
+<p>基于这两种假说，业界提出了分代收集理论，将对象按照年龄（年龄即对象熬过垃圾收集过程的次数）分成年轻代和老年代，对两代对象分开进行垃圾回收。对年轻代的对象应该垃圾回收更频繁一些，很容易就能清理出很多空间，对老年代的对象应该垃圾回收更少一些，因为它们都是难以消灭的对象。</p>
+<p>最新的几款低延时垃圾收集器，在出现之初没有遵从分代收集理论（例如 ZGC、Shenandoah），主要是因为实现分代收集很复杂，对开发而言性价比不高，但这些垃圾收集器在后续的更新中基本都在尝试分代。</p>
+<hr>
+<p>下面逐个学习垃圾收集器。</p>
+<h1 id="Serial"><a href="#Serial" class="headerlink" title="Serial"></a>Serial</h1><p>发音：[‘sɪriəl]</p>
+<p><img src="/assets/SerialGC.jpg" alt="Serial GC"></p>
+<p>这是最早期的垃圾收集器（JDK 1.3 之前），也是目前 HotSpot VM 客户端模式下的默认新生代垃圾收集器。</p>
+<p>它在垃圾回收时会 STW（Stop The World），使用单线程回收垃圾，阻塞所有的用户线程。但同时由于它单线程回收垃圾，没有线程交互的开销，而且额外内存消耗小，因此适用于单核处理器、内存较小的硬件环境（即客户端）。</p>
+<h1 id="Serial-Old"><a href="#Serial-Old" class="headerlink" title="Serial Old"></a>Serial Old</h1><p><img src="/assets/SerialOldGC.jpg" alt="SerialOldGC"></p>
+<p>早期的垃圾收集器，回收老年代垃圾，主要应用于 HotSpot VM 客户端模式。在 JDK 1.8 之前还可以作为后文将提到的 Parallel Scavenge 垃圾收集器的老年代搭配，或者作为 CMS 垃圾收集器发生失败时的后备预案。</p>
+<h1 id="ParNew"><a href="#ParNew" class="headerlink" title="ParNew"></a>ParNew</h1><p><img src="/assets/ParNewGC.jpg" alt="ParNewGC"></p>
+<p>它是 Serial 垃圾收集器的多线程版本，除此之外并无二致。它在多核处理器下速度会比 Serial 快，但单核环境下由于线程交互开销因此反而更慢。</p>
+<p>后文会提到的 CMS 垃圾收集器是 JDK 1.5 - JDK 1.7 的划时代垃圾收集器，由于 ParNew 能够跟 CMS 垃圾收集器配合（ParNew 收集新生代垃圾，CMS 收集老年代垃圾），而能够跟 CMS 配合的垃圾收集器只有它和 Serial，因此它是 JDK 1.7 之前的首选新生代垃圾收集器。</p>
+<h1 id="Parallel-Scavenge"><a href="#Parallel-Scavenge" class="headerlink" title="Parallel Scavenge"></a>Parallel Scavenge</h1><p>发音：[‘perə.lel] [‘skævəndʒ]</p>
+<p><img src="/assets/ParallelScavengeGC.jpg" alt="ParallelScavengeGC"></p>
+<p>与 ParNew 垃圾收集器的原理相同，但它更侧重于垃圾回收的吞吐量（Throughput）。</p>
+<p>吞吐量是处理器用于运行用户代码的时间，与处理器总消耗时间的比值。比如 A 垃圾收集器每秒 GC 一次，平均停顿 1 ms，B 垃圾收集器每分钟 GC 一次，平均停顿 10 ms，尽管 B 垃圾收集器的平均停顿时间长，但它总停顿时间小，吞吐量高。</p>
+<p>Parallel Scavenge 不能搭配 CMS 一起使用（参考《<a href="https://www.zhihu.com/question/43492129" target="_blank" rel="noopener">Parallel Scavenge 收集器为何无法与 CMS 同时使用？</a>》），在 JDK 1.6 之前只能跟 Serial Old 搭配，老年代拖了后腿，因此地位比较尴尬。在 JDK 1.6 时出现了 Parallel Old 垃圾收集器，两者可以搭配使用，总算是有人用了。</p>
+<h1 id="Parallel-Old"><a href="#Parallel-Old" class="headerlink" title="Parallel Old"></a>Parallel Old</h1><p><img src="/assets/ParallelOldGC.jpg" alt="ParallelOldGC"></p>
+<p>它能够并发收集老年代垃圾，通常是配合 Parallel Scavenge 一起使用的。</p>
+<p>Parallel Old 在 JDK 1.6 出现（当时已经有 CMS 垃圾收集器了），它的出现是为了缓解 Parallel Scavenge 的尴尬，因为 Parallel Scavenge 并不能配合 CMS 使用，它需要一款并发收集老年代垃圾的收集器。</p>
+<p>Parallel Scavenge 配合 Parallel Old 收集垃圾，适用于注重吞吐量或者处理器资源较为稀缺的场景。</p>
+<h1 id="CMS"><a href="#CMS" class="headerlink" title="CMS"></a>CMS</h1><p>CMS（Concurrent Mark Sweep）是 JDK 1.5 出现的有划时代意义的垃圾收集器，它面向老年代收集。</p>
+<p>CMS 是一款以最短停顿时间为目标的垃圾收集器，也就是 STW 时间最短，用户线程停顿时间最短。它采用标记-清除算法（英文名就是“并发的标记清除”），垃圾回收共分四步：</p>
+<p><img src="/assets/CMSGC.jpg" alt="CMSGC"></p>
+<ol>
+<li><p>初始标记（CMS initial mark）</p>
+<p>需要停止用户线程，但是只标记 GC Roots 能直接关联到的对象，停顿时间很短</p>
+</li>
+<li><p>并发标记（CMS concurrent mark）</p>
+<p>GC 线程和用户线程并发运行（GC 线程数默认是 <code>(处理器核心数量 + 3) / 4</code>），根据初始标记，遍历所有存活对象</p>
+</li>
+<li><p>重新标记（CMS remark）</p>
+<p>第二步并发标记阶段，用户线程可能修改了对象引用，导致对象起死回生，在第三步重新标记一遍对象（使用三色标记和增量更新的方式），确定所有需要被垃圾回收的对象。</p>
+<p>这一步也需要停止用户线程，比第一步停顿的时间稍长，但时间也很短。</p>
+</li>
+<li><p>并发清除（CMS concurrent sweep）</p>
+<p>原地回收垃圾空间</p>
+</li>
+</ol>
+<p>CMS 是 HotSpot VM 在追求低停顿的第一次成功尝试，但是仍然有以下问题：</p>
+<ul>
+<li><p>对处理器资源非常敏感，因为第二步和第四步 GC 线程和工作线程并行，如果处理器核心数较少（不足四个），就会造成用户请求处理速度变慢。</p>
+</li>
+<li><p>无法处理“浮动垃圾”问题（第二步和第四步 GC 线程和用户线程是并发的，用户线程新产生的垃圾没有被标记到，会一直等到下次 GC 才会清除，这些被称为“浮动垃圾”）。</p>
+</li>
+<li><p>CMS 基于标记-清除算法，回收垃圾后会产生内存碎片，可能导致空间足够但无法分配新内存的情况，引发 Full GC。</p>
+</li>
+<li><p>由于第二步和第四步是并发运行的，因此必须给用户线程留足内存空间，避免并发清理垃圾时，新产生的垃圾占满了所有内存。</p>
+<p>在 JDK 1.5 时，老年代使用了 68% 的内存就会触发 GC（比较保守），在 JDK 1.6 提高到 92%。如果并发过程中，新出现的垃圾占满内存，就会发生“并发失败”（Concurrent Mode Failure），临时启用 Serial Old 进行垃圾回收（就是上文那个停止所有用户线程，单线程 GC 的垃圾收集器）。</p>
+</li>
+</ul>
+<p>CMS 从 JDK 1.5 出现，到 JDK 9 时被官方不再建议使用，ParNew 也就连带着成为历史（因为它是最常被用来和 CMS 搭配的垃圾收集器）。</p>
+<h1 id="G1"><a href="#G1" class="headerlink" title="G1"></a>G1</h1><p>G1（Garbage First）垃圾收集器在 JDK 7 确立项目目标，JDK 8 全部完成，JDK 9 成为默认的垃圾收集器。G1  是里程碑式的垃圾收集器，它的目标是取代 JDK 5 出现的 CMS 垃圾收集器，这个目标已经基本达成。</p>
+<p>G1 开创性地实现了“停顿时间模型”（Pause Prediction Model），即能够指定在一个长度为 M 毫秒的时间片段内，消耗在垃圾收集上的时间大概率不超过 N 毫秒，也就是可以由用户指定期望的停顿时间，默认是 200 ms。</p>
+<p>为了实现这个目标，G1 将堆内存化整为零，划分成多个大小相等的独立区域（Region），每个 Region 都可以作为 Eden 区、Survivor 区或 Old 区，对于大对象还可以分配多个 Region，具体堆内存布局见下图：（该图来源自互联网，原始出处没找到……）</p>
+<p><img src="/assets/G1%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84.jpg" alt="G1内存结构"></p>
+<p>G1 每次进行 GC 时，哪些 Region 回收空间更多、价值收益更大，就回收哪些 Region，这也就是“Garbage First”名字的来源。</p>
+<p>G1 进行 GC 大致可划分成四个步骤，其中前三个步骤跟 CMS 很像（但是实现方式不同）：</p>
+<p><img src="/assets/G1GC.jpg" alt="G1GC"></p>
+<ol>
+<li><p>初始标记（Initial Marking）</p>
+<p>需要停止用户线程，但是只标记 GC Roots 能直接关联到的对象，停顿时间很短。</p>
+</li>
+<li><p>并发标记（Concurrent Marking）</p>
+<p>根据初始标记，遍历所有存活对象。</p>
+</li>
+<li><p>最终标记（Final Marking）</p>
+<p>第二步和用户线程并行，会造成部分对象引用变更，因此第三步需要暂停所有用户线程，再次遍历最终标记存活对象。</p>
+<p>这一步看起来和 CMS 垃圾收集器一样，但实际上 CMS 是通过增量更新实现的，而 G1 是通过原始快照实现的。</p>
+</li>
+<li><p>筛选回收（Live Data Counting and Evauation）</p>
+<p>G1 对所有 Region 的回收价值和成本进行排序，根据用户希望的停顿时间进行计算，制定回收计划。G1 将选择若干个 Region 作为回收集，把其中存活的对象拷贝到空的 Region 中。</p>
+<p>由于拷贝的是活对象，因此需要暂停用户线程。这一步其实也可以做成与用户线程并发执行，但代码实现复杂，因此没有去实现。</p>
+</li>
+</ol>
+<p>G1 由于采用标记-清除算法，因此没有产生垃圾碎片，但将堆区划分成多个 Region，使得跨 Region 间的对象引用统计复杂，需要占用堆容量 10%-20% 的空间。</p>
+<p>在多处理器和大容量内存环境中，G1 比 CMS 表现更为出色，在实现高吞吐量的同时，尽可能地满足垃圾收集暂停时间的要求。</p>
+<h1 id="Shenandoah"><a href="#Shenandoah" class="headerlink" title="Shenandoah"></a>Shenandoah</h1><p>发音：[ˌʃenənˈdouə]</p>
+<p>Shenandoah 垃圾收集器是 RedHat 公司独立发展的低延时垃圾回收器，后来被贡献给 OpenJDK 成为 OpenJDK 12 的正式特性之一。它的目标是能在任何堆内存大小下都可以把垃圾收集的停顿时间限制在 10 ms 以内，目前看来没有实现（但很接近了）。</p>
+<p>Shenandoah 的垃圾回收步骤跟 G1 很相近，只是在最后回收垃圾时，可以做到与用户线程并行。下图是 Shenandoah 的垃圾回收过程，来源自演讲 PPT《<a href="https://shipilev.net/talks/devoxx-Nov2017-shenandoah.pdf" target="_blank" rel="noopener">Shenandoah GC Part I : The Garbage Collector That Could</a>》：</p>
+<p><img src="/assets/ShenandoahGC.jpg" alt="ShenandoahGC"></p>
+<p>Shenandoah 在最后回收垃圾时，会首先将存活对象拷贝到未被使用的 Region 中（上图第三步，和用户线程并发），然后更新对象引用（上图第四步，和用户线程并发），最后更新 GC Roots 的引用（阻塞用户线程，但很快）。</p>
+<h1 id="ZGC"><a href="#ZGC" class="headerlink" title="ZGC"></a>ZGC</h1><p>ZGC（Z Garbage Collector）是 JDK 11 出现的低延迟垃圾收集器，在 JDK 16 已经做到了大部分停顿时间少于 0.5 ms，平均停顿时间少于 0.05 ms。</p>
+<p>ZGC 跟 G1 和 Shenandoah 的回收步骤是相近的，都是堆分区（Region），通过两次标记找到垃圾，然后标记-压缩，回收 Region 的垃圾内存。ZGC 和 Shenandoah 能够做到低延时，都是因为最后整理内存时，可以做到与用户线程并行，但是两者的解决方案是完全不同的。</p>
+<p>整理垃圾时（将存活的对象拷贝到新的 Region 中，更新对象引用，最后回收掉最开始 Region 的全部内存），想做到和用户线程并行，要解决的问题是：如何做到每一次用户线程访问对象时，都能拿到最新的对象？（换个说法，在存活对象拷贝到别的 Region 之前，引用指向的是原来的内存位置，在存活对象拷贝到别的 Region 之后，引用指向的是新的内存位置）在这个问题上，Shenandoah 的 ZGC 的解决方案如下：</p>
+<ul>
+<li><p>Shenandoah 在<strong>对象</strong>上做文章：在对象头前加一个新的引用字段（Brooks Pointer），在正常不处于并发移动的情况下，该引用指向对象自己，在并发移动的情况下，该对象指向新的内存地址。</p>
+</li>
+<li><p>ZGC 在<strong>对象引用</strong>上做文章：64 位的 Linux 支持 46 位的物理内存地址，ZGC 取高 4 位作为染色指针，剩下 42 位作为引用地址（但也就只能管理 16 TB 的内存空间），多留出的 4 位用来记录 GC 信息：</p>
+<ul>
+<li>Marked1、Marked0：引用对象的三色标记状态</li>
+<li>Remapped：是否进入重分配集（即被移动过）</li>
+<li>Finalizable：是否只能通过 finalize() 方法才能被访问到</li>
+</ul>
+<p>（下图来自《<a href="http://cr.openjdk.java.net/~pliden/slides/ZGC-Jfokus-2018.pdf" target="_blank" rel="noopener">The Z Garbage Collector: Low Latency GC for OpenJDK</a>》，再后面的图也来自该 PPT）</p>
+<p><img src="/assets/ZGC%E6%9F%93%E8%89%B2%E6%8C%87%E9%92%88.jpg" alt="ZGC染色指针"></p>
+<p>ZGC 的这种解决方案，有 16 TB 的内存限制，不支持 32 位平台，不支持压缩指针，但是却大大提高了并发移动时的效率（具体原理见下面的 GC 步骤）。</p>
+</li>
+</ul>
+<br>
+
+<p>ZGC 的垃圾回收过程可以简要分成四步：</p>
+<p><img src="/assets/ZGC%E8%BF%87%E7%A8%8B.jpg" alt="ZGC过程"></p>
+<ol>
+<li><p>并发标记（Concurrent Mark）</p>
+<p>跟 G1、Shenandoah 相同，分为初始标记、并发标记、最终标记</p>
+</li>
+<li><p>并发预备重分配（Concurrent Prepare for Relocate）</p>
+<p>根据特定的查询条件统计得出本次收集过程要清理哪些 Region，将这些 Region 组成重分配集（Relocation Set）。</p>
+</li>
+<li><p>并发重分配（Concurrent Relocate）</p>
+<p>重分配是 ZGC 执行过程中的核心阶段，这个阶段会把第二步重分配集中存活的对象，复制到新的 Region 上，并为重分配集中的每个 Region 维护一个转发表，记录从旧对象到新对象的转向关系。</p>
+<p>由于 ZGC 使用染色指针，仅从引用上就能明确得知一个对象是否处于重分配集中，如果用户线程此时并发访问了位于重分配集中的对象，这次访问将会被预制的内存屏障所截获，然后立即根据 Region 上的转发表记录，将访问转发到新复制的对象上，并同时修正更新该引用的值，使其直接指向新对象。</p>
+<p>对比 Shenandoah 的 Brooks Pointer，ZGC 只有第一次访问旧对象会陷入转发，也就是只慢一次，而 Shenandoah 每次访问对象都必须转发，也就是次次都慢。</p>
+</li>
+<li><p>并发重映射（Concurrent Remap）</p>
+<p>修正移动过的对象的引用。</p>
+<p>巧妙的是，ZGC 把这步放在下次垃圾回收的并发标记过程中，反正它们都是要遍历所有对象的，这样就省去了一次遍历对象图的开销。</p>
+</li>
+</ol>
+<p>ZGC 目前面临的问题是，当对象的分配速率很高时，会造成大量浮动垃圾，只能通过加大堆容量来解决，要根本性解决这个问题，还是要引入分代，让朝生夕灭的新对象单独 GC。</p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2021 pz
+  </div>
+  <div class="footer-right">
+    <img src="/images/govPolice.png">
+    <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44030502006101">粤公网安备 44030502006101号</a>
+    <a>&nbsp;</a>
+    <a href="http://beian.miit.gov.cn">粤ICP备2020090003号</a>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+
