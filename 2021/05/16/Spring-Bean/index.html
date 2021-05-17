@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang=Ch>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="五月的第三周，来学习 Spring Bean 相关的内容。 本篇文章的主要学习来源是《从 0 开始深入学习 Spring》。  Bean 是什么Bean 是一个相当早的概念。  Java 在 1996 年发布时，同年 12 月发布了 Java Bean 1.00-A，这是最早的 Bean。 JavaBeans 是 Java 中一种特殊的类，统一规范提供 getter、setter 方法。  在">
+<meta name="keywords" content="Weekly Post">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Bean">
+<meta property="og:url" content="http://hellopz.netlify.com/2021/05/16/Spring-Bean/index.html">
+<meta property="og:site_name" content="这里是pz阁下">
+<meta property="og:description" content="五月的第三周，来学习 Spring Bean 相关的内容。 本篇文章的主要学习来源是《从 0 开始深入学习 Spring》。  Bean 是什么Bean 是一个相当早的概念。  Java 在 1996 年发布时，同年 12 月发布了 Java Bean 1.00-A，这是最早的 Bean。 JavaBeans 是 Java 中一种特殊的类，统一规范提供 getter、setter 方法。  在">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://cupacabana.com/wp-content/uploads/2014/06/bean-jar.png">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/BeanDefinition%E4%BD%93%E7%B3%BB.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg">
+<meta property="og:updated_time" content="2021-05-17T09:24:18.774Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring Bean">
+<meta name="twitter:description" content="五月的第三周，来学习 Spring Bean 相关的内容。 本篇文章的主要学习来源是《从 0 开始深入学习 Spring》。  Bean 是什么Bean 是一个相当早的概念。  Java 在 1996 年发布时，同年 12 月发布了 Java Bean 1.00-A，这是最早的 Bean。 JavaBeans 是 Java 中一种特殊的类，统一规范提供 getter、setter 方法。  在">
+<meta name="twitter:image" content="http://cupacabana.com/wp-content/uploads/2014/06/bean-jar.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Spring Bean</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/2019/07/21/helloworld/">About</a></li>
+         
+          <li><a href="/tags/Weekly-Post/">Weekly Post</a></li>
+         
+          <li><a href="/tags/Random-Post/">Random Post</a></li>
+         
+          <li><a href="/tags/tips/">Tips</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2021/04/02/GC/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://hellopz.netlify.com/2021/05/16/Spring-Bean/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://hellopz.netlify.com/2021/05/16/Spring-Bean/&text=Spring Bean"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://hellopz.netlify.com/2021/05/16/Spring-Bean/&is_video=false&description=Spring Bean"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Bean-是什么"><span class="toc-number">1.</span> <span class="toc-text">Bean 是什么</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#前置知识"><span class="toc-number">2.</span> <span class="toc-text">前置知识</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#声明-Bean"><span class="toc-number">3.</span> <span class="toc-text">声明 Bean</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#通过-XML-声明-Bean"><span class="toc-number">3.1.</span> <span class="toc-text">通过 XML 声明 Bean</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通过-Configuration-配合-Bean-声明-Bean"><span class="toc-number">3.2.</span> <span class="toc-text">通过 @Configuration 配合 @Bean 声明 Bean</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通过-ComponentScan-配合-Component-声明-Bean"><span class="toc-number">3.3.</span> <span class="toc-text">通过 @ComponentScan 配合 @Component 声明 Bean</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通过-FactoryBean-声明-Bean"><span class="toc-number">3.4.</span> <span class="toc-text">通过 FactoryBean 声明 Bean</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#奇技淫巧"><span class="toc-number">3.5.</span> <span class="toc-text">奇技淫巧</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#获取-Bean"><span class="toc-number">4.</span> <span class="toc-text">获取 Bean</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Bean-的属性注入"><span class="toc-number">5.</span> <span class="toc-text">Bean 的属性注入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#setter-方法注入属性"><span class="toc-number">5.1.</span> <span class="toc-text">setter 方法注入属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构造器注入属性"><span class="toc-number">5.2.</span> <span class="toc-text">构造器注入属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注解式属性注入"><span class="toc-number">5.3.</span> <span class="toc-text">注解式属性注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自动注入-Bean-属性"><span class="toc-number">5.4.</span> <span class="toc-text">自动注入 Bean 属性</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#BeanDefinition"><span class="toc-number">6.</span> <span class="toc-text">BeanDefinition</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Bean-的生命周期"><span class="toc-number">7.</span> <span class="toc-text">Bean 的生命周期</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Spring Bean
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">这里是pz阁下</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2021-05-16T06:51:24.000Z" itemprop="datePublished">2021-05-16</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Weekly-Post/">Weekly Post</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <br>
+
+<p>五月的第三周，来学习 Spring Bean 相关的内容。</p>
+<p>本篇文章的主要学习来源是《<a href="https://juejin.cn/book/6857911863016390663" target="_blank" rel="noopener">从 0 开始深入学习 Spring</a>》。</p>
+<hr>
+<h1 id="Bean-是什么"><a href="#Bean-是什么" class="headerlink" title="Bean 是什么"></a>Bean 是什么</h1><p>Bean 是一个相当早的概念。</p>
+<ul>
+<li><p>Java 在 1996 年发布时，同年 12 月发布了 Java Bean 1.00-A，这是最早的 Bean。</p>
+<p>JavaBeans 是 Java 中一种特殊的类，统一规范提供 getter、setter 方法。</p>
+</li>
+<li><p>在实际企业开发中，JavaBeans 太过简单，sun 公司在它的基础上堆功能，堆出了 EJB（Enterprise JavaBean）。</p>
+</li>
+<li><p>EJB 功能强大，但未免太重了，后来又简化成 POJO（plain old Java object）。</p>
+</li>
+</ul>
+<p>这么多年发展下来，Bean 指代的是 Java 的可重用软件组件（reuse software components），主要有这么几个特点：</p>
+<ul>
+<li>所有属性为 private</li>
+<li>提供默认构造方法</li>
+<li>提供 getter 和 setter 方法</li>
+<li>实现 serializable 接口</li>
+</ul>
+<p>有关 JavaBeans 的概念，可以参考《<a href="https://www.zhihu.com/question/19773379" target="_blank" rel="noopener">Java bean 是个什么概念？</a>》、《<a href="https://zh.wikipedia.org/wiki/JavaBeans" target="_blank" rel="noopener">维基百科：JavaBeans</a>》、《<a href="https://www.liaoxuefeng.com/wiki/1252599548343744/1260474416351680" target="_blank" rel="noopener">廖雪峰：JavaBean</a>》。</p>
+<br>
+
+<p>Spring 革 EJB 的命，但沿用了 Bean 这一叫法，作为可重用软件组件的称呼，（个人理解）是指程序中一堆重复使用的对象。</p>
+<p>Spring 中的 Bean，跟 JavaBeans 是两个概念，它们的共同点是可重用组件，除此之外都不太一样。</p>
+<blockquote>
+<p>吐个槽。我查阅了很多网络资料，Spring 的 Bean 到底是什么，得到的回答有两类：</p>
+<ol>
+<li>Spring Ioc 容器管理的 Java 对象</li>
+<li>BeanDefinition 类的实例对象</li>
+</ol>
+<p>特喵的……这不是递归解释吗……Bean 是 Bean 容器管理的对象，是 Bean 定义的实例，这还用你说……</p>
+</blockquote>
+<br>
+
+<p>补充几个冷知识：</p>
+<ul>
+<li><p>Java 指的是爪哇岛，名称来源是作者曾在爪哇岛上喝过一种美味的咖啡。</p>
+</li>
+<li><p>Java 的 Logo 就是一杯咖啡，class 文件的前四个字节是魔数 0xCAFABABE。</p>
+</li>
+<li><p>Bean 的字面义就是咖啡豆，代表 Java 中的小部件。</p>
+</li>
+<li><p>Bean 可以装在 jar 里。</p>
+<p><img src="http://cupacabana.com/wp-content/uploads/2014/06/bean-jar.png" alt="bean-jar.png (324×353)"></p>
+</li>
+</ul>
+<p>有关这个冷知识可以参考《<a href="https://stackoverflow.com/questions/18609030/why-java-beans-are-called-beans" target="_blank" rel="noopener">Why Java Beans are called “beans”?</a>》。</p>
+<hr>
+<h1 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h1><p>尽管大多数点进这篇文章的人，都知道控制反转、依赖注入、Spring 的 IoC 容器这些概念，但我还是补充一下 Spring Bean 的基础世界观。</p>
+<p>在 Spring 的世界里，Bean 是被统一管理的，都装进一个叫<code>IoC 容器</code>的罐子里。程序启动初始化的时候，Spring 就会收集所有的 Bean，全部装到<code>IoC 容器</code>里面，之后程序运行起来，每次需要哪个 Bean，就去问<code>IoC 容器</code>要。（这个设计叫做控制反转）</p>
+<p>例如我们平常写的，被 <code>@Controller</code>、<code>@Service</code> 注解过的类实例，都是 Spring 中的 Bean，都会被装进<code>IoC 容器</code>里面。</p>
+<p><code>IoC 容器</code>中的 IoC 全称是 Inversion of Control（控制反转），这个概念比较抽象，指的是获取对象的方式“反转”了（原始描述是“依赖对象的获得被反转了”，太抽象了），原来获取一个对象要 new 一个（或者工厂模式创建一个），现在可以去问<code>IoC 容器</code>要一个，就无需关心对象的创建和初始化问题了，这样做最大的好处是解耦。</p>
+<p>Spring 中的<code>IoC 容器</code>实际上指的是两类接口：<code>BeanFactory</code> 和 <code>ApplicationContext</code> 接口，后者是前者的子接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// BeanFactory 作为 IoC 容器</span></span><br><span class="line">BeanFactory beanFactory = <span class="keyword">new</span> ClassPathXmlApplicationContext();</span><br><span class="line">Object bean = beanFactory.getBean(<span class="string">"person"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ApplicationContext 作为 IoC 容器</span></span><br><span class="line">ApplicationContext ctx = <span class="keyword">new</span> ClassPathXmlApplicationContext();</span><br><span class="line">Map&lt;String, Person&gt; beanMap = ctx.getBeansOfType(Person.class);</span><br></pre></td></tr></table></figure>
+
+<p>这块知识体系比较庞大，本篇文章只学习 Bean 的部分，不学习 Bean 容器。</p>
+<hr>
+<h1 id="声明-Bean"><a href="#声明-Bean" class="headerlink" title="声明 Bean"></a>声明 Bean</h1><p>在 Spring 中主要有三类声明 Bean 的方式。</p>
+<p>我们创建一个 <code>Person</code> 类，它的全限定名是 <code>com.pz.bean.Person</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line">    <span class="comment">// ... getter setter 方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="通过-XML-声明-Bean"><a href="#通过-XML-声明-Bean" class="headerlink" title="通过 XML 声明 Bean"></a>通过 XML 声明 Bean</h2><p>在 <code>resources</code> 目录下创建一个 XML 文件，加入一个 <code>&lt;bean&gt;</code> 元素，具体可参考<a href="https://docs.spring.io/spring-framework/docs/5.2.x/spring-framework-reference/core.html#beans-factory-instantiation" target="_blank" rel="noopener">官方文档</a>。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans</span></span></span><br><span class="line"><span class="tag"><span class="string">        https://www.springframework.org/schema/beans/spring-beans.xsd"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"person"</span> <span class="attr">class</span>=<span class="string">"com.pz.bean.Person"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"name"</span> <span class="attr">value</span>=<span class="string">"pz"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"age"</span> <span class="attr">value</span>=<span class="string">"24"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="通过-Configuration-配合-Bean-声明-Bean"><a href="#通过-Configuration-配合-Bean-声明-Bean" class="headerlink" title="通过 @Configuration 配合 @Bean 声明 Bean"></a>通过 @Configuration 配合 @Bean 声明 Bean</h2><p>在配置类（被 <code>@Configuration</code> 注解的类）里，通过 <code>@Bean</code> 注解声明 Bean。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QuickstartConfiguration</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Person <span class="title">person</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Person();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="通过-ComponentScan-配合-Component-声明-Bean"><a href="#通过-ComponentScan-配合-Component-声明-Bean" class="headerlink" title="通过 @ComponentScan 配合 @Component 声明 Bean"></a>通过 @ComponentScan 配合 @Component 声明 Bean</h2><p>在配置类上额外标注 <code>@ComponentScan</code> 开启注解扫描，就可以扫描到 <code>@Component</code> 注解声明的 Bean。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ComponentScan</span> <span class="comment">// 默认扫描本类所在包及子包下的所有 @Component 组件</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QuickstartConfiguration</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line">    <span class="comment">// ... getter setter 方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Web 三层架构用的注解：<code>@Controller</code> 、<code>@Service</code> 、<code>@Repository</code>，底层也是 <code>@Component</code>。</p>
+<h2 id="通过-FactoryBean-声明-Bean"><a href="#通过-FactoryBean-声明-Bean" class="headerlink" title="通过 FactoryBean 声明 Bean"></a>通过 FactoryBean 声明 Bean</h2><p>感觉不太常用，但还是列一下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// —————————————————— 定义 FactoryBean ——————————————————</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PersonFactoryBean</span> <span class="keyword">implements</span> <span class="title">FactoryBean</span>&lt;<span class="title">Toy</span>&gt; </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> Person person;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Person <span class="title">getObject</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Class&lt;Person&gt; <span class="title">getObjectType</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Person.class;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPerson</span><span class="params">(Person person)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.person = person;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// —————————————————— 在配置类中配置 FactoryBean ——————————————————</span></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> PersonFactoryBean <span class="title">personFactory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    PersonFactoryBean personFactory = <span class="keyword">new</span> PersonFactoryBean();</span><br><span class="line">    personFactory.setPerson(<span class="keyword">new</span> Person());</span><br><span class="line">    <span class="keyword">return</span> personFactory;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="奇技淫巧"><a href="#奇技淫巧" class="headerlink" title="奇技淫巧"></a>奇技淫巧</h2><p>除了上述几种方法外，还可以编程式声明 Bean。</p>
+<p>编程式的意思是，我们找到 Spring 的 IoC 容器，手动写代码，把自己想声明的 Bean 塞到 IoC 容器里。</p>
+<p>这块知识超纲了，平常几乎也不会用到，在此只贴其中一种代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">// 获取 IoC 容器</span></span><br><span class="line">    AnnotationConfigApplicationContext ctx = <span class="keyword">new</span> AnnotationConfigApplicationContext();</span><br><span class="line">    <span class="comment">// 获取 Bean 定义</span></span><br><span class="line">    BeanDefinition personDefinition = BeanDefinitionBuilder.rootBeanDefinition(Person.class).getBeanDefinition();</span><br><span class="line">    <span class="comment">// 手动注册 Bean</span></span><br><span class="line">    ctx.registerBeanDefinition(<span class="string">"person"</span>, personDefinition);</span><br><span class="line">    <span class="comment">// 刷新 IoC 容器</span></span><br><span class="line">    ctx.refresh();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="获取-Bean"><a href="#获取-Bean" class="headerlink" title="获取 Bean"></a>获取 Bean</h1><p>在 IoC 容器中装载 Bean 之后，我们可以从中获取 Bean（尽管几乎没人这么做过？）。</p>
+<p>BeanFactory 接口只能获取单个 Bean，ApplicationContext 接口可以获取多个 Bean（具体原因不详述，要学习到 IoC 容器时才能理解）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// BeanFactory 作为 IoC 容器</span></span><br><span class="line">BeanFactory beanFactory = <span class="keyword">new</span> ClassPathXmlApplicationContext();</span><br><span class="line">Object bean = beanFactory.getBean(<span class="string">"person"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ApplicationContext 作为 IoC 容器</span></span><br><span class="line">ApplicationContext ctx = <span class="keyword">new</span> ClassPathXmlApplicationContext();</span><br><span class="line">Map&lt;String, Person&gt; beanMap = ctx.getBeansOfType(Person.class);</span><br></pre></td></tr></table></figure>
+
+<p>上面只罗列了两种手动获取 Bean 的方法，其实方法重载挺多的，可以通过 Bean 的名称、类型等获取。</p>
+<br>
+
+<p>主动从 IoC 容器中获取 Bean，这个动作被称为<strong>依赖查找</strong>，也就是我需要 Bean，我主动去 Bean 容器里索要 Bean。</p>
+<p>这种方式不多见，更常见的方式是：我需要 Bean，代码自动把 Bean 给我（<strong>依赖注入</strong>），这种方式主要体现在属性注入上。</p>
+<hr>
+<h1 id="Bean-的属性注入"><a href="#Bean-的属性注入" class="headerlink" title="Bean 的属性注入"></a>Bean 的属性注入</h1><p>属性可以分两种：一种属性是静态值，一种属性是另一个 Bean。比如下面这段代码中的 Cat 类，属性 <code>name</code> 就是静态值，属性 <code>master</code> 就是另一个 Bean。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cat</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Person master;</span><br><span class="line">    <span class="comment">// ... getter setter 方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>主要有四种属性注入的方式：</p>
+<h2 id="setter-方法注入属性"><a href="#setter-方法注入属性" class="headerlink" title="setter 方法注入属性"></a>setter 方法注入属性</h2><ol>
+<li><p>XML 方式的 setter 注入</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"cat"</span> <span class="attr">class</span>=<span class="string">"com.pz.bean.Cat"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"name"</span> <span class="attr">value</span>=<span class="string">"mimi"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>注解方式的 setter 注入</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Cat <span class="title">cat</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Cat cat = <span class="keyword">new</span> Cat();</span><br><span class="line">    cat.setName(<span class="string">"mimi"</span>);</span><br><span class="line">    <span class="keyword">return</span> cat;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="构造器注入属性"><a href="#构造器注入属性" class="headerlink" title="构造器注入属性"></a>构造器注入属性</h2><p>首先要修改一下 Cat 类，增加一个带参数的构造方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cat</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Person master;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Cat</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ... getter setter 方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>XML 方式的构造器注入</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"cat"</span> <span class="attr">class</span>=<span class="string">"com.pz.bean.Cat"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">index</span>=<span class="string">"0"</span> <span class="attr">value</span>=<span class="string">"mimi"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>注解式构造器注入</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Cat <span class="title">cat</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Cat(<span class="string">"mimi"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="注解式属性注入"><a href="#注解式属性注入" class="headerlink" title="注解式属性注入"></a>注解式属性注入</h2><ol>
+<li><p><code>@Value</code> 注入静态字段</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cat</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"mimi"</span>)</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Person master;</span><br><span class="line">    <span class="comment">// ... getter setter 方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>@Value</code> 注入外部配置</p>
+<p>在 resources 目录下新建一个 properties 文件，存放外部配置，并在配置类上增加 <code>@PropertySource</code> 注解。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat.name=mimi</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ComponentScan</span></span><br><span class="line"><span class="meta">@PropertySource</span>(<span class="string">"classpath:bean/cat.property"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">InjectValueConfiguration</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用 <code>${}</code> 表示引入外部配置：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cat</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;cat.name&#125;"</span>)</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Person master;</span><br><span class="line">    <span class="comment">// ... getter setter 方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>@Value</code> 注入 SpEL 表达式</p>
+<p>使用 <code>#{}</code> 表示 SpEL 表达式，具体语法自查：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cat</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"#&#123;'mimi'&#125;"</span>)</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Person master;</span><br><span class="line">    <span class="comment">// ... getter setter 方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="自动注入-Bean-属性"><a href="#自动注入-Bean-属性" class="headerlink" title="自动注入 Bean 属性"></a>自动注入 Bean 属性</h2><p>如果一个 Bean 依赖另一个 Bean，就要通过自动注入实现。</p>
+<ol>
+<li><p>@Autowired</p>
+<p>在属性上标注 <code>@Autowired</code> 注解，IoC 容器会按照属性的<strong>类型</strong>，找到对应类型的 Bean 注入给属性：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cat</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> Person master;</span><br><span class="line">    <span class="comment">// ... getter setter 方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>@Autowired</code> 的使用方式和细节挺多的，详情可参考《<a href="https://juejin.cn/book/6857911863016390663/section/6859985201360011279" target="_blank" rel="noopener">IOC基础-依赖注入-自动注入&amp;复杂类型注入</a>》（要收费hh）。</p>
+</li>
+<li><p>@Resource</p>
+<p>在属性上标注 <code>@Resource</code> 注解，IoC 容器会按照属性的<strong>名称</strong>，找到对应名称的 Bean 注入给属性：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cat</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Resource</span>(name = <span class="string">"person"</span>)</span><br><span class="line">    <span class="keyword">private</span> Person master;</span><br><span class="line">    <span class="comment">// ... getter setter 方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>@Resource</code> 注解来自 JSR250 规范。</p>
+</li>
+<li><p>@Inject</p>
+<p>它跟 <code>@Autowired</code> 是一样的策略，也是按照<strong>类型</strong>注入，但它来自 JSR330 规范。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cat</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    </span><br><span class="line">	<span class="meta">@Inject</span></span><br><span class="line">    <span class="keyword">private</span> Person master;</span><br><span class="line">    <span class="comment">// ... getter setter 方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<hr>
+<p>接下来的内容都是进阶内容了，涉及到 Spring 的实现细节。</p>
+<br>
+
+<h1 id="BeanDefinition"><a href="#BeanDefinition" class="headerlink" title="BeanDefinition"></a>BeanDefinition</h1><p>BeanDefinition 也就是 Bean 的定义，它是一种元信息。</p>
+<p>元信息是指“定义的定义”，在这里 Bean 的定义是指所有的 Bean 有一些公共性的东西（比如 Bean 的名称、是否是单例、是否懒加载等等），把这些公共性的东西抽取出来，作为 BeanDefinition。</p>
+<p>在这种角度上，Bean 可以简单认为是 BeanDefinition 的实例。<br><br></p>
+<p>BeanDefinition 主要包括以下几部分：</p>
+<ul>
+<li>Bean 的类信息：全限定类名（用于反射生成 bean）</li>
+<li>Bean 的属性：作用域（scope）、是否默认 Bean（primary）、描述信息（description）</li>
+<li>Bean 的行为特征：是否延迟加载、是否自动注入、初始化/销毁方法</li>
+<li>Bean 与其他 Bean 的关系：父 Bean（parentName）、依赖的 Bean（dependsOn）</li>
+<li>Bean 的配置属性：构造器参数、属性变量值</li>
+</ul>
+<p>下面贴一下 BeanDefinition 的接口代码（很大程度上参考自博文《<a href="https://www.javadoop.com/post/spring-ioc" target="_blank" rel="noopener">Spring IOC 容器源码分析</a>》）:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 为了视觉效果，去掉了很多 @Nullable 注解</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BeanDefinition</span> <span class="keyword">extends</span> <span class="title">AttributeAccessor</span>, <span class="title">BeanMetadataElement</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 作用域（scope）默认只提供 singleton 和 prototype 两种</span></span><br><span class="line">    <span class="comment">// 还有更多类型的作用域，但它们都是扩展</span></span><br><span class="line">    String SCOPE_SINGLETON = ConfigurableBeanFactory.SCOPE_SINGLETON;</span><br><span class="line">    String SCOPE_PROTOTYPE = ConfigurableBeanFactory.SCOPE_PROTOTYPE;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Bean 的角色：用户自己定义的 Bean、复杂配置的支撑部分、Spring 内部的 Bean</span></span><br><span class="line">    <span class="keyword">int</span> ROLE_APPLICATION = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> ROLE_SUPPORT = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> ROLE_INFRASTRUCTURE = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 父 Bean（作用是继承父 Bean 的配置信息）</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setParentName</span><span class="params">(String parentName)</span></span>;</span><br><span class="line">    <span class="function">String <span class="title">getParentName</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Bean 的类名称，将来通过反射来生成实例</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setBeanClassName</span><span class="params">(String beanClassName)</span></span>;</span><br><span class="line">    <span class="function">String <span class="title">getBeanClassName</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// bean 的作用域</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setScope</span><span class="params">(String scope)</span></span>;</span><br><span class="line">    <span class="function">String <span class="title">getScope</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 是否懒加载</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setLazyInit</span><span class="params">(<span class="keyword">boolean</span> lazyInit)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isLazyInit</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 该 Bean 依赖的所有的 Bean（depends-on="" 属性设置的值）</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setDependsOn</span><span class="params">(String... dependsOn)</span></span>;</span><br><span class="line">    String[] getDependsOn();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 该 Bean 是否可以注入到其他 Bean 中</span></span><br><span class="line">    <span class="comment">// 只对根据类型注入有效，如果根据名称注入，即使这边设置了 false，也是可以的</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setAutowireCandidate</span><span class="params">(<span class="keyword">boolean</span> autowireCandidate)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isAutowireCandidate</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 是否默认 Bean</span></span><br><span class="line">    <span class="comment">// 同一接口的多个实现，如果不指定名字的话，Spring 会优先选择设置 primary 为 true 的 Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setPrimary</span><span class="params">(<span class="keyword">boolean</span> primary)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isPrimary</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果该 Bean 采用工厂方法生成，指定工厂名称</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setFactoryBeanName</span><span class="params">(String factoryBeanName)</span></span>;</span><br><span class="line">    <span class="function">String <span class="title">getFactoryBeanName</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 指定工厂类中的工厂方法名称</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setFactoryMethodName</span><span class="params">(String factoryMethodName)</span></span>;</span><br><span class="line">    <span class="function">String <span class="title">getFactoryMethodName</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 构造器参数</span></span><br><span class="line">    <span class="function">ConstructorArgumentValues <span class="title">getConstructorArgumentValues</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">default</span> <span class="keyword">boolean</span> <span class="title">hasConstructorArgumentValues</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> !getConstructorArgumentValues().isEmpty();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Bean 中的属性值</span></span><br><span class="line">    <span class="function">MutablePropertyValues <span class="title">getPropertyValues</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">default</span> <span class="keyword">boolean</span> <span class="title">hasPropertyValues</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> !getPropertyValues().isEmpty();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化方法</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setInitMethodName</span><span class="params">(String initMethodName)</span></span>;</span><br><span class="line">    <span class="function">String <span class="title">getInitMethodName</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 销毁方法</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setDestroyMethodName</span><span class="params">(String destroyMethodName)</span></span>;</span><br><span class="line">    <span class="function">String <span class="title">getDestroyMethodName</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Bean 的角色</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setRole</span><span class="params">(<span class="keyword">int</span> role)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getRole</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Bean 的描述</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setDescription</span><span class="params">(String description)</span></span>;</span><br><span class="line">    <span class="function">String <span class="title">getDescription</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// BeanDefinition 的可解析类型？</span></span><br><span class="line">    <span class="function">ResolvableType <span class="title">getResolvableType</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 是否是 singleton/prototype</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isSingleton</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isPrototype</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 是否是抽象的</span></span><br><span class="line">    <span class="comment">// 如果是抽象的，那么不能实例化，常用于作为父 bean 用于继承</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isAbstract</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 定义 Bean 的资源描述</span></span><br><span class="line">    <span class="function">String <span class="title">getResourceDescription</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果当前 BeanDefinition 是一个代理对象，那么该方法可以用来返回原始的 BeanDefinition</span></span><br><span class="line">    <span class="function">BeanDefinition <span class="title">getOriginatingBeanDefinition</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<p>BeanDefinition 有很多实现类，我粗略画了张图整理了一下相关体系：</p>
+<p><img src="/assets/BeanDefinition%E4%BD%93%E7%B3%BB.jpg" alt="BeanDefinition体系"></p>
+<hr>
+<h1 id="Bean-的生命周期"><a href="#Bean-的生命周期" class="headerlink" title="Bean 的生命周期"></a>Bean 的生命周期</h1><p>有点复杂……画张图溜了……</p>
+<p><img src="/assets/Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="Bean的生命周期"></p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2021 pz
+  </div>
+  <div class="footer-right">
+    <img src="/images/govPolice.png">
+    <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44030502006101">粤公网安备 44030502006101号</a>
+    <a>&nbsp;</a>
+    <a href="http://beian.miit.gov.cn">粤ICP备2020090003号</a>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-37473492-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+

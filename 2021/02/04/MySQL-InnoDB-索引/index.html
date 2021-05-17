@@ -18,7 +18,9 @@
 <meta property="og:image" content="http://hellopz.netlify.com/assets/%E6%8E%98%E9%87%91%E5%B0%8F%E5%86%8C%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.jpg">
 <meta property="og:image" content="http://hellopz.netlify.com/assets/%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B.jpg">
 <meta property="og:image" content="http://hellopz.netlify.com/assets/%E4%BA%8C%E7%BA%A7%E7%B4%A2%E5%BC%95%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B.jpg">
-<meta property="og:updated_time" content="2021-02-04T08:36:47.706Z">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/B%E6%A0%91%E4%B8%8EB+%E6%A0%91%E7%BB%93%E6%9E%841.jpg">
+<meta property="og:image" content="http://hellopz.netlify.com/assets/B%E6%A0%91%E4%B8%8EB+%E6%A0%91%E7%BB%93%E6%9E%842.jpg">
+<meta property="og:updated_time" content="2021-04-11T06:18:34.547Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL InnoDB 索引">
 <meta name="twitter:description" content="二月的第一周，来学习 InnoDB 的索引设计。 本周的学习来源还是《MySQL 是怎样运行的：从根儿上理解 MySQL》，瑞思拜。  InnoDB 为每个索引创建一个 B+ 树，每个节点都是一个索引页，其中包含若干 Compact 数据行。  有两种索引，一种是主键（聚簇索引），一种是其他索引（二级索引）。 聚簇索引比如一张表有 10000 行记录，用于区分每一行记录的唯一标记，就被叫做聚簇">
@@ -99,7 +101,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#聚簇索引"><span class="toc-number">1.</span> <span class="toc-text">聚簇索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二级索引"><span class="toc-number">2.</span> <span class="toc-text">二级索引</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#索引数据结构"><span class="toc-number"></span> <span class="toc-text">索引数据结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#索引查询逻辑"><span class="toc-number"></span> <span class="toc-text">索引查询逻辑</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#聚簇索引-1"><span class="toc-number">1.</span> <span class="toc-text">聚簇索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二级索引-1"><span class="toc-number">2.</span> <span class="toc-text">二级索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么-InnoDB-使用-B-树"><span class="toc-number">3.</span> <span class="toc-text">为什么 InnoDB 使用 B+ 树</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用索引有什么规范"><span class="toc-number">4.</span> <span class="toc-text">使用索引有什么规范</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#聚簇索引"><span class="toc-number">1.</span> <span class="toc-text">聚簇索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二级索引"><span class="toc-number">2.</span> <span class="toc-text">二级索引</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#索引数据结构"><span class="toc-number"></span> <span class="toc-text">索引数据结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#索引查询逻辑"><span class="toc-number"></span> <span class="toc-text">索引查询逻辑</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#聚簇索引-1"><span class="toc-number">1.</span> <span class="toc-text">聚簇索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二级索引-1"><span class="toc-number">2.</span> <span class="toc-text">二级索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么-InnoDB-使用-B-树"><span class="toc-number">3.</span> <span class="toc-text">为什么 InnoDB 使用 B+ 树</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用索引有什么规范"><span class="toc-number">4.</span> <span class="toc-text">使用索引有什么规范</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#B-树和-B-树有什么区别，为什么使用-B-树？"><span class="toc-number">5.</span> <span class="toc-text">B+ 树和 B 树有什么区别，为什么使用 B+ 树？</span></a></li></ol>
     </div>
   </span>
 </div>
@@ -222,6 +224,22 @@
 <li>尽量使用<code>覆盖索引</code>进行查询，避免<code>回表</code>带来的性能损耗。</li>
 </ul>
 </li>
+</ol>
+<br>
+
+<br>
+
+<p>（2021.04.11 补）</p>
+<h2 id="B-树和-B-树有什么区别，为什么使用-B-树？"><a href="#B-树和-B-树有什么区别，为什么使用-B-树？" class="headerlink" title="B+ 树和 B 树有什么区别，为什么使用 B+ 树？"></a>B+ 树和 B 树有什么区别，为什么使用 B+ 树？</h2><p>首先，B 树也可以叫做 B- 树，因为 B 树的英文名是 B-tree。</p>
+<p>B+ 树是 B 树的一种变种，它们都是多路平衡查找树，但是 B 树的每个节点都有 key 和 value，而 B+ 数只有最深层的节点有 key 和 value，其他层都只有 key。</p>
+<p>下图是《<a href="https://www.geeksforgeeks.org/difference-between-b-tree-and-b-tree/" target="_blank" rel="noopener">Difference between B tree and B+ tree</a>》中的配图：</p>
+<p><img src="/assets/B%E6%A0%91%E4%B8%8EB+%E6%A0%91%E7%BB%93%E6%9E%841.jpg" alt="B树与B+树结构1"></p>
+<p>下图是《<a href="https://stackoverflow.com/questions/870218/what-are-the-differences-between-b-trees-and-b-trees" target="_blank" rel="noopener">What are the differences between B trees and B+ trees?</a>》中的配图：</p>
+<p><img src="/assets/B%E6%A0%91%E4%B8%8EB+%E6%A0%91%E7%BB%93%E6%9E%842.jpg" alt="B树与B+树结构2"></p>
+<p>B+ 树相比 B 树的优势在于：</p>
+<ol>
+<li>B+ 树由于非叶子节点只存 key，因此每一层可以存更多组，树的深度变少了</li>
+<li>B+ 树的叶子节点是链表，可以方便地实现范围查找，而 B 树范围查找需要 DFS。</li>
 </ol>
 
   </div>
